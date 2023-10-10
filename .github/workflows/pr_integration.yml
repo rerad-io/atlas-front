@@ -1,0 +1,74 @@
+name: PR Preview workflow
+
+on:
+  pull_request:
+    types: [ 'opened', 'synchronize', 'closed', 'labeled', 'unlabeled' ]
+    branches: ['main']
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: write
+
+jobs:
+
+  check:
+    name: Checks
+    if: github.event.action != 'closed'
+    uses: rerad-io/rerad-devops/.github/workflows/code-quality.yaml@main
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    name: Build
+    needs: ['check']
+    uses: rerad-io/rerad-devops/.github/workflows/docker-image.yaml@main
+    with:
+      ECR_REPOSITORY: atlas-front
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      DOT_ENV: |
+        VITE_BACKEND_API=${{ secrets.VITE_BACKEND_API }}
+        VITE_GA4_MEASUREMENT_ID=${{ secrets.VITE_GA4_MEASUREMENT_ID }}
+        VITE_GOOGLE_APP_ID=${{ secrets.VITE_GOOGLE_APP_ID }}
+        VITE_ENVIRONMENT=development
+        VITE_RELEASE=0.0.1
+
+  deploy:
+    name: Deploy
+    needs: ['build']
+    uses: rerad-io/rerad-devops/.github/workflows/deploy-on-kuber.yaml@main
+    with:
+      APP: atlas-front-pr-${{ github.event.number }}
+      NAMESPACE: rerad-dev
+    secrets:
+      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      args: | 
+        -f ./.helm/values.dev.yaml \
+        --set image.tag=${{ github.sha }} \
+        --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
+        --set ingress.tls\[0\].secretName=atlas-front-pr-${{ github.event.number }}-d-medcol-io \
+        --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
+        --wait
+
+  comment:
+    name: Comment
+    needs: ['deploy']
+    uses: rerad-io/rerad-devops/.github/workflows/deploy-comment.yaml@main
+    with:
+      APP_HOST: atlas-front-pr-${{ github.event.number }}.d.medcol.io/atlas
+      install: ${{ github.event.action == 'opened' || github.event.action == 'synchronize' }}
+  
+  uninstall:
+    name: Uninstall
+    if: github.event.action == 'closed'
+    runs-on: dev-runner
+    steps:
+    - name: Uninstall with helm
+      uses: wahyd4/kubectl-helm-action@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+      with:
+        args: |
+          helm uninstall atlas-front-pr-${{ github.event.number }} -n rerad-dev

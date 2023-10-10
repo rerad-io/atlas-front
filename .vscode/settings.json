@@ -1,0 +1,10 @@
+{
+    "i18n-ally.localesPaths": ["locales", "public/locales"],
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.displayLanguage": "en",
+    "i18n-ally.enabledFrameworks": ["next-translate"],
+    "i18n-ally.tabStyle": "tab",
+    "i18n-ally.pathMatcher": "{locale}/{namespace}.json",
+    "i18n-ally.namespace": true,
+    "i18n-ally.defaultNamespace": "common",
+}

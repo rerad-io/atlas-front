@@ -1,0 +1,41 @@
+/*  
+    EN: 
+    Mixins (aliases) for general media queries usage
+    
+    RU:
+    Миксины (алиасы) для общего использования медиа-запросов
+*/
+
+/*  Adaptivity for different devices / Адаптивность под разные устройства  */
+@mixin desktop {
+    @media only screen and (min-width: 1025px) {
+        @content;
+    }
+}
+@mixin mobile-tablet {
+    @media only screen and (max-width: 1024px) {
+        @content;
+    }
+}
+@mixin tablet {
+    @media only screen and (min-width: 744px) and (max-width: 1024px) {
+        @content;
+    }
+}
+@mixin mobile {
+    @media only screen and (max-width: 743px) {
+        @content;
+    }
+}
+
+/*  Adaptivity for brightness modes / Адаптивность под режимы яркости  */
+@mixin lightmode {
+    body:global(.light-mode) & {
+        @content;
+    }
+}
+@mixin darkmode {
+    body:global(.dark-mode) & {
+        @content;
+    }
+}

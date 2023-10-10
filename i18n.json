@@ -1,0 +1,8 @@
+{
+    "locales": ["en", "ru-KZ", "ko-KR", "ar-AE"],
+    "defaultLocale": "en",
+    "nsSeparator": ".",
+    "pages": {
+        "*": ["common"]
+    }
+}
