@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import Button from "../../components/UI/Button";
 import s from "./s.module.css";
 
-
 const AnatomicalStructureSubjectTableItem = ({ id, name, color }) => {
     return (
         <tr>

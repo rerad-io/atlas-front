@@ -1,6 +1,5 @@
 import AnatomicalStructureSubjectTableItem from "../AnatomicalStructureSubjectTableItem";
 
-
 const AnatomicalStructureSubjectTable = ({ obj }) => {
     return (
         <div>
