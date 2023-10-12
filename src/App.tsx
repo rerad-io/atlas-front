@@ -3,8 +3,11 @@ import AdminIndex from "./admin/AdminIndex";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+
 import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
+//import AnatomicalStructureSubject from "./admin/pages/AnatomicalStructureSubject";
+
 
 export default function App() {
     const routes = [
@@ -27,6 +30,14 @@ export default function App() {
         {
             path: "/admin/AnatomicalStructureSubject/:id",
             Component: AnatomicalStructureEditPage,
+        },
+        {
+            path: "/admin/AnatomicalStructure",
+            //Component: AnatomicalStructure,
+        },
+        {
+            path: "/admin/Study",
+           //Component: Study,
         },
     ];
     const router = createBrowserRouter(routes, {
