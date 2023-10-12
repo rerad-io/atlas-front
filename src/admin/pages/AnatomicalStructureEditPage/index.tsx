@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import s from "./s.module.css";
+import Button from "../../components/UI/Button";
 
 const AnatomicalStructureEditPage = () => {
     const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
@@ -58,7 +59,7 @@ const AnatomicalStructureEditPage = () => {
                         />
                     </label>
                 ) : null}
-                <input type="submit" value="Save" />
+                <Button>Save</Button>
             </form>
         </div>
     );
