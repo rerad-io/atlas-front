@@ -44,7 +44,7 @@ export default function App() {
         },
         {
             path: "/admin/Study",
-            //Component: Study,
+            // Component: Study,
         },
     ];
     const router = createBrowserRouter(routes, {
