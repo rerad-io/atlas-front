@@ -3,12 +3,10 @@ import AdminIndex from "./admin/AdminIndex";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import AnatomicalStructurePage from "./admin/pages/AnatomicalStructurePage";
-
-import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
-//import AnatomicalStructureSubject from "./admin/pages/AnatomicalStructureSubject";
-
+import AnatomicalStructureSubjectListPage from "./admin/pages/AnatomicalStructureSubjectListPage";
+import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructureSubjectEditPage";
+import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage/AnatomicalStructureEditPage";
 
 export default function App() {
     const routes = [
@@ -20,29 +18,33 @@ export default function App() {
             path: "/admin",
             Component: AdminIndex,
         },
-				{
+        {
             path: "/admin/AnatomicalStructureSubject",
-            Component: AnatomicalStructureListPage,
+            Component: AnatomicalStructureSubjectListPage,
         },
         {
             path: "/admin/AnatomicalStructureSubject/create",
-            Component: AnatomicalStructureEditPage,
+            Component: AnatomicalStructureSubjectEditPage,
         },
         {
             path: "/admin/AnatomicalStructureSubject/:id",
-            Component: AnatomicalStructureEditPage,
+            Component: AnatomicalStructureSubjectEditPage,
         },
         {
             path: "/admin/AnatomicalStructure",
-            Component: AnatomicalStructurePage,
+            Component: AnatomicalStructureListPage,
         },
-				{
-					path: "/admin/AnatomicalStructure/:id",
-					//Component: AnatomicalStructureItemPage,
-			},
+        {
+            path: "/admin/AnatomicalStructure/create",
+            Component: AnatomicalStructureEditPage,
+        },
+        {
+            path: "/admin/AnatomicalStructure/:id",
+            Component: AnatomicalStructureEditPage,
+        },
         {
             path: "/admin/Study",
-           //Component: Study,
+            //Component: Study,
         },
     ];
     const router = createBrowserRouter(routes, {

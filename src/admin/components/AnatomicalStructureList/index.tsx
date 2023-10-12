@@ -1,9 +1,8 @@
-import { FC } from "react";
 import AnatomicalStructureItem from "../AnatomicalStructureItem";
 import s from "./styles.module.scss";
 
 type AnatomicalStructureListProps = {
-	structureList: {
+    structureList: {
         id: string;
         name: string;
         subject: string;
@@ -12,7 +11,7 @@ type AnatomicalStructureListProps = {
     }[];
 };
 
-const AnatomicalStructureList: FC<AnatomicalStructureListProps> = ({ structureList }) => {
+const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
     return (
         <section className={s.section}>
             <div className="container">
@@ -26,7 +25,7 @@ const AnatomicalStructureList: FC<AnatomicalStructureListProps> = ({ structureLi
                             </tr>
                         </thead>
                         <tbody>
-                            {structureList.map((el) => (
+                            {props.structureList.map((el) => (
                                 <AnatomicalStructureItem key={el.id} {...el} />
                             ))}
                         </tbody>

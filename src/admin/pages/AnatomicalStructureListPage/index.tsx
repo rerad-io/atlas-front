@@ -1,32 +1,33 @@
-import AnatomicalStructureSubjectTable from "../../components/AnatomicalStructureSubjectTable";
-import Button from "../../components/UI/Button";
+import Button from "../../../components/UI/Button";
+import AnatomicalStructureList from "../../components/AnatomicalStructureList";
+import s from "./styles.module.scss";
 
-type obj = {
-    name: string;
-    color: string;
-};
-
-const obj = {
-    items: [
-        {
-            id: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
-            name: "наименование 1 ",
-            color: "74b9ff",
-        },
-        {
-            id: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d7",
-            name: "наименование 2",
-            color: "00b894",
-        },
-    ],
-};
+const anatomicalStructureListPage = [
+    {
+        id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
+        name: "структура 1 ",
+        subject: "костная ткань",
+        anatomicalStructureSubjectId: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
+        color: "#00FF12",
+    },
+    {
+        id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
+        name: "структура с текстом 2",
+        subject: "мышечная ткань",
+        anatomicalStructureSubjectId: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d7",
+        color: "#d92020",
+    },
+];
 
 const AnatomicalStructureListPage = () => {
     return (
-        <>
-            <Button to="/admin/AnatomicalStructureSubject/create">Add new Anatomical Theme</Button>
-            <AnatomicalStructureSubjectTable obj={obj.items} />
-        </>
+        <div className={s.page}>
+            <div className="container">
+                <h1 className="title ">Анатомические структуры</h1>
+                <Button to="/admin/AnatomicalStructure/create">Add new Anatomical Structure</Button>
+            </div>
+            <AnatomicalStructureList structureList={anatomicalStructureListPage} />
+        </div>
     );
 };
 

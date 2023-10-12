@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import adminReducer from "./admin";
-import anatomicalStructureReducer from "./anatomicalStructure";
 import { useDispatch } from "react-redux";
 
 export const store = configureStore({
     reducer: {
         admin: adminReducer,
-				anatomicalStructure: anatomicalStructureReducer,
     },
 });
 
