@@ -8,7 +8,6 @@ import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPa
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
 //import AnatomicalStructureSubject from "./admin/pages/AnatomicalStructureSubject";
 
-
 export default function App() {
     const routes = [
         {
@@ -37,7 +36,7 @@ export default function App() {
         },
         {
             path: "/admin/Study",
-           //Component: Study,
+            //Component: Study,
         },
     ];
     const router = createBrowserRouter(routes, {
