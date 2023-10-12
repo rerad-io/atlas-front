@@ -6,6 +6,8 @@ import { Toaster } from "react-hot-toast";
 
 import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
+import StudyListPage from "./admin/pages/StudyListPage";
+import StudyEditPage from "./admin/pages/StudyEditPage";
 //import AnatomicalStructureSubject from "./admin/pages/AnatomicalStructureSubject";
 
 export default function App() {
@@ -36,7 +38,15 @@ export default function App() {
         },
         {
             path: "/admin/Study",
-            //Component: Study,
+            Component: StudyListPage,
+        },
+        {
+            path: "/admin/Study/create",
+            Component: StudyEditPage,
+        },
+        {
+            path: "/admin/Study/:id",
+            Component: StudyEditPage,
         },
     ];
     const router = createBrowserRouter(routes, {
