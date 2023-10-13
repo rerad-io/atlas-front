@@ -1,0 +1,12 @@
+.wrap {
+    max-width: 500px;
+    margin: 20px;
+    width: fit-content;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+}
