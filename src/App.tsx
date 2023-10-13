@@ -1,14 +1,13 @@
 import AppIndex from "./app/AppIndex";
 import AdminIndex from "./admin/AdminIndex";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-
-import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
+import AnatomicalStructureSubjectListPage from "./admin/pages/AnatomicalStructureSubjectListPage";
+import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructureSubjectEditPage";
+import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage/AnatomicalStructureEditPage";
 import StudyListPage from "./admin/pages/StudyListPage";
 import StudyEditPage from "./admin/pages/StudyEditPage";
-//import AnatomicalStructureSubject from "./admin/pages/AnatomicalStructureSubject";
 
 export default function App() {
     const routes = [
@@ -22,19 +21,27 @@ export default function App() {
         },
         {
             path: "/admin/AnatomicalStructureSubject",
-            Component: AnatomicalStructureListPage,
+            Component: AnatomicalStructureSubjectListPage,
         },
         {
             path: "/admin/AnatomicalStructureSubject/create",
-            Component: AnatomicalStructureEditPage,
+            Component: AnatomicalStructureSubjectEditPage,
         },
         {
             path: "/admin/AnatomicalStructureSubject/:id",
-            Component: AnatomicalStructureEditPage,
+            Component: AnatomicalStructureSubjectEditPage,
         },
         {
             path: "/admin/AnatomicalStructure",
-            //Component: AnatomicalStructure,
+            Component: AnatomicalStructureListPage,
+        },
+        {
+            path: "/admin/AnatomicalStructure/create",
+            Component: AnatomicalStructureEditPage,
+        },
+        {
+            path: "/admin/AnatomicalStructure/:id",
+            Component: AnatomicalStructureEditPage,
         },
         {
             path: "/admin/Study",

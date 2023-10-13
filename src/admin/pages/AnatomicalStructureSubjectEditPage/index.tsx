@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import s from "./s.module.css";
 import Button from "../../components/UI/Button";
 
-const AnatomicalStructureEditPage = () => {
+const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
     const [createAnother, setCreateAnother] = useState(false);
 
@@ -65,4 +65,4 @@ const AnatomicalStructureEditPage = () => {
     );
 };
 
-export default AnatomicalStructureEditPage;
+export default AnatomicalStructureSubjectEditPage;

@@ -1,0 +1,15 @@
+.table_cage {
+    padding: 4px 10px;
+    font-size: clamp(12px, 3vw, 18px);
+}
+
+.table_cage:nth-child(3) {
+    text-align: center;
+}
+
+.btn_delete {
+    border: none;
+    background-color: transparent;
+    font-weight: 600;
+    cursor: pointer;
+}
