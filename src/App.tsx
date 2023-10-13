@@ -1,12 +1,13 @@
 import AppIndex from "./app/AppIndex";
 import AdminIndex from "./admin/AdminIndex";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
 import AnatomicalStructureSubjectListPage from "./admin/pages/AnatomicalStructureSubjectListPage";
 import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructureSubjectEditPage";
 import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage/AnatomicalStructureEditPage";
+import StudyListPage from "./admin/pages/StudyListPage";
+import StudyEditPage from "./admin/pages/StudyEditPage";
 
 export default function App() {
     const routes = [
@@ -44,7 +45,15 @@ export default function App() {
         },
         {
             path: "/admin/Study",
-            // Component: Study,
+            Component: StudyListPage,
+        },
+        {
+            path: "/admin/Study/create",
+            Component: StudyEditPage,
+        },
+        {
+            path: "/admin/Study/:id",
+            Component: StudyEditPage,
         },
     ];
     const router = createBrowserRouter(routes, {
