@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import s from "./s.module.css";
+import s from "./s.module.scss";
 import Button from "../../components/UI/Button";
+import AnatomicalStructureList from "../../components/AnatomicalStructureList";
+import { anatomicalStructureList } from "../../../data/data";
 
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
     const [createAnother, setCreateAnother] = useState(false);
+
+    // temporary!!! get data from temporary DB
+    const structureList = useRef(anatomicalStructureList.filter((elem) => elem.anatomicalStructureSubjectId === id));
 
     // if (id) {
     //     console.log("EDIT PAGE");
@@ -35,32 +40,38 @@ const AnatomicalStructureSubjectEditPage = () => {
     };
 
     return (
-        <div className={s.wrap}>
-            <form onSubmit={onSubmitHandler} className={s.form}>
-                <label htmlFor="themeName">
-                    Theme Name:
-                    <input type="text" name="name" id="themeName" />
-                </label>
-                <label htmlFor="themeColor">
-                    Theme Color:
-                    <input type="color" name="color" id="themeColor" />
-                </label>
-                {typeof id === "undefined" ? (
-                    <label htmlFor="createAnother">
-                        Create Another:
-                        <input
-                            type="checkbox"
-                            name="createAnother"
-                            id="createAnother"
-                            defaultChecked={createAnother}
-                            onChange={() => {
-                                setCreateAnother(!createAnother);
-                            }}
-                        />
-                    </label>
-                ) : null}
-                <Button>Save</Button>
-            </form>
+        <div className={s.page}>
+            <div className="container">
+                <div className={s.page_wrapper}>
+                    <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
+                    <form onSubmit={onSubmitHandler} className={s.form}>
+                        <label htmlFor="themeName">
+                            Theme Name:
+                            <input type="text" name="name" id="themeName" />
+                        </label>
+                        <label htmlFor="themeColor">
+                            Theme Color:
+                            <input type="color" name="color" id="themeColor" />
+                        </label>
+                        {typeof id === "undefined" ? (
+                            <label htmlFor="createAnother">
+                                Create Another:
+                                <input
+                                    type="checkbox"
+                                    name="createAnother"
+                                    id="createAnother"
+                                    defaultChecked={createAnother}
+                                    onChange={() => {
+                                        setCreateAnother(!createAnother);
+                                    }}
+                                />
+                            </label>
+                        ) : null}
+                        <Button>Save</Button>
+                    </form>
+                    {id ? <AnatomicalStructureList structureList={structureList.current} /> : null}
+                </div>
+            </div>
         </div>
     );
 };
