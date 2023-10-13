@@ -8,7 +8,6 @@ import AnatomicalStructureSubjectListPage from "./admin/pages/AnatomicalStructur
 import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructureSubjectEditPage";
 import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 
-
 export default function App() {
     const routes = [
         {
