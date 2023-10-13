@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import AnatomicalStructureListPage from "./admin/pages/AnatomicalStructureListPage";
 import AnatomicalStructureSubjectListPage from "./admin/pages/AnatomicalStructureSubjectListPage";
 import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructureSubjectEditPage";
-import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage/AnatomicalStructureEditPage";
+import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import StudyListPage from "./admin/pages/StudyListPage";
 import StudyEditPage from "./admin/pages/StudyEditPage";
 
