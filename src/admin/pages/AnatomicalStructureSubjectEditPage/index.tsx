@@ -42,36 +42,34 @@ const AnatomicalStructureSubjectEditPage = () => {
     return (
         <div className={s.page}>
             <div className="container">
-                <div className={s.page_wrapper}>
-                    <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
-                    <form onSubmit={onSubmitHandler} className={s.form}>
-                        <label htmlFor="themeName">
-                            Theme Name:
-                            <input type="text" name="name" id="themeName" />
+                <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
+                <form onSubmit={onSubmitHandler} className={s.form}>
+                    <label htmlFor="themeName">
+                        Theme Name:
+                        <input type="text" name="name" id="themeName" />
+                    </label>
+                    <label htmlFor="themeColor">
+                        Theme Color:
+                        <input type="color" name="color" id="themeColor" />
+                    </label>
+                    {typeof id === "undefined" ? (
+                        <label htmlFor="createAnother">
+                            Create Another:
+                            <input
+                                type="checkbox"
+                                name="createAnother"
+                                id="createAnother"
+                                defaultChecked={createAnother}
+                                onChange={() => {
+                                    setCreateAnother(!createAnother);
+                                }}
+                            />
                         </label>
-                        <label htmlFor="themeColor">
-                            Theme Color:
-                            <input type="color" name="color" id="themeColor" />
-                        </label>
-                        {typeof id === "undefined" ? (
-                            <label htmlFor="createAnother">
-                                Create Another:
-                                <input
-                                    type="checkbox"
-                                    name="createAnother"
-                                    id="createAnother"
-                                    defaultChecked={createAnother}
-                                    onChange={() => {
-                                        setCreateAnother(!createAnother);
-                                    }}
-                                />
-                            </label>
-                        ) : null}
-                        <Button>Save</Button>
-                    </form>
-                    {id ? <AnatomicalStructureList structureList={structureList.current} /> : null}
-                </div>
+                    ) : null}
+                    <Button>Save</Button>
+                </form>
             </div>
+            {id ? <AnatomicalStructureList structureList={structureList.current} /> : null}
         </div>
     );
 };
