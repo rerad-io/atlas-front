@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import s from "./s.module.css";
-import Button from "../../components/UI/Button";
+import Button from "../../../components/UI/Button";
 
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
@@ -35,7 +35,8 @@ const AnatomicalStructureSubjectEditPage = () => {
     };
 
     return (
-        <div className={s.wrap}>
+        <div className={s.page}>
+            <h1>Создание/Редактирование Темы Анатомической структуры </h1>
             <form onSubmit={onSubmitHandler} className={s.form}>
                 <label htmlFor="themeName">
                     Theme Name:
