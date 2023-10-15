@@ -11,7 +11,7 @@ type AnatomicalStructureListProps = {
         color: string;
     }[];
 };
-const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"]
+const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"];
 
 const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
     return (
@@ -32,7 +32,7 @@ const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
                             ))}
                         </tbody>
                     </table> */}
-                    <TableComponent columns={columns} data={props.structureList} actions={"/admin/AnatomicalStructure/"}/>
+                    <TableComponent columns={columns} data={props.structureList} actions={"/admin/AnatomicalStructure/"} />
                 </div>
             </div>
         </section>

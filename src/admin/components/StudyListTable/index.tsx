@@ -3,7 +3,7 @@
 import TableComponent from "../../../components/UI/TableComponent";
 
 const StudyListTable = ({ obj }) => {
-    const columns = ['Id', 'Name', 'ExternalId', 'Description', 'PreviewFrame', "Actions"]
+    const columns = ["Id", "Name", "ExternalId", "Description", "PreviewFrame", "Actions"];
     return (
         <div>
             {/* <table>
@@ -21,7 +21,7 @@ const StudyListTable = ({ obj }) => {
                     ))}
                 </tbody>
             </table> */}
-            <TableComponent  columns={columns} data={obj} actions={"/admin/Study/"}/>
+            <TableComponent columns={columns} data={obj} actions={"/admin/Study/"} />
         </div>
     );
 };

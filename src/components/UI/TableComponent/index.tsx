@@ -11,7 +11,7 @@
 // /admin/AnatomicalStructureSubject/3213213
 
 import Button from "../Button";
-import s from './s.module.css'
+import s from "./s.module.css";
 
 function TableComponent({ columns, data, actions = false }) {
     const tableHeader = () => {
