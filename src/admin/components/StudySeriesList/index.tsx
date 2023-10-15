@@ -1,10 +1,25 @@
-import StudySeriesListItem from "../StudySeriesListItem";
+import TableComponent from "../../../components/UI/TableComponent";
+// import StudySeriesListItem from "../StudySeriesListItem"; // если будет принят компонент TableComponent то этот можно удалить
+
 import s from "./s.module.css";
+
+const columns = [
+    "Id",
+    "Study",
+    "Number",
+    "Name",
+    "PreviewFrame",
+    "InstanceCount",
+    "SagitalFrame",
+    "CoronalFrame",
+    "Actions"
+  ];
+  
 
 const obj = {
     items: [
         {
-            Id: "342142143213213",
+            id: "342142143213213",
             Study: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
             Number: 1,
             Name: "свойство name, а в заметке сказано что это описание",
@@ -14,7 +29,7 @@ const obj = {
             CoronalFrame: "CoronalFrame.jpg",
         },
         {
-            Id: "442142143213213",
+            id: "442142143213213",
             Study: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d2",
             Number: 1,
             Name: "свойство name, а в заметке сказано что это описание",
@@ -42,7 +57,7 @@ const StudySeriesList = () => {
             <section className={s.section}>
                 <div className="container">
                     <div>
-                        <table>
+                       {/*  <table>
                             <thead>
                                 <tr>
                                     <th className={s.table_head}>Id</th>
@@ -61,7 +76,8 @@ const StudySeriesList = () => {
                                     <StudySeriesListItem key={el.Id} {...el} />
                                 ))}
                             </tbody>
-                        </table>
+                        </table> */}
+                        <TableComponent columns={columns} data={obj.items} actions={"/admin/StudySeriesItem/"} />
                     </div>
                 </div>
             </section>

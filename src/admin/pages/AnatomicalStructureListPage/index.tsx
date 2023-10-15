@@ -8,14 +8,14 @@ const anatomicalStructureListPage = [
         name: "структура 1 ",
         subject: "костная ткань",
         anatomicalStructureSubjectId: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
-        color: "#00FF12",
+        color: "00FF12",
     },
     {
         id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
         name: "структура с текстом 2",
         subject: "мышечная ткань",
         anatomicalStructureSubjectId: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d7",
-        color: "#d92020",
+        color: "d92020",
     },
 ];
 

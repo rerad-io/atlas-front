@@ -1,4 +1,5 @@
-import AnatomicalStructureItem from "../AnatomicalStructureItem";
+import TableComponent from "../../../components/UI/TableComponent";
+// import AnatomicalStructureItem from "../AnatomicalStructureItem"; // если будет принят компонент TableComponent то этот можно удалить
 import s from "./styles.module.scss";
 
 type AnatomicalStructureListProps = {
@@ -10,13 +11,14 @@ type AnatomicalStructureListProps = {
         color: string;
     }[];
 };
+const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"]
 
 const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
     return (
         <section className={s.section}>
             <div className="container">
                 <div>
-                    <table>
+                    {/* <table>
                         <thead>
                             <tr>
                                 <th className={s.table_head}>Name</th>
@@ -29,7 +31,8 @@ const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
                                 <AnatomicalStructureItem key={el.id} {...el} />
                             ))}
                         </tbody>
-                    </table>
+                    </table> */}
+                    <TableComponent columns={columns} data={props.structureList} actions={"/admin/AnatomicalStructure/"}/>
                 </div>
             </div>
         </section>
