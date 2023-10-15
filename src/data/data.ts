@@ -1,4 +1,6 @@
 // temporary Data Base
+import arm from "../assets/arm.webp";
+import had from "../assets/had.webp";
 
 export const anatomicalStructureList = [
     {
@@ -42,5 +44,38 @@ export const anatomicalStructureList = [
         subject: "костная ткань",
         anatomicalStructureSubjectId: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
         color: "#00FF12",
+    },
+];
+
+export const gallery_list = [
+    {
+        id: "1",
+        img: arm,
+        alt: "photo1",
+    },
+    {
+        id: "2",
+        img: had,
+        alt: "photo2",
+    },
+    {
+        id: "3",
+        img: arm,
+        alt: "photo3",
+    },
+    {
+        id: "4",
+        img: had,
+        alt: "photo4",
+    },
+    {
+        id: "5",
+        img: arm,
+        alt: "photo5",
+    },
+    {
+        id: "6",
+        img: had,
+        alt: "photo6",
     },
 ];
