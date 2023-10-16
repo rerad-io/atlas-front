@@ -1,27 +1,28 @@
+import Button from "../../../components/UI/Button";
 import StudySeriesListItem from "../StudySeriesListItem";
 import s from "./s.module.css";
 
 const obj = {
     items: [
         {
-            Id: "342142143213213",
-            Study: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
-            Number: 1,
-            Name: "свойство name, а в заметке сказано что это описание",
-            PreviewFrame: "previewFrame.jpg",
-            InstanceCount: 24,
-            SagitalFrame: "SagitalFrame.jpg",
-            CoronalFrame: "CoronalFrame.jpg",
+            id: "342142143213213",
+            study: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
+            number: 1,
+            name: "свойство name, а в заметке сказано что это описание",
+            previewFrame: "previewFrame.jpg",
+            instanceCount: 24,
+            sagitalFrame: "SagitalFrame.jpg",
+            coronalFrame: "CoronalFrame.jpg",
         },
         {
-            Id: "442142143213213",
-            Study: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d2",
-            Number: 1,
-            Name: "свойство name, а в заметке сказано что это описание",
-            PreviewFrame: "previewFrame1.jpg",
-            InstanceCount: 24,
-            SagitalFrame: "SagitalFrame1.jpg",
-            CoronalFrame: "CoronalFrame1.jpg",
+            id: "442142143213213",
+            study: "4ebafa2a-7448-47ba-80fa-5e9ee88f73d2",
+            number: 1,
+            name: "свойство name, а в заметке сказано что это описание",
+            previewFrame: "previewFrame1.jpg",
+            instanceCount: 24,
+            sagitalFrame: "SagitalFrame1.jpg",
+            coronalFrame: "CoronalFrame1.jpg",
         },
     ],
 };
@@ -39,6 +40,7 @@ const StudySeriesList = () => {
         <div className={s.page}>
             <h3>Список серий исследования</h3>
 
+            <Button to="/admin/StudySeries/create">Добавить серию исследования</Button>
             <section className={s.section}>
                 <div className="container">
                     <div>
@@ -58,7 +60,7 @@ const StudySeriesList = () => {
                             </thead>
                             <tbody>
                                 {obj.items.map((el) => (
-                                    <StudySeriesListItem key={el.Id} {...el} />
+                                    <StudySeriesListItem key={el.id} {...el} />
                                 ))}
                             </tbody>
                         </table>

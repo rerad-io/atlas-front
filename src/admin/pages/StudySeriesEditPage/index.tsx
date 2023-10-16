@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import s from "./s.module.css";
 import Button from "../../../components/UI/Button";
 
-const StudySeriesItemEditPage = () => {
+const StudySeriesEditPage = () => {
     const { Id } = useParams<{ Id: string }>();
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,4 +84,4 @@ const StudySeriesItemEditPage = () => {
     );
 };
 
-export default StudySeriesItemEditPage;
+export default StudySeriesEditPage;
