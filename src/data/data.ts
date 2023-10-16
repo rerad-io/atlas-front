@@ -1,6 +1,8 @@
 // temporary Data Base
-import arm from "../assets/arm.webp";
-import had from "../assets/had.webp";
+import arm from "../assets/arm.jpg";
+import had from "../assets/had.jpg";
+import lag from "../assets/lag.jpg";
+import had2 from "../assets/had2.jpg";
 
 export const anatomicalStructureList = [
     {
@@ -60,12 +62,12 @@ export const gallery_list = [
     },
     {
         id: "3",
-        img: arm,
+        img: lag,
         alt: "photo3",
     },
     {
         id: "4",
-        img: had,
+        img: had2,
         alt: "photo4",
     },
     {
