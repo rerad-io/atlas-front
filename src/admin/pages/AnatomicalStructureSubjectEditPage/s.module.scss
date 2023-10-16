@@ -1,12 +1,11 @@
-.wrap {
-    max-width: 500px;
-    margin: 20px;
-    width: fit-content;
+.page {
+    padding: 50px 0;
 }
 
 .form {
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     justify-content: center;
+    gap: 20px;
 }

@@ -1,47 +1,33 @@
 import { NavLink } from "react-router-dom";
-import styles from "./AdminIndex.module.scss";
+import s from "./AdminIndex.module.scss";
 
 const AdminIndex = () => {
     const name = "Full name";
     const role = "Administrator";
     return (
-        <>
-            <div
-                className="container"
-                style={{
-                    maxWidth: "1920px",
-                    padding: "0 15px",
-                    margin: "0 auto",
-                }}
-            >
-                <div className={styles.page_wrapper}>
+        <div className={s.page}>
+            <div className="container">
+                <div className={s.page_wrapper}>
                     <h1>Administration page</h1>
-                    <div
-                        style={{
-                            padding: "20px 0",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "20px",
-                        }}
-                    >
+                    <div className={s.subtitle}>
                         <span>You are logged in as:</span>
                         <span>Admin: {name}</span>
                         <span>Role: {role}</span>
                     </div>
                     <nav>
-                        <ul className={styles.nav_list}>
+                        <ul className={s.nav_list}>
                             <li>
-                                <NavLink className={styles.nav_link} to="/admin/AnatomicalStructureSubject">
+                                <NavLink className={s.nav_link} to="/admin/AnatomicalStructureSubject">
                                     Справочник Тема Анатомической структуры
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink className={styles.nav_link} to="/admin/AnatomicalStructure">
+                                <NavLink className={s.nav_link} to="/admin/AnatomicalStructure">
                                     Справочник Анатомические структуры
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink className={styles.nav_link} to="/admin/Study">
+                                <NavLink className={s.nav_link} to="/admin/Study">
                                     Исследования
                                 </NavLink>
                             </li>
@@ -49,7 +35,7 @@ const AdminIndex = () => {
                     </nav>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 export default AdminIndex;
