@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import s from "./s.module.css";
+import s from "./s.module.scss";
 import Button from "../../../components/UI/Button";
+import AnatomicalStructureList from "../../components/AnatomicalStructureList";
+import { anatomicalStructureList } from "../../../data/data";
 
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
     const [createAnother, setCreateAnother] = useState(false);
+
+    // temporary!!! get data from temporary DB
+    const structureList = useRef(anatomicalStructureList.filter((elem) => elem.anatomicalStructureSubjectId === id));
 
     // if (id) {
     //     console.log("EDIT PAGE");

@@ -46,7 +46,7 @@ const AnatomicalStructureEditPage = () => {
     return (
         <div className={s.page}>
             <div className="container">
-                <div className={s.wrapper}>
+                <div className={s.page_wrapper}>
                     <Toaster />
                     <h1 className="title">{id ? `Редактирование` : `Создание`} Анатомической структуры</h1>
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
