@@ -2,12 +2,12 @@ import { useParams } from "react-router-dom";
 import s from "./s.module.css";
 import { useState } from "react";
 import Button from "../../../components/UI/Button";
-import { gallery_list } from "../../../data/data";
-import StudySeriesItemGallery from "../../components/StudySeriesItemGallery";
-import StudySeriesItemCurrentFrame from "../../components/StudySeriesItemCurrentFrame";
+import { galleryList } from "../../../data/data";
+import FrameSelector from "../../components/FrameSelector";
+import RenderComponent from "../../components/RenderComponent";
 
 const StudySeriesEditPage = () => {
-    const { Id } = useParams<{ Id: string }>();
+    const { id } = useParams<{ id: string }>();
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -34,7 +34,7 @@ const StudySeriesEditPage = () => {
             // SAVE_IMAGE_FUNCTION(imgData);
         }
 
-        console.log(obj);
+        //console.log(obj);
 
         // при возврате учти createAnother
     };
@@ -58,60 +58,58 @@ const StudySeriesEditPage = () => {
 
     // Id	Study	Number	Name	PreviewFrame	InstanceCount	SagitalFrame	CoronalFrame
 
-    // ======= Перенести после размещения StudySeriesItemGallery и StudySeriesItemCurrentFrame на нужную страницу
-    const galleryList: {
+    const frameList: {
         id: string;
         img: string;
         alt: string;
-    }[] = gallery_list;
-    const [currentFrame, setCurrentFrame] = useState(galleryList[0]);
+    }[] = galleryList;
+    const [currentFrame, setCurrentFrame] = useState(frameList[0]);
 
     const handleClick = (id: string) => {
         const newFrame: {
             id: string;
             img: string;
             alt: string;
-        } = galleryList.find((elem) => elem.id === id) as {
+        } = frameList.find((elem) => elem.id === id) as {
             id: string;
             img: string;
             alt: string;
         };
         setCurrentFrame(newFrame);
     };
-    //==========
 
     return (
         <div className={s.page}>
-            <h1>Редактирование Серии Исследования</h1>
-            <form onSubmit={onSubmitHandler} className={s.form}>
-                <label htmlFor="Study">
-                    Study:
-                    <input type="text" name="Name" id="Study" defaultValue={Id} />
-                </label>
-                <label htmlFor="studyNumber">
-                    Study Number:
-                    <input type={"number"} id="studyNumber" name="namber" />
-                </label>
-                <label htmlFor="PreviewFrame">
-                    Preview Frame:
-                    <input type="file" name="PreviewFrame" id="PreviewFrame" accept="image/*"></input>
-                </label>
-                <label htmlFor="SagitalFrame">
-                    Sagital Frame:
-                    <input type="file" name="SagitalFrame" id="SagitalFrame" accept="image/*"></input>
-                </label>
-                <label htmlFor="CoronalFrame">
-                    Coronal Frame:
-                    <input type="file" name="CoronalFrame" id="CoronalFrame" accept="image/*"></input>
-                </label>
+            <div className="container">
+                <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
+                <form onSubmit={onSubmitHandler} className={s.form}>
+                    <label htmlFor="Study">
+                        Study:
+                        <input type="text" name="Name" id="Study" defaultValue={id} />
+                    </label>
+                    <label htmlFor="studyNumber">
+                        Study Number:
+                        <input type={"number"} id="studyNumber" name="namber" />
+                    </label>
+                    <label htmlFor="PreviewFrame">
+                        Preview Frame:
+                        <input type="file" name="PreviewFrame" id="PreviewFrame" accept="image/*"></input>
+                    </label>
+                    <label htmlFor="SagitalFrame">
+                        Sagital Frame:
+                        <input type="file" name="SagitalFrame" id="SagitalFrame" accept="image/*"></input>
+                    </label>
+                    <label htmlFor="CoronalFrame">
+                        Coronal Frame:
+                        <input type="file" name="CoronalFrame" id="CoronalFrame" accept="image/*"></input>
+                    </label>
 
-                <Button>Save</Button>
-            </form>
-
-            {/*Для страницы Серии ==============================*/}
-            {Id ? (
+                    <Button>Save</Button>
+                </form>
+            </div>
+            {id ? (
                 <>
-                    <StudySeriesItemGallery galleryList={galleryList} handleClick={handleClick} />
+                    <FrameSelector frameList={frameList} handleClick={handleClick} />
                     <section
                         className={s.frame_info}
                         style={{
@@ -128,7 +126,7 @@ const StudySeriesEditPage = () => {
                                     gap: "20px",
                                 }}
                             >
-                                <StudySeriesItemCurrentFrame currentFrame={currentFrame} />
+                                <RenderComponent currentFrame={currentFrame} />
                                 <div
                                     style={{
                                         overflow: "hidden",
@@ -148,7 +146,6 @@ const StudySeriesEditPage = () => {
                     </section>
                 </>
             ) : null}
-            {/*=============================*/}
         </div>
     );
 };

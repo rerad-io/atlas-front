@@ -1,6 +1,6 @@
 import s from "./styles.module.scss";
 
-type StudySeriesItemCurrentFrameProps = {
+type RenderComponentProps = {
     currentFrame: {
         id: string;
         img: string;
@@ -8,7 +8,7 @@ type StudySeriesItemCurrentFrameProps = {
     };
 };
 
-const StudySeriesItemCurrentFrame = (props: StudySeriesItemCurrentFrameProps) => {
+const RenderComponent = (props: RenderComponentProps) => {
     return (
         <div className={s.current_frame}>
             <img src={props.currentFrame.img} alt={props.currentFrame.alt} />
@@ -16,4 +16,4 @@ const StudySeriesItemCurrentFrame = (props: StudySeriesItemCurrentFrameProps) =>
     );
 };
 
-export default StudySeriesItemCurrentFrame;
+export default RenderComponent;

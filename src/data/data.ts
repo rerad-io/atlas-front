@@ -1,8 +1,4 @@
 // temporary Data Base
-import arm from "../assets/arm.jpg";
-import had from "../assets/had.jpg";
-import lag from "../assets/lag.jpg";
-import had2 from "../assets/had2.jpg";
 
 export const anatomicalStructureList = [
     {
@@ -49,7 +45,12 @@ export const anatomicalStructureList = [
     },
 ];
 
-export const gallery_list = [
+const arm: string = "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg";
+const had: string = "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg";
+const lag: string = "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg";
+const had2: string = "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg";
+
+export const galleryList = [
     {
         id: "1",
         img: arm,

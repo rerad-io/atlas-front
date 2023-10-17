@@ -1,6 +1,6 @@
 import s from "./styles.module.scss";
-type StudySeriesItemGalleryProps = {
-    galleryList: {
+type FrameSelectorProps = {
+    frameList: {
         id: string;
         img: string;
         alt: string;
@@ -8,14 +8,14 @@ type StudySeriesItemGalleryProps = {
     handleClick: (id: string) => void;
 };
 
-const StudySeriesItemGallery = (props: StudySeriesItemGalleryProps) => {
+const FrameSelector = (props: FrameSelectorProps) => {
     const slideWidth: number = 80;
     return (
         <section>
             <div className="container">
-                <div className={s.slider} style={{ maxWidth: `calc(${props.galleryList.length}*${slideWidth}px)` }}>
+                <div className={s.slider} style={{ maxWidth: `calc(${props.frameList.length}*${slideWidth}px)` }}>
                     <ul className={s.slider_wrapper}>
-                        {props.galleryList.map((slide) => (
+                        {props.frameList.map((slide) => (
                             <li
                                 key={slide.id}
                                 className={s.slide}
@@ -35,4 +35,4 @@ const StudySeriesItemGallery = (props: StudySeriesItemGalleryProps) => {
     );
 };
 
-export default StudySeriesItemGallery;
+export default FrameSelector;
