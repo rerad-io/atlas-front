@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import s from "./s.module.css";
-import Button from "../../components/UI/Button";
+import Button from "../../../components/UI/Button";
+import StudySeriesList from "../../components/StudySeriesList";
 
 const StudyEditPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -62,7 +63,8 @@ const StudyEditPage = () => {
     // };
 
     return (
-        <div className={s.wrap}>
+        <div className={s.page}>
+            <h1>Создание/Редактирование Исследования</h1>
             <form onSubmit={onSubmitHandler} className={s.form}>
                 <label htmlFor="studyName">
                     Study Name:
@@ -89,6 +91,8 @@ const StudyEditPage = () => {
                 ) : null}
                 <Button>Save</Button>
             </form>
+
+            {typeof id !== "undefined" ? <StudySeriesList /> : null}
         </div>
     );
 };
