@@ -1,7 +1,9 @@
-.wrap {
-    max-width: 500px;
-    margin: 20px;
-    width: fit-content;
+.page {
+    padding: 50px 40px;
+}
+
+.page h1 {
+    margin-bottom: 30px;
 }
 
 .form {

@@ -8,6 +8,7 @@ import AnatomicalStructureSubjectEditPage from "./admin/pages/AnatomicalStructur
 import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPage";
 import StudyListPage from "./admin/pages/StudyListPage";
 import StudyEditPage from "./admin/pages/StudyEditPage";
+import StudySeriesEditPage from "./admin/pages/StudySeriesEditPage";
 
 export default function App() {
     const routes = [
@@ -54,6 +55,14 @@ export default function App() {
         {
             path: "/admin/Study/:id",
             Component: StudyEditPage,
+        },
+        {
+            path: "/admin/StudySeries/create",
+            Component: StudySeriesEditPage,
+        },
+        {
+            path: "/admin/StudySeries/:id",
+            Component: StudySeriesEditPage,
         },
     ];
     const router = createBrowserRouter(routes, {

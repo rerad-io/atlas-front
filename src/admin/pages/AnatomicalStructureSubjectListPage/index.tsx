@@ -1,10 +1,6 @@
 import AnatomicalStructureSubjectTable from "../../components/AnatomicalStructureSubjectTable";
-import Button from "../../components/UI/Button";
-
-type obj = {
-    name: string;
-    color: string;
-};
+import Button from "../../../components/UI/Button";
+import s from "./s.module.css";
 
 const obj = {
     items: [
@@ -23,10 +19,11 @@ const obj = {
 
 const AnatomicalStructureSubjectListPage = () => {
     return (
-        <>
+        <div className={s.page}>
+            <h1>Темы Анатомической структуры</h1>
             <Button to="/admin/AnatomicalStructureSubject/create">Add new Anatomical Theme</Button>
             <AnatomicalStructureSubjectTable obj={obj.items} />
-        </>
+        </div>
     );
 };
 

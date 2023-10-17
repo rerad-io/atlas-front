@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import s from "./s.module.scss";
-import Button from "../../components/UI/Button";
+import Button from "../../../components/UI/Button";
 import AnatomicalStructureList from "../../components/AnatomicalStructureList";
 import { anatomicalStructureList } from "../../../data/data";
 
