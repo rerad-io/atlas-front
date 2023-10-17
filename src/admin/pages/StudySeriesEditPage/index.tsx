@@ -109,40 +109,45 @@ const StudySeriesEditPage = () => {
             </form>
 
             {/*Для страницы Серии ==============================*/}
-            <StudySeriesItemGallery galleryList={galleryList} handleClick={handleClick} />
-            <section
-                className={s.frame_info}
-                style={{
-                    padding: "20px 0",
-                }}
-            >
-                <div className="container">
-                    <div
-                        className={s.frame_wrapper}
+            {Id ? (
+                <>
+                    <StudySeriesItemGallery galleryList={galleryList} handleClick={handleClick} />
+                    <section
+                        className={s.frame_info}
                         style={{
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "20px",
+                            padding: "20px 0",
                         }}
                     >
-                        <StudySeriesItemCurrentFrame currentFrame={currentFrame} />
-                        <div
-                            style={{
-                                overflow: "hidden",
-                            }}
-                        >
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed adipisci voluptatem corporis qui voluptate
-                            veritatis commodi iste est quis vero! Dolorem asperiores eos reprehenderit quisquam nam earum obcaecati
-                            repellendus commodi magnam, odio distinctio minima exercitationem ea doloremque labore voluptatibus. Error,
-                            nulla expedita omnis maiores veniam temporibus minima fuga tempora neque magnam iure illum, earum vel saepe,
-                            animi laudantium! Voluptatem, aut suscipit. Fugiat est, harum iste ipsam explicabo ullam? Dolor consequuntur,
-                            perferendis facilis veniam commodi cupiditate voluptatum rem ratione esse magni vel iste. Tempora sint culpa,
-                            quasi asperiores sit atque est magni explicabo et quam in ducimus commodi harum placeat veritatis.
+                        <div className="container">
+                            <div
+                                className={s.frame_wrapper}
+                                style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: "20px",
+                                }}
+                            >
+                                <StudySeriesItemCurrentFrame currentFrame={currentFrame} />
+                                <div
+                                    style={{
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed adipisci voluptatem corporis qui voluptate
+                                    veritatis commodi iste est quis vero! Dolorem asperiores eos reprehenderit quisquam nam earum obcaecati
+                                    repellendus commodi magnam, odio distinctio minima exercitationem ea doloremque labore voluptatibus.
+                                    Error, nulla expedita omnis maiores veniam temporibus minima fuga tempora neque magnam iure illum, earum
+                                    vel saepe, animi laudantium! Voluptatem, aut suscipit. Fugiat est, harum iste ipsam explicabo ullam?
+                                    Dolor consequuntur, perferendis facilis veniam commodi cupiditate voluptatum rem ratione esse magni vel
+                                    iste. Tempora sint culpa, quasi asperiores sit atque est magni explicabo et quam in ducimus commodi
+                                    harum placeat veritatis.
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </section>
+                    </section>
+                </>
+            ) : null}
             {/*=============================*/}
         </div>
     );
