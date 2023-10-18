@@ -1,9 +1,13 @@
 import { useParams } from "react-router-dom";
 import s from "./s.module.css";
+import { useState } from "react";
 import Button from "../../../components/UI/Button";
+import { galleryList } from "../../../data/data";
+import FrameSelector from "../../components/FrameSelector";
+import RenderComponent from "../../components/RenderComponent";
 
 const StudySeriesEditPage = () => {
-    const { Id } = useParams<{ Id: string }>();
+    const { id } = useParams<{ id: string }>();
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -30,8 +34,6 @@ const StudySeriesEditPage = () => {
             // SAVE_IMAGE_FUNCTION(imgData);
         }
 
-        console.log(obj);
-
         // при возврате учти createAnother
     };
 
@@ -53,33 +55,95 @@ const StudySeriesEditPage = () => {
     // };
 
     // Id	Study	Number	Name	PreviewFrame	InstanceCount	SagitalFrame	CoronalFrame
+
+    const frameList: {
+        id: string;
+        img: string;
+        alt: string;
+    }[] = galleryList;
+    const [currentFrame, setCurrentFrame] = useState(frameList[0]);
+
+    const handleClick = (id: string) => {
+        const newFrame: {
+            id: string;
+            img: string;
+            alt: string;
+        } = frameList.find((elem) => elem.id === id) as {
+            id: string;
+            img: string;
+            alt: string;
+        };
+        setCurrentFrame(newFrame);
+    };
+
     return (
         <div className={s.page}>
-            <h1>Редактирование Серии Исследования</h1>
-            <form onSubmit={onSubmitHandler} className={s.form}>
-                <label htmlFor="Study">
-                    Study:
-                    <input type="text" name="Name" id="Study" defaultValue={Id} />
-                </label>
-                <label htmlFor="studyNumber">
-                    Study Number:
-                    <input type={"number"} id="studyNumber" name="namber" />
-                </label>
-                <label htmlFor="PreviewFrame">
-                    Preview Frame:
-                    <input type="file" name="PreviewFrame" id="PreviewFrame" accept="image/*"></input>
-                </label>
-                <label htmlFor="SagitalFrame">
-                    Sagital Frame:
-                    <input type="file" name="SagitalFrame" id="SagitalFrame" accept="image/*"></input>
-                </label>
-                <label htmlFor="CoronalFrame">
-                    Coronal Frame:
-                    <input type="file" name="CoronalFrame" id="CoronalFrame" accept="image/*"></input>
-                </label>
+            <div className="container">
+                <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
+                <form onSubmit={onSubmitHandler} className={s.form}>
+                    <label htmlFor="Study">
+                        Study:
+                        <input type="text" name="Name" id="Study" defaultValue={id} />
+                    </label>
+                    <label htmlFor="studyNumber">
+                        Study Number:
+                        <input type={"number"} id="studyNumber" name="namber" />
+                    </label>
+                    <label htmlFor="PreviewFrame">
+                        Preview Frame:
+                        <input type="file" name="PreviewFrame" id="PreviewFrame" accept="image/*"></input>
+                    </label>
+                    <label htmlFor="SagitalFrame">
+                        Sagital Frame:
+                        <input type="file" name="SagitalFrame" id="SagitalFrame" accept="image/*"></input>
+                    </label>
+                    <label htmlFor="CoronalFrame">
+                        Coronal Frame:
+                        <input type="file" name="CoronalFrame" id="CoronalFrame" accept="image/*"></input>
+                    </label>
 
-                <Button>Save</Button>
-            </form>
+                    <Button>Save</Button>
+                </form>
+            </div>
+            {id ? (
+                <>
+                    <FrameSelector frameList={frameList} handleClick={handleClick} />
+                    <section
+                        className={s.frame_info}
+                        style={{
+                            padding: "20px 0",
+                        }}
+                    >
+                        <div className="container">
+                            <div
+                                className={s.frame_wrapper}
+                                style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    gap: "20px",
+                                }}
+                            >
+                                <RenderComponent currentFrame={currentFrame} />
+                                <div
+                                    style={{
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed adipisci voluptatem corporis qui voluptate
+                                    veritatis commodi iste est quis vero! Dolorem asperiores eos reprehenderit quisquam nam earum obcaecati
+                                    repellendus commodi magnam, odio distinctio minima exercitationem ea doloremque labore voluptatibus.
+                                    Error, nulla expedita omnis maiores veniam temporibus minima fuga tempora neque magnam iure illum, earum
+                                    vel saepe, animi laudantium! Voluptatem, aut suscipit. Fugiat est, harum iste ipsam explicabo ullam?
+                                    Dolor consequuntur, perferendis facilis veniam commodi cupiditate voluptatum rem ratione esse magni vel
+                                    iste. Tempora sint culpa, quasi asperiores sit atque est magni explicabo et quam in ducimus commodi
+                                    harum placeat veritatis.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            ) : null}
         </div>
     );
 };
