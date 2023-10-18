@@ -34,8 +34,6 @@ const StudySeriesEditPage = () => {
             // SAVE_IMAGE_FUNCTION(imgData);
         }
 
-        //console.log(obj);
-
         // при возврате учти createAnother
     };
 
