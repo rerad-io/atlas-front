@@ -13,18 +13,18 @@ type obj = {
 const obj = {
     items: [
         {
-            Id: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
-            ExternalId: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8string",
-            Name: "Study - name 1",
-            Description: "Study description 1",
-            PreviewFrame: "someImg.jpg",
+            id: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8",
+            externalId: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d8string",
+            name: "Study - name 1",
+            description: "Study description 1",
+            previewFrame: "someImg.jpg",
         },
         {
-            Id: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
-            ExternalId: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
-            Name: "Study - name 2",
-            Description: "Study description 2",
-            PreviewFrame: "someImg2.jpg",
+            id: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
+            externalId: "8ebafa2a-7448-47ba-80fa-5e9ee88f73d5",
+            name: "Study - name 2",
+            description: "Study description 2",
+            previewFrame: "someImg2.jpg",
         },
     ],
 };

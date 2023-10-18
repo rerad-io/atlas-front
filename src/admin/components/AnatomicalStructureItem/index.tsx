@@ -13,10 +13,18 @@ const AnatomicalStructureItem = (props: AnatomicalStructureItemProps) => {
     return (
         <tr>
             <td className={s.table_cage}>
-                <Link to={`/admin/AnatomicalStructure/${props.id}`}>{props.name}</Link>
+                <Link to={`/admin/AnatomicalStructure/${props.id}`} className={s.link}>
+                    {props.name}
+                </Link>
             </td>
-            <td className={s.table_cage} style={{ color: props.color }}>
-                <Link to={`/admin/AnatomicalStructureSubject/${props.anatomicalStructureSubjectId}`}>{props.subject}</Link>
+            <td className={s.table_cage}>
+                <Link
+                    to={`/admin/AnatomicalStructureSubject/${props.anatomicalStructureSubjectId}`}
+                    className={s.link}
+                    style={{ color: props.color }}
+                >
+                    {props.subject}
+                </Link>
             </td>
             <td className={s.table_cage}>
                 <button className={s.btn_delete}>X</button>
