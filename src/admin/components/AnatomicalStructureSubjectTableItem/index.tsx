@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Button from "../../../components/UI/Button";
 import s from "./s.module.css";
 
-const AnatomicalStructureSubjectTableItem = ({ id, name, color }) => {
+const AnatomicalStructureSubjectTableItem = ({ id, name, color, removeItem }) => {
     return (
         <tr style={{ backgroundColor: `#${color}` }}>
             <td>
@@ -12,7 +12,9 @@ const AnatomicalStructureSubjectTableItem = ({ id, name, color }) => {
             </td>
             <td>{color}</td>
             <td>
-                <Button className={s.btnDelete}>X</Button>
+                <Button className={s.btnDelete} onClick={() => removeItem(id)}>
+                    X
+                </Button>
             </td>
         </tr>
     );

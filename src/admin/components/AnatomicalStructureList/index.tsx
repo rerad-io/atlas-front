@@ -1,17 +1,69 @@
+import { useEffect, useState } from "react";
 import AnatomicalStructureItem from "../AnatomicalStructureItem";
 import s from "./styles.module.scss";
+import { anatomicalStructure } from "../../../data/data";
+
+//type AnatomicalStructureListProps = {
+//	anatomicalStructureList: [
+//		{
+//        id: string;
+//        name: string;
+//        anatomicalStructureSubject: {
+//					id: string,
+//					name: string,
+//					color: string,
+//				}
+//    }
+//	],
+//	removeItem?: ()=> void,
+//};
 
 type AnatomicalStructureListProps = {
-    structureList: {
-        id: string;
-        name: string;
-        subject: string;
-        anatomicalStructureSubjectId: string;
-        color: string;
-    }[];
+	subjectId?: string
+}
+
+//const AnatomicalStructureList = ({anatomicalStructureList, removeItem}) => {
+const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
+
+	const [anatomicalStructureList, setAnatomicalStructureList] = useState<any>([]);
+	useEffect(() => {
+		getList();
+}, []);
+
+const getList = () => {
+	//раскоментировать после добавления базы
+	if(props.subjectId){
+		const temporaryAnatomicalStructureList = anatomicalStructure.items.filter((elem) => elem.anatomicalStructureSubject.id === props.subjectId); // удалить
+		setAnatomicalStructureList(temporaryAnatomicalStructureList); // удалить
+	}else{
+		setAnatomicalStructureList(anatomicalStructure.items); // удалить после добавления базы
+		
+		}
+		//	try {
+		//		axios.get(`${baseUrl}AnatomicalStructure`)
+		//		.then(res=> {
+		//			setStructureList(res.data);
+		//		})
+		//	} catch (error) {
+		//		console.log(error);
+		//}
 };
 
-const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
+const removeItem = (itemId: string) => {
+	//заменить после добавления базы
+	setAnatomicalStructureList(anatomicalStructureList.filter((item) => item.id !== itemId));
+	//	try {
+	//		axios.delete(`${baseUrl}AnatomicalStructure/${itemId}`)
+	//		.then(res=> {
+		//if(res.data === '204'){
+			//getList();
+		//}
+	//		})
+	//	} catch (error) { 
+	//		console.log(error);
+	//}
+};
+
     return (
         <section className={s.section}>
             <div className="container">
@@ -25,8 +77,8 @@ const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {props.structureList.map((el) => (
-                                <AnatomicalStructureItem key={el.id} {...el} />
+                            {anatomicalStructureList?.map((el) => (
+                                <AnatomicalStructureItem key={el.id} {...el} removeItem={removeItem}/>
                             ))}
                         </tbody>
                     </table>

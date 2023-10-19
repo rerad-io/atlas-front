@@ -1,11 +1,17 @@
-import { useParams } from "react-router-dom";
-import s from "./styles.module.scss";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { useRef, useState } from "react";
-import Button from "../../../components/UI/Button";
 import toast, { Toaster } from "react-hot-toast";
+import Button from "../../../components/UI/Button";
+import s from "./styles.module.scss";
+
+
+const baseUrl = "https://api/";
+
 
 const AnatomicalStructureEditPage = () => {
     const { id } = useParams<{ id: string }>();
+		const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
     const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -14,34 +20,56 @@ const AnatomicalStructureEditPage = () => {
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const obj: Record<string, string> = {};
+        const newStructure: Record<string, string> = {};
 
         formData.forEach((value, key) => {
-            obj[key] = value as string;
+            newStructure[key] = value as string;
         });
 
-        console.log(obj);
+        //console.log(newStructure);
 
         // Если id не undefined, то диспатчим на функцию редактирования, если undefined, то диспатчим на создание нового item
+				if(newStructure.structure && newStructure.subject){
         if (id) {
-            // Редактирование существующего
+						updateStructure(newStructure);
         } else {
-            // Создание нового
-        }
-
-        // при успешном сохранении вызвать сообщение
-        const isResponseOk: boolean = true;
-        if (isResponseOk) {
-            notify("структура создана усешно");
-        } else {
-            notify("ошибка сохранения");
+					const newStructureId = createStructure(newStructure);
+					if(!createAnother){
+						navigate(`/admin/AnatomicalStructure/${newStructureId}`);
+						//navigate(`/admin/AnatomicalStructure/3ebafa2a-7448-47ba-80fa-5e9ee88f73d1`);
+					}
         }
         if (formRef.current) {
             formRef.current.reset();
         }
+			}
+    }
 
-        //при возрате учесть createAnother
-    };
+		const updateStructure = (updatedData: unknown) =>{
+			try {
+				//axios.put(`${baseUrl}AnatomicalStructure${id}`, updatedData)
+				//.then(res=> {
+					//console.log(res.data);	
+					notify("изменение успешно");	
+				//});
+			} catch (error) {
+				//console.log(error);
+				notify("ошибка сохранения");
+			}
+		}
+
+		const createStructure=(newStructure: unknown) =>{
+			try {
+				axios.post(`${baseUrl}AnatomicalStructure`, newStructure)
+				.then(res=> {
+					notify("структура создана усешно");	
+					return res.data.id
+				});
+			} catch (error) {
+				console.log(error);
+				notify("ошибка сохранения");
+			}
+		}
 
     return (
         <div className={s.page}>

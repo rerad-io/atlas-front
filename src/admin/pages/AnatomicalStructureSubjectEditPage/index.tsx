@@ -1,49 +1,77 @@
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import s from "./s.module.scss";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 import Button from "../../../components/UI/Button";
 import AnatomicalStructureList from "../../components/AnatomicalStructureList";
-import { anatomicalStructureList } from "../../../data/data";
+import s from "./s.module.scss";
+
+const baseUrl = "https://api/";
 
 const AnatomicalStructureSubjectEditPage = () => {
-    const { id } = useParams<{ id: string }>(); // прорисать правильный роут (Done)
-    const [createAnother, setCreateAnother] = useState(false);
-
-    // temporary!!! get data from temporary DB
-    const structureList = useRef(anatomicalStructureList.filter((elem) => elem.anatomicalStructureSubjectId === id));
-
-    // if (id) {
-    //     console.log("EDIT PAGE");
-    // } else {
-    //     console.log("CREATE PAGE");
-    // }
-
+	const { id } = useParams<string>();
+	const navigate = useNavigate();
+	const [createAnother, setCreateAnother] = useState(false);
+	const formRef = useRef<HTMLFormElement | null>(null);
+	const notify = (message: string) => toast(message, { duration: 2000 });
+	
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const obj: Record<string, string> = {};
+        const newSubject: Record<string, string> = {};
 
         formData.forEach((value, key) => {
-            obj[key] = value as string;
+					newSubject[key] = value as string;
         });
 
-        console.log(obj);
-
-        // Если id не undefined, то диспатчим на функцию редактирования, если undefined, то диспатчим на создание нового item
-        if (id) {
-            // Редактирование существующего
-        } else {
-            // Создание нового
+				
+				if(newSubject.name){
+					if (id) {
+							updateSubject(newSubject);
+					} else {
+						const newSubjectId = createSubject(newSubject);
+						if(!createAnother){
+							navigate(`/admin/AnatomicalStructureSubject/${newSubjectId}`);
+							//navigate(`/admin/AnatomicalStructureSubject/3ebafa2a-7448-47ba-80fa-5e9ee88f7999`);
+						}
+					}
+					if (formRef.current) {
+            formRef.current.reset();
         }
+				}
+    }
+		
+		const updateSubject = (updatedData: unknown) =>{
+			try {
+				axios.put(`${baseUrl}AnatomicalStructureSubject${id}`, updatedData)
+				.then(res=> {
+					console.log(res.data);		
+					notify("изменение успешно");
+				});
+			} catch (error) {
+				console.log(error);
+				notify("ошибка сохранения");
+			}
+		}
 
-        //при возрате учесть createAnother
-    };
+		const createSubject =(newSubject: unknown) =>{
+			try {
+				axios.post(`${baseUrl}AnatomicalStructureSubject`, newSubject)
+				.then(res=> {
+					notify("тема создана усешно");	
+					return res.data.id
+				});
+			} catch (error) {
+				console.log(error);
+				notify("ошибка сохранения");
+			}
+		}
 
     return (
         <div className={s.page}>
             <div className="container">
                 <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
-                <form onSubmit={onSubmitHandler} className={s.form}>
+                <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
                         Theme Name:
                         <input type="text" name="name" id="themeName" />
@@ -69,7 +97,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     <Button>Save</Button>
                 </form>
             </div>
-            {id ? <AnatomicalStructureList structureList={structureList.current} /> : null}
+            {id ? <AnatomicalStructureList subjectId={id} /> : null}
         </div>
     );
 };

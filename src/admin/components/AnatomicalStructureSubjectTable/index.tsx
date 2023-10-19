@@ -1,6 +1,6 @@
 import AnatomicalStructureSubjectTableItem from "../AnatomicalStructureSubjectTableItem";
 
-const AnatomicalStructureSubjectTable = ({ obj }) => {
+const AnatomicalStructureSubjectTable = ({ subjectslist, removeItem }) => {
     return (
         <div>
             <table>
@@ -12,9 +12,14 @@ const AnatomicalStructureSubjectTable = ({ obj }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {obj.map((el) => (
-                        <AnatomicalStructureSubjectTableItem key={el.id} {...el} />
-                    ))}
+                    {/*{subjectslist.map((el) => ( // раскоментировать*/}
+                    {subjectslist.slice(0, 6).map(
+                        (
+                            el, // удалить
+                        ) => (
+                            <AnatomicalStructureSubjectTableItem key={el.id} {...el} removeItem={removeItem} />
+                        ),
+                    )}
                 </tbody>
             </table>
         </div>

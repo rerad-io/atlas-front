@@ -1,33 +1,36 @@
 import { Link } from "react-router-dom";
 import s from "./styles.module.scss";
 
-type AnatomicalStructureItemProps = {
-    id: string;
-    name: string;
-    subject: string;
-    anatomicalStructureSubjectId: string;
-    color: string;
-};
+//type AnatomicalStructureItemProps = {
+//	id: string;
+//	name: string;
+//	anatomicalStructureSubject: {
+//		id: string,
+//		name: string,
+//		color: string,
+//	}
+//};
 
-const AnatomicalStructureItem = (props: AnatomicalStructureItemProps) => {
+const AnatomicalStructureItem = ({id, name, anatomicalStructureSubject, removeItem}) => {
     return (
         <tr>
             <td className={s.table_cage}>
-                <Link to={`/admin/AnatomicalStructure/${props.id}`} className={s.link}>
-                    {props.name}
+                <Link to={`/admin/AnatomicalStructure/${id}`} className={s.link}>
+                    {name}
                 </Link>
             </td>
             <td className={s.table_cage}>
                 <Link
-                    to={`/admin/AnatomicalStructureSubject/${props.anatomicalStructureSubjectId}`}
+                    to={`/admin/AnatomicalStructureSubject/${anatomicalStructureSubject?.id}`}
                     className={s.link}
-                    style={{ color: props.color }}
+                    style={{ color: anatomicalStructureSubject?.color }}
                 >
-                    {props.subject}
+                    {anatomicalStructureSubject?.name}
                 </Link>
             </td>
             <td className={s.table_cage}>
-                <button className={s.btn_delete}>X</button>
+                <button className={s.btn_delete}
+								onClick={() => removeItem(id)}>X</button>
             </td>
         </tr>
     );
