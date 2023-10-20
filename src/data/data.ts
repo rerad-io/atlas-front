@@ -5,12 +5,12 @@ export const anatomicalStructureSubjectsList = {
         {
             id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
             name: "thema 1 ",
-            color: "#00FF12",
+            color: "00FF12",
         },
         {
             id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
             name: "thema 2",
-            color: "#d92020",
+            color: "d92020",
         },
     ],
 };
@@ -23,7 +23,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
 							name: "thema 1 ",
-							color: "#00FF12",
+							color: "00FF12",
 						}
         },
         {
@@ -32,7 +32,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
 							name: "thema 1 ",
-							color: "#00FF12",
+							color: "00FF12",
 						}
         },
         {
@@ -41,7 +41,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
 							name: "thema 1 ",
-							color: "#00FF12",
+							color: "00FF12",
 						}
         },
         {
@@ -50,7 +50,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
 							name: "thema 2",
-							color: "#d92020",
+							color: "d92020",
 						}
         },
         {
@@ -59,7 +59,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
 							name: "thema 2",
-							color: "#d92020",
+							color: "d92020",
 						}
         },
         {
@@ -68,7 +68,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
 							name: "thema 2",
-							color: "#d92020",
+							color: "d92020",
 						}
         },
         {
@@ -77,7 +77,7 @@ export const anatomicalStructure = {
 						anatomicalStructureSubject: {
 							id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
 							name: "thema 2",
-							color: "#d92020",
+							color: "d92020",
 						}
         },
     ],
@@ -87,7 +87,7 @@ export const anatomicalStructureFullSubjectsList = [
     {
         id: "3ebafa2a-7448-47ba-80fa-5e9ee88f7999",
         name: "thema 1 ",
-        color: "#00FF12",
+        color: "00FF12",
         anatomicalStructures: [
             {
                 id: "3ebafa2a-7448-47ba-80fa-5e9ee88f73d1",
@@ -106,7 +106,7 @@ export const anatomicalStructureFullSubjectsList = [
     {
         id: "4ebafa2a-7448-47ba-80fa-5e9ee8f76667",
         name: "thema 2",
-        color: "#d92020",
+        color: "d92020",
         anatomicalStructures: [
             {
                 id: "4ebafa2a-7448-47ba-80fa-5e9ee88f73c1",

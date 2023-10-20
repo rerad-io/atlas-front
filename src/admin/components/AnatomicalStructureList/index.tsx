@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import AnatomicalStructureItem from "../AnatomicalStructureItem";
+import TableComponent from "../../../components/UI/TableComponent";
+// import AnatomicalStructureItem from "../AnatomicalStructureItem"; // если будет принят компонент TableComponent то этот можно удалить
 import s from "./styles.module.scss";
 import { anatomicalStructure } from "../../../data/data";
 
 type AnatomicalStructureListProps = {
 	subjectId?: string
 }
+const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"];
 
 const baseUrl = "https://api/";
 
@@ -56,7 +58,7 @@ const removeItem = (itemId: string) => {
         <section className={s.section}>
             <div className="container">
                 <div>
-                    <table>
+                    {/*<table>
                         <thead>
                             <tr>
                                 <th className={s.table_head}>Name</th>
@@ -69,7 +71,8 @@ const removeItem = (itemId: string) => {
                                 <AnatomicalStructureItem key={el.id} {...el} removeItem={removeItem}/>
                             ))}
                         </tbody>
-                    </table>
+                    </table>*/}
+										<TableComponent columns={columns} data={removeItem} actions={"/admin/AnatomicalStructure/"} />
                 </div>
             </div>
         </section>

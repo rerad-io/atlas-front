@@ -2,8 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import Button from "../../../components/UI/Button";
 import s from "./styles.module.scss";
+import Button from "../../../components/UI/Button";
 
 
 const baseUrl = "https://api/";
