@@ -1,28 +1,15 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import AnatomicalStructureItem from "../AnatomicalStructureItem";
 import s from "./styles.module.scss";
 import { anatomicalStructure } from "../../../data/data";
-
-//type AnatomicalStructureListProps = {
-//	anatomicalStructureList: [
-//		{
-//        id: string;
-//        name: string;
-//        anatomicalStructureSubject: {
-//					id: string,
-//					name: string,
-//					color: string,
-//				}
-//    }
-//	],
-//	removeItem?: ()=> void,
-//};
 
 type AnatomicalStructureListProps = {
 	subjectId?: string
 }
 
-//const AnatomicalStructureList = ({anatomicalStructureList, removeItem}) => {
+const baseUrl = "https://api/";
+
 const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
 
 	const [anatomicalStructureList, setAnatomicalStructureList] = useState<any>([]);
@@ -32,17 +19,18 @@ const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
 
 const getList = () => {
 	//раскоментировать после добавления базы
+	let url: string = `${baseUrl}AnatomicalStructure`;
 	if(props.subjectId){
+		url = url+ "/props.subjectId";
 		const temporaryAnatomicalStructureList = anatomicalStructure.items.filter((elem) => elem.anatomicalStructureSubject.id === props.subjectId); // удалить
 		setAnatomicalStructureList(temporaryAnatomicalStructureList); // удалить
 	}else{
 		setAnatomicalStructureList(anatomicalStructure.items); // удалить после добавления базы
-		
 		}
 		//	try {
-		//		axios.get(`${baseUrl}AnatomicalStructure`)
+		//		axios.get(url)
 		//		.then(res=> {
-		//			setStructureList(res.data);
+		//			setAnatomicalStructureList(res.data);
 		//		})
 		//	} catch (error) {
 		//		console.log(error);
