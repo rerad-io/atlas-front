@@ -1,28 +1,12 @@
-import AnatomicalStructureSubjectTableItem from "../AnatomicalStructureSubjectTableItem";
+import TableComponent from "../../../components/UI/TableComponent";
 
 const AnatomicalStructureSubjectTable = ({ subjectslist, removeItem }) => {
+    const columns = ["id", "Name", "Color", "Actions"];
+
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Color</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {/*{subjectslist.map((el) => ( // раскоментировать*/}
-                    {subjectslist.slice(0, 6).map(
-                        (
-                            el, // удалить
-                        ) => (
-                            <AnatomicalStructureSubjectTableItem key={el.id} {...el} removeItem={removeItem} />
-                        ),
-                    )}
-                </tbody>
-            </table>
-        </div>
+        <>
+          <TableComponent columns={columns} data={obj} actions={"/admin/AnatomicalStructureSubject/"} />
+        </>
     );
 };
 

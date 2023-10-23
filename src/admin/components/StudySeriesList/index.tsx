@@ -1,6 +1,9 @@
 import Button from "../../../components/UI/Button";
-import StudySeriesListItem from "../StudySeriesListItem";
+import TableComponent from "../../../components/UI/TableComponent";
+// import StudySeriesListItem from "../StudySeriesListItem";
 import s from "./s.module.css";
+
+const columns = ["Id", "Study", "Number", "Name", "PreviewFrame", "InstanceCount", "SagitalFrame", "CoronalFrame", "Actions"];
 
 const obj = {
     items: [
@@ -44,7 +47,7 @@ const StudySeriesList = () => {
             <section className={s.section}>
                 <div className="container">
                     <div>
-                        <table>
+                        {/*  <table>
                             <thead>
                                 <tr>
                                     <th className={s.table_head}>Id</th>
@@ -63,7 +66,8 @@ const StudySeriesList = () => {
                                     <StudySeriesListItem key={el.id} {...el} />
                                 ))}
                             </tbody>
-                        </table>
+                        </table> */}
+                        <TableComponent columns={columns} data={obj.items} actions={"/admin/StudySeries/"} />
                     </div>
                 </div>
             </section>
