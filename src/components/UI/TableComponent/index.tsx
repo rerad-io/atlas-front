@@ -1,19 +1,7 @@
-// Инструкция:
-
-// До вызова компонента TableComponent создай массив с названиями колонок таблицы. Пример:
-// const columns = ["id", "Name", "Color", "Actions"];
-// Затем вызови компонент TableComponent следующим образом:
-// <TableComponent columns={columns} data={obj} actions={"/admin/AnatomicalStructureSubject/"} />
-// columns - это массив с названиями колонок таблицы.
-// data - это массив с объектами данных.
-// actions - укажите путь к странице редактирования элемента. В конце адреса будет подставлен id.
-// ACTIONS (Действия)                /          ID
-// /admin/AnatomicalStructureSubject/3213213
-
 import Button from "../Button";
-import s from "./s.module.css";
+import s from "./styles.module.scss";
 
-function TableComponent({ columns, data, actions = false }) {
+function TableComponent({ columns, data, actions = "", removeItemById }) {
     const tableHeader = () => {
         return columns.map((column, index) => <th key={index}>{column}</th>);
     };
@@ -29,24 +17,28 @@ function TableComponent({ columns, data, actions = false }) {
                     ))}
                     {actions ? (
                         <td className={s.actions}>
-                            {" "}
-                            <Button to={`${actions}/${item.id}`}>Edit</Button> <Button>Delete</Button>
+                            <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
+                            <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
                         </td>
-                    ) : (
-                        ""
-                    )}
+                    ) : null}
                 </tr>
             );
         });
     };
 
     return (
-        <table className={s.table}>
-            <thead>
-                <tr>{tableHeader()}</tr>
-            </thead>
-            <tbody>{tableData()}</tbody>
-        </table>
+        <div className={s.table_content}>
+            <div className="container">
+                <div className={s.table_wrapper}>
+                    <table className={s.table}>
+                        <thead>
+                            <tr className={s.table_header}>{tableHeader()}</tr>
+                        </thead>
+                        <tbody>{tableData()}</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     );
 }
 

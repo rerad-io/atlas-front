@@ -6,7 +6,7 @@ const StudyListTable = ({ obj }) => {
     const columns = ["Id", "Name", "ExternalId", "Description", "PreviewFrame", "Actions"];
     return (
         <div>
-            {/* <table>
+            {/*<table>
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -20,7 +20,7 @@ const StudyListTable = ({ obj }) => {
                         <StudyListTableItem key={el.id} {...el} />
                     ))}
                 </tbody>
-            </table> */}
+            </table>*/}
             <TableComponent columns={columns} data={obj} actions={"/admin/Study/"} />
         </div>
     );

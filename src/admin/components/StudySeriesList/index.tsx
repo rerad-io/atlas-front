@@ -47,7 +47,7 @@ const StudySeriesList = () => {
             <section className={s.section}>
                 <div className="container">
                     <div>
-                        {/*  <table>
+                        {/*<table>
                             <thead>
                                 <tr>
                                     <th className={s.table_head}>Id</th>
@@ -66,7 +66,7 @@ const StudySeriesList = () => {
                                     <StudySeriesListItem key={el.id} {...el} />
                                 ))}
                             </tbody>
-                        </table> */}
+                        </table>*/}
                         <TableComponent columns={columns} data={obj.items} actions={"/admin/StudySeries/"} />
                     </div>
                 </div>
