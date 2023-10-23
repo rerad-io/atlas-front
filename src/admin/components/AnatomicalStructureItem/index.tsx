@@ -11,7 +11,7 @@ import s from "./styles.module.scss";
 //	}
 //};
 
-const AnatomicalStructureItem = ({id, name, anatomicalStructureSubject, removeItem}) => {
+const AnatomicalStructureItem = ({ id, name, anatomicalStructureSubject, removeItem }) => {
     return (
         <tr>
             <td className={s.table_cage}>
@@ -29,8 +29,9 @@ const AnatomicalStructureItem = ({id, name, anatomicalStructureSubject, removeIt
                 </Link>
             </td>
             <td className={s.table_cage}>
-                <button className={s.btn_delete}
-								onClick={() => removeItem(id)}>X</button>
+                <button className={s.btn_delete} onClick={() => removeItem(id)}>
+                    X
+                </button>
             </td>
         </tr>
     );

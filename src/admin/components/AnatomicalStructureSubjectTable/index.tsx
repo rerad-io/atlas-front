@@ -1,27 +1,26 @@
+import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
-// import AnatomicalStructureSubjectTableItem from "../AnatomicalStructureSubjectTableItem"; // если будет принят компонент TableComponent то этот можно удалить
+import { getAnatomicalStructureSubjectList } from "../../../axios/requestsAnatomicalStructureSubject";
 
-const AnatomicalStructureSubjectTable = ({ obj }) => {
-    const columns = ["id", "Name", "Color", "Actions"];
-    return (
-        <div>
-            {/* <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Color</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {obj.map((el) => (
-                        <AnatomicalStructureSubjectTableItem key={el.id} {...el} />
-                    ))}
-                </tbody>
-            </table> */}
-            <TableComponent columns={columns} data={obj} actions={"/admin/AnatomicalStructureSubject/"} />
-        </div>
-    );
+const AnatomicalStructureSubjectTable = () => {
+    const [subjectslist, setSubjectsList] = useState([]);
+    const [columns, setColumns] = useState<string[]>([]);
+
+    useEffect(() => {
+			const structureList = getAnatomicalStructureSubjectList();
+			console.log("🚀 ~ file: index.tsx:11 ~ useEffect ~ structureList:", structureList)
+			setSubjectsList(structureList);
+    }, []);
+
+    useEffect(() => {
+        if (subjectslist.length) {
+            const columnsTitles = Object.keys(subjectslist[0]);
+            columnsTitles.push("Actions");
+            setColumns(columnsTitles);
+        }
+    }, [subjectslist]);
+
+    return <TableComponent columns={columns} data={subjectslist} actions={"AnatomicalStructureSubject/"} />;
 };
 
 export default AnatomicalStructureSubjectTable;

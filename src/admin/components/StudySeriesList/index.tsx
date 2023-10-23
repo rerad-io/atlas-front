@@ -67,7 +67,7 @@ const StudySeriesList = () => {
                                 ))}
                             </tbody>
                         </table>*/}
-												<TableComponent columns={columns} data={obj.items} actions={"/admin/StudySeries/"} />
+                        <TableComponent columns={columns} data={obj.items} actions={"/admin/StudySeries/"} />
                     </div>
                 </div>
             </section>

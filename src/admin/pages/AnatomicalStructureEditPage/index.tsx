@@ -4,14 +4,13 @@ import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import s from "./styles.module.scss";
 import Button from "../../../components/UI/Button";
-
+import { updateItem } from "../../../axios/requestsAnatomicalStructure";
 
 const baseUrl = "https://api/";
 
-
 const AnatomicalStructureEditPage = () => {
     const { id } = useParams<{ id: string }>();
-		const navigate = useNavigate();
+    const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
     const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -29,47 +28,34 @@ const AnatomicalStructureEditPage = () => {
         //console.log(newStructure);
 
         // Если id не undefined, то диспатчим на функцию редактирования, если undefined, то диспатчим на создание нового item
-				if(newStructure.structure && newStructure.subject){
-        if (id) {
-						updateStructure(newStructure);
-        } else {
-					const newStructureId = createStructure(newStructure);
-					if(!createAnother){
-						navigate(`/admin/AnatomicalStructure/${newStructureId}`);
-						//navigate(`/admin/AnatomicalStructure/3ebafa2a-7448-47ba-80fa-5e9ee88f73d1`);
-					}
+        if (newStructure.structure && newStructure.subject) {
+            //console.log("🚀 ~ file: index.tsx:36 ~ onSubmitHandler ~ newStructure:", newStructure)
+            if (id) {
+                updateItem(newStructure, id, "AnatomicalStructure/");
+            } else {
+                const newStructureId = createStructure(newStructure);
+                if (!createAnother) {
+                    navigate(`/admin/AnatomicalStructure/${newStructureId}`);
+                    //navigate(`/admin/AnatomicalStructure/3ebafa2a-7448-47ba-80fa-5e9ee88f73d1`);
+                }
+            }
+            if (formRef.current) {
+                formRef.current.reset();
+            }
         }
-        if (formRef.current) {
-            formRef.current.reset();
+    };
+
+    const createStructure = (newStructure: unknown) => {
+        try {
+            axios.post(`${baseUrl}AnatomicalStructure`, newStructure).then((res) => {
+                notify("структура создана усешно");
+                return res.data.id;
+            });
+        } catch (error) {
+            console.log(error);
+            notify("ошибка сохранения");
         }
-			}
-    }
-
-		const updateStructure = (updatedData: unknown) =>{
-			try {
-				//axios.put(`${baseUrl}AnatomicalStructure${id}`, updatedData)
-				//.then(res=> {
-					//console.log(res.data);	
-					notify("изменение успешно");	
-				//});
-			} catch (error) {
-				//console.log(error);
-				notify("ошибка сохранения");
-			}
-		}
-
-		const createStructure=(newStructure: unknown) =>{
-			try {
-				axios.post(`${baseUrl}AnatomicalStructure`, newStructure)
-				.then(res=> {
-					notify("структура создана усешно");	
-					return res.data.id
-				});
-			} catch (error) {
-				console.log(error);
-				notify("ошибка сохранения");
-			}
-		}
+    };
 
     return (
         <div className={s.page}>

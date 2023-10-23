@@ -1,80 +1,57 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import TableComponent from "../../../components/UI/TableComponent";
-// import AnatomicalStructureItem from "../AnatomicalStructureItem"; // если будет принят компонент TableComponent то этот можно удалить
+import { getItem, getList, removeItem } from "../../../axios/requestsAnatomicalStructure";
 import s from "./styles.module.scss";
 import { anatomicalStructure } from "../../../data/data";
 
 type AnatomicalStructureListProps = {
-	subjectId?: string
-}
-const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"];
-
-const baseUrl = "https://api/";
+    subjectId?: string;
+};
 
 const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
+    //console.log("🚀 ~ file: index.tsx:12 ~ AnatomicalStructureList ~ props:", props.subjectId)
 
-	const [anatomicalStructureList, setAnatomicalStructureList] = useState<any>([]);
-	useEffect(() => {
-		getList();
-}, []);
+    const [anatomicalStructureList, setAnatomicalStructureList] = useState<any>([]);
+    //console.log("🚀 ~ file: index.tsx:13 ~ AnatomicalStructureList ~ anatomicalStructureList:", anatomicalStructureList)
+    const [columns, setColumns] = useState<any>([]);
+    //console.log("🚀 ~ file: index.tsx:15 ~ AnatomicalStructureList ~ columns:", columns)
 
-const getList = () => {
-	//раскоментировать после добавления базы
-	let url: string = `${baseUrl}AnatomicalStructure`;
-	if(props.subjectId){
-		url = url+ "/props.subjectId";
-		const temporaryAnatomicalStructureList = anatomicalStructure.items.filter((elem) => elem.anatomicalStructureSubject.id === props.subjectId); // удалить
-		setAnatomicalStructureList(temporaryAnatomicalStructureList); // удалить
-	}else{
-		setAnatomicalStructureList(anatomicalStructure.items); // удалить после добавления базы
-		}
-		//	try {
-		//		axios.get(url)
-		//		.then(res=> {
-		//			setAnatomicalStructureList(res.data);
-		//		})
-		//	} catch (error) {
-		//		console.log(error);
-		//}
-};
+    useEffect(() => {
+        if (props.subjectId) {
+            //console.log("🚀 ~ file: index.tsx:20 ~ useEffect ~ props.subjectId:", props.subjectId)
 
-const removeItem = (itemId: string) => {
-	//заменить после добавления базы
-	setAnatomicalStructureList(anatomicalStructureList.filter((item) => item.id !== itemId));
-	//	try {
-	//		axios.delete(`${baseUrl}AnatomicalStructure/${itemId}`)
-	//		.then(res=> {
-		//if(res.data === '204'){
-			//getList();
-		//}
-	//		})
-	//	} catch (error) { 
-	//		console.log(error);
-	//}
-};
+            getItem(props.subjectId, "AnatomicalStructure/", setAnatomicalStructureList);
+        } else {
+            //setAnatomicalStructureList(anatomicalStructure.items)
+            getList("AnatomicalStructure/", setAnatomicalStructureList);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (anatomicalStructureList.length) {
+            //console.log("🚀 ~ file: index.tsx:23 ~ useEffect ~ anatomicalStructureList:", anatomicalStructureList)
+            const columnsTitles = Object.keys(anatomicalStructureList[0]);
+            //console.log("🚀 ~ file: index.tsx:24 ~ useEffect ~ s:", s)
+            columnsTitles.push("Actions");
+            //console.log("🚀 ~ file: index.tsx:25 ~ useEffect ~ columnsTitles:", columnsTitles)
+            setColumns(columnsTitles);
+        }
+    }, [anatomicalStructureList]);
+
+    const removeItemById = (itemId: string) => {
+        //заменить после добавления базы
+        setAnatomicalStructureList(anatomicalStructureList.filter((item) => item.id !== itemId));
+        //removeItem(itemId, actions);
+    };
 
     return (
         <section className={s.section}>
-            <div className="container">
-                <div>
-                    {/*<table>
-                        <thead>
-                            <tr>
-                                <th className={s.table_head}>Name</th>
-                                <th className={s.table_head}>Thema</th>
-                                <th className={s.table_head}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {anatomicalStructureList?.map((el) => (
-                                <AnatomicalStructureItem key={el.id} {...el} removeItem={removeItem}/>
-                            ))}
-                        </tbody>
-                    </table>*/}
-										<TableComponent columns={columns} data={removeItem} actions={"/admin/AnatomicalStructure/"} />
-                </div>
-            </div>
+            <TableComponent
+                columns={columns}
+                data={anatomicalStructureList}
+                actions={"AnatomicalStructure/"}
+                removeItemById={removeItemById}
+            />
         </section>
     );
 };
