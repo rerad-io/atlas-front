@@ -22,9 +22,9 @@ function TableComponent({ columns, data, actions = false }) {
         return data.map((item, index) => {
             return (
                 <tr key={index} style={item.color && { backgroundColor: `#${item.color}` }}>
-                    {Object.values(item).map((value, index) => (
+                    {Object.values(item).map((value, obj_index) => (
                         <>
-                            <td key={index}>{value}</td>
+                            <td key={obj_index}>{value}</td>
                         </>
                     ))}
                     {actions ? (

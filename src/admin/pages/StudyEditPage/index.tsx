@@ -1,18 +1,33 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import s from "./s.module.css";
 import Button from "../../../components/UI/Button";
 import StudySeriesList from "../../components/StudySeriesList";
+import { createStudy, getStudyId, updateStudy } from "../../../requests/StudyRequests.js";
+import toast from "react-hot-toast";
 
 const StudyEditPage = () => {
+    const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [createAnother, setCreateAnother] = useState(false);
 
-    // if (id) {
-    //     console.log("EDIT PAGE");
-    // } else {
-    //     console.log("CREATE PAGE");
-    // }
+    const [study, setStudy] = useState();
+    // console.log(study);
+
+    useEffect(() => {
+        if (id) {
+            const fetchingData = async () => {
+                try {
+                    const result = await getStudyId(id);
+                    setStudy(result);
+                } catch (error) {
+                    console.error("StudyEditPage - ", error);
+                }
+            };
+            fetchingData();
+        }
+    }, [id]);
+
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -23,26 +38,37 @@ const StudyEditPage = () => {
             obj[key] = value as string;
         });
 
-        const file = formData.get("PreviewFrame") as File;
-
-        if (file && file.type.startsWith("image/")) {
-            //промис чтения файла
-            obj["PreviewFrame"] = Date.now() + "_" + file.name;
-
-            // функция сохранения изображение на сервак - раскоментировать вместе с функцией readFile
-            // const imgData = await readFile(file);
-            // SAVE_IMAGE_FUNCTION(imgData);
-        }
-
-        console.log(obj);
-
         if (id) {
             // Редактирование существующего исследования
+            const fetchData = async () => {
+                try {
+                    const updatedObj = await updateStudy(obj, id);
+                    setStudy(updatedObj);
+                    toast.success("Study updated!");
+                } catch (error) {
+                    console.log("Error StudyEditPage, method PUT", error);
+                }
+            };
+            fetchData();
         } else {
             // Создание нового исследования
+            const fetchData = async () => {
+                try {
+                    // console.log(obj);
+                    await createStudy(obj);
+                    toast.success("Study created!");
+                    // при возврате учти createAnother
+                    if (!createAnother) {
+                        navigate(`/admin/Study`);
+                    }
+                } catch (error) {
+                    console.log("Error StudyEditPage, method POST", error);
+                }
+            };
+            fetchData();
         }
 
-        // при возврате учти createAnother
+        e.target.reset();
     };
 
     //  чтение файла - раскоментировать когда будем реализовывать сохранение файла
@@ -68,13 +94,17 @@ const StudyEditPage = () => {
             <form onSubmit={onSubmitHandler} className={s.form}>
                 <label htmlFor="studyName">
                     Study Name:
-                    <input type="text" name="Name" id="studyName" />
+                    <input required type="text" name="name" id="studyName" defaultValue={study?.name} />
                 </label>
                 <label htmlFor="studyDescription">
                     Study Description:
-                    <textarea id="studyDescription" name="Description" rows={4} cols={50}></textarea>
+                    <textarea id="studyDescription" name="description" rows={4} cols={50} defaultValue={study?.description}></textarea>
                 </label>
-                <input type="file" name="PreviewFrame" accept="image/*"></input>
+                {/* <input type="file" name="previewFrame" accept="image/*"></input> */}
+                <label htmlFor="previewFrame">
+                    Preview Frame:
+                    <input type="text" name="previewFrame" id="previewFrame" defaultValue={study?.previewFrame} />
+                </label>
                 {typeof id === "undefined" ? (
                     <label htmlFor="createAnother">
                         Create Another:
@@ -92,7 +122,7 @@ const StudyEditPage = () => {
                 <Button>Save</Button>
             </form>
 
-            {typeof id !== "undefined" ? <StudySeriesList /> : null}
+            {typeof id !== "undefined" ? <StudySeriesList seriesId={id} /> : null}
         </div>
     );
 };

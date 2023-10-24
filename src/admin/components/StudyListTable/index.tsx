@@ -1,27 +1,28 @@
 // import StudyListTableItem from "../StudyListTableItem"; // если будет принят компонент TableComponent то этот можно удалить
 
+import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
+import { getStudyList } from "../../../requests/StudyRequests.js";
 
-const StudyListTable = ({ obj }) => {
-    const columns = ["Id", "Name", "ExternalId", "Description", "PreviewFrame", "Actions"];
+const StudyListTable = () => {
+    const columns = ["Id", "ExternalId", "Name", "Description", "PreviewFrame", "Actions"];
+    const [studyList, setStudyList] = useState([]);
+
+    useEffect(() => {
+        const fetchingData = async () => {
+            try {
+                const result = await getStudyList();
+                setStudyList(result);
+            } catch (error) {
+                console.error("StudyListTable - ", error);
+            }
+        };
+        fetchingData();
+    }, []);
+
     return (
         <div>
-            {/* <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>ExternalId</th>
-                        <th>Description</th>
-                        <th>PreviewFrame</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {obj.map((el) => (
-                        <StudyListTableItem key={el.id} {...el} />
-                    ))}
-                </tbody>
-            </table> */}
-            <TableComponent columns={columns} data={obj} actions={"/admin/Study/"} />
+            <TableComponent columns={columns} data={studyList} actions={"/admin/Study/"} />
         </div>
     );
 };
