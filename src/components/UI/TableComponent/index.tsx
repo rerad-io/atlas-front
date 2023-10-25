@@ -2,31 +2,24 @@ import Button from "../Button";
 import s from "./styles.module.scss";
 
 function TableComponent({ columns, data, actions = "", removeItemById }) {
-    console.log("🚀 ~ file: index.tsx:5 ~ TableComponent ~ data:", data);
-    console.log("🚀 ~ file: index.tsx:5 ~ TableComponent ~ columns:", columns);
-
     const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
 
     const tableData = () => {
-        return data.map((item, index) => {
-            return (
-                <tr key={index} style={item.color && { backgroundColor: `#${item.color}` }}>
-                    {Object.values(item).map((value, index) => (
-                        <>
-                            <td key={index}>{value}</td>
-                        </>
-                    ))}
-                    {actions ? (
-                        <td className={s.actions}>
-                            <div className={s.action_wrapper}>
-                                <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
-                                <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
-                            </div>
-                        </td>
-                    ) : null}
-                </tr>
-            );
-        });
+        return data.map((item, index) => (
+            <tr key={index} style={item.color && { backgroundColor: `#${item.color}` }}>
+                {Object.values(item).map((value, objectIndex) => (
+                    <td key={objectIndex}>{value}</td>
+                ))}
+                {actions ? (
+                    <td className={s.actions}>
+                        <div className={s.action_wrapper}>
+                            <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
+                            <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
+                        </div>
+                    </td>
+                ) : null}
+            </tr>
+        ));
     };
 
     return (

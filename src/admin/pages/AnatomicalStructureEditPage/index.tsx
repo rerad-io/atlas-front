@@ -19,7 +19,8 @@ const AnatomicalStructureEditPage = () => {
     const [subjectsList, setSubjectsList] = useState([]);
     const [structure, setStructure] = useState({});
 
-    const notify = (message: string) => toast(message, { duration: 2000 });
+    const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
+    const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     useEffect(() => {
         const fetchStructureData = async () => {
@@ -62,7 +63,9 @@ const AnatomicalStructureEditPage = () => {
         if (id) {
             const updatedStructure = updateAnatomicalStructure(id, newStructure);
             if (updatedStructure?.id) {
-                notify("изменение успешно!");
+                notifySuccess("изменение успешно!");
+            } else {
+                notifyError("ошибка!");
             }
         } else {
             const fetchData = async () => {
@@ -102,10 +105,6 @@ const AnatomicalStructureEditPage = () => {
                                 </select>
                             )}
                         </label>
-                        {/*<label>
-                            Theme Color:
-                            <input type="color" name="color" />
-                        </label>*/}
                         <label>
                             Structure Name:
                             <input type="text" name="name" placeholder={structure.name} />

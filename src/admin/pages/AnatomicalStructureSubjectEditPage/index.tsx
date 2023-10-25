@@ -10,25 +10,28 @@ const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<string>();
     const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
+
+    // TODO: это состояние из запроса в useEffect будет использоваться позже
     //const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>({});
 
     const formRef = useRef<HTMLFormElement | null>(null);
-    const notify = (message: string) => toast(message, { duration: 2000 });
+    const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
+    const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
-    //useEffect(()=> {
-    //if(id){
-    //	const fetchData = async () => {
-    //		try {
-    //				const result = await getAnatomicalStructureSubjectById(id);
-    //				setSubject(result);
-    //		} catch (error) {
-    //				console.error("Error fetching AnatomicalStructureSubjectList:", error);
-    //		}
-    //};
+    //useEffect(() => {
+    //    if (id) {
+    //        const fetchData = async () => {
+    //            try {
+    //                const result = await getAnatomicalStructureSubjectById(id);
+    //                setSubject(result);
+    //            } catch (error) {
+    //                console.error("Error fetching AnatomicalStructureSubjectList:", error);
+    //            }
+    //        };
 
-    //fetchData();
-    //}
-    //},[])
+    //        fetchData();
+    //    }
+    //}, [id]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -46,7 +49,9 @@ const AnatomicalStructureSubjectEditPage = () => {
                     if (id) {
                         const updatedSubject = updateAnatomicalStructureSubject(id, newSubject);
                         if (updatedSubject?.id) {
-                            notify("изменение успешно!");
+                            notifySuccess("изменение успешно!");
+                        } else {
+                            notifyError("ошибка!");
                         }
                     } else {
                         const createdSubject = await createAnatomicalStructureSubject(newSubject);

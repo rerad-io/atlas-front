@@ -12,6 +12,7 @@ const AnatomicalStructureList = ({ subjectId }) => {
             try {
                 const result = await getAnatomicalStructureList();
                 if (subjectId) {
+                    // TODO: фильтрацию вынести на бекенд
                     const subjectIdList = result.filter((elem) => elem.anatomicalStructureSubject?.id === subjectId);
                     setAnatomicalStructureList(subjectIdList);
                 } else {
