@@ -7,3 +7,29 @@ export interface AuthData {
     refreshTokenExpiresIn: number;
     myProperty: unknown;
 }
+
+export type AnatomicalStructureSubject = {
+    id: string;
+    name: string;
+    color: string;
+};
+
+export type AnatomicalStructure = {
+    id: string;
+    name: string;
+    anatomicalStructureSubject: AnatomicalStructureSubject;
+};
+
+export type AnatomicalStructureModel = {
+    id: string;
+    name: string;
+    anatomicalStructureSubject: AnatomicalStructureSubject;
+    anatomicalStructureSubjectId: string;
+};
+
+export type AnatomicalStructureSubjectModel = {
+    id: string;
+    name: string;
+    color: string;
+    anatomicalStructures: AnatomicalStructure[];
+};

@@ -1,41 +1,52 @@
+import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
-// import AnatomicalStructureItem from "../AnatomicalStructureItem"; // если будет принят компонент TableComponent то этот можно удалить
-import s from "./styles.module.scss";
+import { deleteAnatomicalStructure, getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
+import { AnatomicalStructure } from "../../../_types";
 
-type AnatomicalStructureListProps = {
-    structureList: {
-        id: string;
-        name: string;
-        subject: string;
-        anatomicalStructureSubjectId: string;
-        color: string;
-    }[];
-};
-const columns = ["Id", "Name", "Subject", "Anatomical Structure Subject Id", "color", "Actions"];
+const AnatomicalStructureList = ({ subjectId }) => {
+    const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+    const [columns, setColumns] = useState<string[]>([]);
 
-const AnatomicalStructureList = (props: AnatomicalStructureListProps) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await getAnatomicalStructureList();
+                if (subjectId) {
+                    // TODO: фильтрацию вынести на бекенд
+                    const subjectIdList = result.filter((elem) => elem.anatomicalStructureSubject?.id === subjectId);
+                    setAnatomicalStructureList(subjectIdList);
+                } else {
+                    setAnatomicalStructureList(result);
+                }
+            } catch (error) {
+                console.error("Error fetching AnatomicalStructureList:", error);
+            }
+        };
+
+        fetchData();
+    }, [subjectId]);
+
+    useEffect(() => {
+        if (anatomicalStructureList.length) {
+            const columnsTitles = Object.keys(anatomicalStructureList[0]);
+            columnsTitles.push("Actions");
+            setColumns(columnsTitles);
+        }
+    }, [anatomicalStructureList]);
+
+    const removeItemById = async (itemId: string) => {
+        try {
+            const result = await deleteAnatomicalStructure(itemId);
+            if (result === 204) {
+                setAnatomicalStructureList(anatomicalStructureList.filter((item) => item.id !== itemId));
+            }
+        } catch (error) {
+            console.error("Error fetching AnatomicalStructureSubjectList:", error);
+        }
+    };
+
     return (
-        <section className={s.section}>
-            <div className="container">
-                <div>
-                    {/* <table>
-                        <thead>
-                            <tr>
-                                <th className={s.table_head}>Name</th>
-                                <th className={s.table_head}>Thema</th>
-                                <th className={s.table_head}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {props.structureList.map((el) => (
-                                <AnatomicalStructureItem key={el.id} {...el} />
-                            ))}
-                        </tbody>
-                    </table> */}
-                    <TableComponent columns={columns} data={props.structureList} actions={"/admin/AnatomicalStructure/"} />
-                </div>
-            </div>
-        </section>
+        <TableComponent columns={columns} data={anatomicalStructureList} actions={"AnatomicalStructure/"} removeItemById={removeItemById} />
     );
 };
 

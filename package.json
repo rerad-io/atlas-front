@@ -2,8 +2,8 @@
   "name": "atlas-front",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "scripts": {
+  "type": "module",  
+	"scripts": {
     "dev": "vite --port 5400",
     "dev:host": "vite --port 5400 --host",
     "build": "tsc && vite build",

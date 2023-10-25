@@ -1,15 +1,30 @@
+.table_content {
+    overflow-x: hidden;
+}
+
+.table_wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .table {
     width: 100%;
     border-collapse: collapse;
     border-radius: 5px;
-    margin: 10px 0;
+    margin: 20px 0;
 }
 
 .table th {
-    background-color: #cbcbcb;
-    padding: 5px;
+    padding: 5px 15px;
+    font-size: clamp(14px, 3vw, 18px);
+    text-transform: uppercase;
     text-align: center;
+    background-color: #cbcbcb;
     border: 1px solid #b6b6b6;
+}
+
+.table td {
+    height: 100%;
 }
 
 .table tr:nth-child(even) {
@@ -25,8 +40,9 @@
     border: 1px solid #ccc;
 }
 
-.table .actions{
+.action_wrapper {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
-    justify-content: flex-end;
 }
