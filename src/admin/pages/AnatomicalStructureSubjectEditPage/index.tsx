@@ -1,14 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
 import AnatomicalStructureList from "../../components/AnatomicalStructureList";
-import {
-    createAnatomicalStructureSubject,
-    getAnatomicalStructureSubjectById,
-    updateAnatomicalStructureSubject,
-} from "../../../requests/anatomicalStructureSubjectRequests";
-import { AnatomicalStructureSubjectModel } from "../../../_types";
+import { createAnatomicalStructureSubject, updateAnatomicalStructureSubject } from "../../../requests/anatomicalStructureSubjectRequests";
 import s from "./s.module.scss";
 
 const AnatomicalStructureSubjectEditPage = () => {

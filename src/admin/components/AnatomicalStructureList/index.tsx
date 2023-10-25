@@ -23,7 +23,7 @@ const AnatomicalStructureList = ({ subjectId }) => {
         };
 
         fetchData();
-    }, []);
+    }, [subjectId]);
 
     useEffect(() => {
         if (anatomicalStructureList.length) {

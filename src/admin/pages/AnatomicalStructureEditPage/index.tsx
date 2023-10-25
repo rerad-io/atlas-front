@@ -44,7 +44,7 @@ const AnatomicalStructureEditPage = () => {
         } else {
             fetchSubjectData();
         }
-    }, []);
+    }, [id]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
