@@ -2,9 +2,10 @@ import Button from "../Button";
 import s from "./styles.module.scss";
 
 function TableComponent({ columns, data, actions = "", removeItemById }) {
-    const tableHeader = () => {
-        return columns.map((column, index) => <th key={index}>{column}</th>);
-    };
+    console.log("🚀 ~ file: index.tsx:5 ~ TableComponent ~ data:", data);
+    console.log("🚀 ~ file: index.tsx:5 ~ TableComponent ~ columns:", columns);
+
+    const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
 
     const tableData = () => {
         return data.map((item, index) => {
@@ -17,8 +18,10 @@ function TableComponent({ columns, data, actions = "", removeItemById }) {
                     ))}
                     {actions ? (
                         <td className={s.actions}>
-                            <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
-                            <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
+                            <div className={s.action_wrapper}>
+                                <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
+                                <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
+                            </div>
                         </td>
                     ) : null}
                 </tr>

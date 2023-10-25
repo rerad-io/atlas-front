@@ -1,19 +1,39 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
 import AnatomicalStructureList from "../../components/AnatomicalStructureList";
+import {
+    createAnatomicalStructureSubject,
+    getAnatomicalStructureSubjectById,
+    updateAnatomicalStructureSubject,
+} from "../../../requests/anatomicalStructureSubjectRequests";
+import { AnatomicalStructureSubjectModel } from "../../../_types";
 import s from "./s.module.scss";
-
-const baseUrl = "https://api/";
 
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<string>();
     const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
+    //const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>({});
+
     const formRef = useRef<HTMLFormElement | null>(null);
     const notify = (message: string) => toast(message, { duration: 2000 });
+
+    //useEffect(()=> {
+    //if(id){
+    //	const fetchData = async () => {
+    //		try {
+    //				const result = await getAnatomicalStructureSubjectById(id);
+    //				setSubject(result);
+    //		} catch (error) {
+    //				console.error("Error fetching AnatomicalStructureSubjectList:", error);
+    //		}
+    //};
+
+    //fetchData();
+    //}
+    //},[])
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,44 +42,33 @@ const AnatomicalStructureSubjectEditPage = () => {
 
         formData.forEach((value, key) => {
             newSubject[key] = value as string;
+            newSubject.color = value.slice(1) as string;
         });
 
         if (newSubject.name) {
-            if (id) {
-                updateSubject(newSubject);
-            } else {
-                const newSubjectId = createSubject(newSubject);
-                if (!createAnother) {
-                    navigate(`/admin/AnatomicalStructureSubject/${newSubjectId}`);
+            const fetchData = async () => {
+                try {
+                    if (id) {
+                        const updatedSubject = updateAnatomicalStructureSubject(id, newSubject);
+                        if (updatedSubject?.id) {
+                            notify("изменение успешно!");
+                        }
+                    } else {
+                        const createdSubject = await createAnatomicalStructureSubject(newSubject);
+                        if (!createAnother) {
+                            navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching AnatomicalStructureSubjectList:", error);
                 }
-            }
-            if (formRef.current) {
-                formRef.current.reset();
-            }
-        }
-    };
+            };
 
-    const updateSubject = (updatedData: unknown) => {
-        try {
-            axios.put(`${baseUrl}AnatomicalStructureSubject${id}`, updatedData).then((res) => {
-                console.log(res.data);
-                notify("изменение успешно");
-            });
-        } catch (error) {
-            console.log(error);
-            notify("ошибка сохранения");
+            fetchData();
         }
-    };
 
-    const createSubject = (newSubject: unknown) => {
-        try {
-            axios.post(`${baseUrl}AnatomicalStructureSubject`, newSubject).then((res) => {
-                notify("тема создана усешно");
-                return res.data.id;
-            });
-        } catch (error) {
-            console.log(error);
-            notify("ошибка сохранения");
+        if (formRef.current) {
+            formRef.current.reset();
         }
     };
 
