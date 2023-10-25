@@ -18,7 +18,7 @@ const AnatomicalStructureSubjectEditPage = () => {
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
-		// TODO: этот useEffect будет использоваться позже
+    // TODO: этот useEffect будет использоваться позже
     //useEffect(() => {
     //    if (id) {
     //        const fetchData = async () => {
