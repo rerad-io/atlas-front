@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import s from "./s.module.css";
 import Button from "../../../components/UI/Button";
 import StudySeriesList from "../../components/StudySeriesList";
-import { createStudy, getStudyId, updateStudy } from "../../../requests/StudyRequests.js";
+import { createStudy, getStudyId, updateStudy } from "../../../requests/StudyRequests";
 import toast from "react-hot-toast";
 
 const StudyEditPage = () => {
@@ -16,15 +16,14 @@ const StudyEditPage = () => {
 
     useEffect(() => {
         if (id) {
-            const fetchingData = async () => {
+            (async () => {
                 try {
                     const result = await getStudyId(id);
                     setStudy(result);
                 } catch (error) {
                     console.error("StudyEditPage - ", error);
                 }
-            };
-            fetchingData();
+            })();
         }
     }, [id]);
 

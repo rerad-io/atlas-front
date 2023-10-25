@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "../../../components/UI/Button";
 import TableComponent from "../../../components/UI/TableComponent";
-import { getStudySeriesList } from "../../../requests/StudySeriesRequests.js";
+import { getStudySeriesList } from "../../../requests/StudySeriesRequests";
 import s from "./s.module.css";
 
 const StudySeriesList = ({ seriesId }) => {
@@ -10,7 +10,7 @@ const StudySeriesList = ({ seriesId }) => {
     const [studySeriesList, setStudySeriesList] = useState([]);
 
     useEffect(() => {
-        const fetchingData = async () => {
+        (async () => {
             try {
                 const result = await getStudySeriesList();
                 setStudySeriesList(result); // добавить метод фильтр и отфильтровать по study
@@ -18,11 +18,8 @@ const StudySeriesList = ({ seriesId }) => {
             } catch (error) {
                 console.error("StudySeriesListTable - ", error);
             }
-        };
-        fetchingData();
+        })();
     }, []);
-
-    // console.log("studySeriesList",studySeriesList);
 
     return (
         <div className={s.page}>

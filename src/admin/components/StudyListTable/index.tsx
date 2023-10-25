@@ -2,22 +2,21 @@
 
 import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
-import { getStudyList } from "../../../requests/StudyRequests.js";
+import { getStudyList } from "../../../requests/StudyRequests";
 
 const StudyListTable = () => {
     const columns = ["Id", "ExternalId", "Name", "Description", "PreviewFrame", "Actions"];
     const [studyList, setStudyList] = useState([]);
 
     useEffect(() => {
-        const fetchingData = async () => {
+        (async () => {
             try {
                 const result = await getStudyList();
                 setStudyList(result);
             } catch (error) {
                 console.error("StudyListTable - ", error);
             }
-        };
-        fetchingData();
+        })();
     }, []);
 
     return (

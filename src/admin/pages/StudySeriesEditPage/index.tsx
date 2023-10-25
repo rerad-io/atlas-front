@@ -5,7 +5,7 @@ import Button from "../../../components/UI/Button";
 import { galleryList } from "../../../data/data";
 import FrameSelector from "../../components/FrameSelector";
 import RenderComponent from "../../components/RenderComponent";
-import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests.js";
+import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import toast from "react-hot-toast";
 
 const StudySeriesEditPage = () => {
@@ -19,15 +19,14 @@ const StudySeriesEditPage = () => {
 
     useEffect(() => {
         if (id) {
-            const fetchingData = async () => {
+            (async () => {
                 try {
                     const result = await getStudySeriesId(id);
                     setStudySeries(result);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
-            };
-            fetchingData();
+            })();
         }
     }, [id]);
 
