@@ -9,14 +9,15 @@ const StudyListTable = () => {
     const [studyList, setStudyList] = useState([]);
 
     useEffect(() => {
-        (async () => {
+        const fetchDataAndSetStudyList = async () => {
             try {
                 const result = await getStudyList();
                 setStudyList(result);
             } catch (error) {
                 console.error("StudyListTable - ", error);
             }
-        })();
+        };
+        fetchDataAndSetStudyList();
     }, []);
 
     return (

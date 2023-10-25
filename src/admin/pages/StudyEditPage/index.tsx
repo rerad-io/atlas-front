@@ -15,14 +15,15 @@ const StudyEditPage = () => {
 
     useEffect(() => {
         if (id) {
-            (async () => {
+            const fetchDataAndSetStudyId = async () => {
                 try {
                     const result = await getStudyId(id);
                     setStudy(result);
                 } catch (error) {
                     console.error("StudyEditPage - ", error);
                 }
-            })();
+            };
+            fetchDataAndSetStudyId();
         }
     }, [id]);
 
@@ -37,7 +38,7 @@ const StudyEditPage = () => {
         });
 
         if (id) {
-            (async () => {
+            const fetchDataAndUpdateStudy = async () => {
                 try {
                     const updatedObj = await updateStudy(obj, id);
                     setStudy(updatedObj);
@@ -46,9 +47,10 @@ const StudyEditPage = () => {
                     toast.error("Study update - error!");
                     console.log("Error StudyEditPage, method PUT", error);
                 }
-            })();
+            };
+            fetchDataAndUpdateStudy();
         } else {
-            (async () => {
+            const fetchDataAndCreateStudy = async () => {
                 try {
                     await createStudy(obj);
                     if (!createAnother) {
@@ -58,7 +60,8 @@ const StudyEditPage = () => {
                     toast.error("Study create - Error");
                     console.log("Error StudyEditPage, method POST", error);
                 }
-            })();
+            };
+            fetchDataAndCreateStudy();
         }
         e.target.reset();
     };

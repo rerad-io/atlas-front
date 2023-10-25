@@ -10,7 +10,7 @@ const StudySeriesList = ({ seriesId }) => {
     const [studySeriesList, setStudySeriesList] = useState([]);
 
     useEffect(() => {
-        (async () => {
+        const fetchDataAndSetStudySeriesList = async () => {
             try {
                 const result = await getStudySeriesList();
                 setStudySeriesList(result);
@@ -19,7 +19,8 @@ const StudySeriesList = ({ seriesId }) => {
             } catch (error) {
                 console.error("StudySeriesListTable - ", error);
             }
-        })();
+        };
+        fetchDataAndSetStudySeriesList();
     }, []);
 
     return (
