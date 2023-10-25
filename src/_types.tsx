@@ -17,7 +17,7 @@ export type AnatomicalStructureSubject = {
 export type AnatomicalStructure = {
     id: string;
     name: string;
-    anatomicalStructureSubject: AnatomicalStructureSubject;
+    subject: AnatomicalStructureSubject;
 };
 
 export type AnatomicalStructureModel = {
