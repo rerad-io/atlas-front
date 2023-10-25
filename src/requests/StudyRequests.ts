@@ -13,7 +13,7 @@ export const getStudyList = async () => {
 };
 
 export const getStudyId = async (id) => {
-    const result = await axios.get(`${backendUrl}/api/Study/${id}`); 
+    const result = await axios.get(`${backendUrl}/api/Study/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -33,7 +33,7 @@ export const createStudy = async (body) => {
 };
 
 export const updateStudy = async (body, id) => {
-    const result = await axios.put(`${backendUrl}/api/Study/${id}`, body); 
+    const result = await axios.put(`${backendUrl}/api/Study/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -43,7 +43,7 @@ export const updateStudy = async (body, id) => {
 };
 
 export const deleteStudy = async (id) => {
-    const result = await axios.delete(`${backendUrl}/api/Study/${id}`); 
+    const result = await axios.delete(`${backendUrl}/api/Study/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }

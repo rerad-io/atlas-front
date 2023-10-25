@@ -13,7 +13,7 @@ export const getStudySeriesList = async () => {
 };
 
 export const getStudySeriesId = async (id) => {
-    const result = await axios.get(`${backendUrl}/api/Series/${id}`); 
+    const result = await axios.get(`${backendUrl}/api/Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -33,7 +33,7 @@ export const createStudySeries = async (body) => {
 };
 
 export const updateStudySeries = async (body, id) => {
-    const result = await axios.put(`${backendUrl}/api/Series/${id}`, body); 
+    const result = await axios.put(`${backendUrl}/api/Series/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -43,7 +43,7 @@ export const updateStudySeries = async (body, id) => {
 };
 
 export const deleteStudySeries = async (id) => {
-    const result = await axios.delete(`${backendUrl}/api/Series/${id}`); 
+    const result = await axios.delete(`${backendUrl}/api/Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
