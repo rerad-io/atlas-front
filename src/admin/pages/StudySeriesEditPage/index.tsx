@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const [studySeries, setStudySeries] = useState();
-    // console.log("studySeriesEditPage", studySeries);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -40,6 +39,7 @@ const StudySeriesEditPage = () => {
             obj[key] = value as string;
         });
 
+        //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
         // const file_preview = formData.get("PreviewFrame") as File;
         // const file_sagital = formData.get("SagitalFrame") as File;
         // const file_coronal = formData.get("CoronalFrame") as File;
@@ -56,35 +56,33 @@ const StudySeriesEditPage = () => {
         // }
 
         if (id) {
-            // Редактирование существующего исследования
-            const fetchData = async () => {
+            (async () => {
                 try {
                     const updatedObj = await updateStudySeries(obj, id);
                     setStudySeries(updatedObj);
                     toast.success("Study Series updated!");
                 } catch (error) {
+                    toast.error("Study Series update - error!");
                     console.log("Error StudySeriesEditPage, method PUT", error);
                 }
-            };
-            fetchData();
+            })();
         } else {
-            // Создание нового исследования
-            const fetchData = async () => {
+            (async () => {
                 try {
                     // console.log(obj);
                     await createStudySeries(obj);
                     toast.success("Study Series created!");
                 } catch (error) {
+                    toast.error("Study Series create - error!");
                     console.log("Error StudySeriesEditPage, method POST", error);
                 }
-            };
-            fetchData();
+            })();
         }
 
         e.target.reset();
     };
 
-    //  чтение файла - раскоментировать когда будем реализовывать сохранение файла
+    //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
     // const readFile = (file: File): Promise<string> => {
     //     return new Promise((resolve, reject) => {
     //         const reader = new FileReader();
@@ -100,8 +98,6 @@ const StudySeriesEditPage = () => {
     //         reader.readAsDataURL(file);
     //     });
     // };
-
-    // Id	Study	Number	Name	PreviewFrame	InstanceCount	SagitalFrame	CoronalFrame
 
     const frameList: {
         id: string;
@@ -131,7 +127,6 @@ const StudySeriesEditPage = () => {
                     <label htmlFor="Study">
                         Study:
                         <input type="text" name="study" id="Study" defaultValue={seriesId} disabled style={{ width: "400px" }} />{" "}
-                        {/* если seriesId === undefined то studySeries.study  */}
                     </label>
                     <label htmlFor="StudySeriesName">
                         Study Series Name:

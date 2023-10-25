@@ -13,7 +13,8 @@ const StudySeriesList = ({ seriesId }) => {
         (async () => {
             try {
                 const result = await getStudySeriesList();
-                setStudySeriesList(result); // добавить метод фильтр и отфильтровать по study
+                setStudySeriesList(result);
+                // TODO: добавить метод фильтр и отфильтровать по study
                 //setStudySeriesList(result.filter(el => el.id === seriesId));
             } catch (error) {
                 console.error("StudySeriesListTable - ", error);

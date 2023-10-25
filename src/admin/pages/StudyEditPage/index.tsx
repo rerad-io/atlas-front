@@ -12,7 +12,6 @@ const StudyEditPage = () => {
     const [createAnother, setCreateAnother] = useState(false);
 
     const [study, setStudy] = useState();
-    // console.log(study);
 
     useEffect(() => {
         if (id) {
@@ -38,39 +37,33 @@ const StudyEditPage = () => {
         });
 
         if (id) {
-            // Редактирование существующего исследования
-            const fetchData = async () => {
+            (async () => {
                 try {
                     const updatedObj = await updateStudy(obj, id);
                     setStudy(updatedObj);
                     toast.success("Study updated!");
                 } catch (error) {
+                    toast.error("Study update - error!");
                     console.log("Error StudyEditPage, method PUT", error);
                 }
-            };
-            fetchData();
+            })();
         } else {
-            // Создание нового исследования
-            const fetchData = async () => {
+            (async () => {
                 try {
-                    // console.log(obj);
                     await createStudy(obj);
-                    toast.success("Study created!");
-                    // при возврате учти createAnother
                     if (!createAnother) {
                         navigate(`/admin/Study`);
                     }
                 } catch (error) {
+                    toast.error("Study create - Error");
                     console.log("Error StudyEditPage, method POST", error);
                 }
-            };
-            fetchData();
+            })();
         }
-
         e.target.reset();
     };
 
-    //  чтение файла - раскоментировать когда будем реализовывать сохранение файла
+    // TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
     // const readFile = (file: File): Promise<string> => {
     //     return new Promise((resolve, reject) => {
     //         const reader = new FileReader();
@@ -99,7 +92,6 @@ const StudyEditPage = () => {
                     Study Description:
                     <textarea id="studyDescription" name="description" rows={4} cols={50} defaultValue={study?.description}></textarea>
                 </label>
-                {/* <input type="file" name="previewFrame" accept="image/*"></input> */}
                 <label htmlFor="previewFrame">
                     Preview Frame:
                     <input type="text" name="previewFrame" id="previewFrame" defaultValue={study?.previewFrame} />
