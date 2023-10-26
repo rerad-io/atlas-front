@@ -87,6 +87,10 @@ const StudyEditPage = () => {
         <div className={s.page}>
             <h1>Создание/Редактирование Исследования</h1>
             <form onSubmit={onSubmitHandler} className={s.form}>
+                <label htmlFor="externalId">
+                    External Id:
+                    <input required type="text" name="externalId" id="externalId" defaultValue={study?.externalId} />
+                </label>
                 <label htmlFor="studyName">
                     Study Name:
                     <input required type="text" name="name" id="studyName" defaultValue={study?.name} />
