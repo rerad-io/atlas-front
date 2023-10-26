@@ -3,51 +3,45 @@ import TableComponent from "../../../components/UI/TableComponent";
 import { deleteAnatomicalStructure, getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { AnatomicalStructure } from "../../../_types";
 
-const AnatomicalStructureList = ({ subjectId }) => {
-    const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+const AnatomicalStructureList = ({ anatomicalStructureList }) => {
+    const [structureList, setStructureList] = useState<AnatomicalStructure[]>(anatomicalStructureList);
     const [columns, setColumns] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await getAnatomicalStructureList();
-                if (subjectId) {
-                    // TODO: фильтрацию вынести на бекенд
-                    const subjectIdList = result.filter((elem) => elem.anatomicalStructureSubject?.id === subjectId);
-                    setAnatomicalStructureList(subjectIdList);
-                } else {
-                    setAnatomicalStructureList(result);
-                }
+                setStructureList(result);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureList:", error);
             }
         };
 
-        fetchData();
-    }, [subjectId]);
+        if (!structureList) {
+            fetchData();
+        }
+    }, [structureList]);
 
     useEffect(() => {
-        if (anatomicalStructureList.length) {
-            const columnsTitles = Object.keys(anatomicalStructureList[0]);
+        if (structureList.length) {
+            const columnsTitles = Object.keys(structureList[0]);
             columnsTitles.push("Actions");
             setColumns(columnsTitles);
         }
-    }, [anatomicalStructureList]);
+    }, [structureList]);
 
     const removeItemById = async (itemId: string) => {
         try {
             const result = await deleteAnatomicalStructure(itemId);
             if (result === 204) {
-                setAnatomicalStructureList(anatomicalStructureList.filter((item) => item.id !== itemId));
+                setStructureList(structureList.filter((item) => item.id !== itemId));
             }
         } catch (error) {
             console.error("Error fetching AnatomicalStructureSubjectList:", error);
         }
     };
 
-    return (
-        <TableComponent columns={columns} data={anatomicalStructureList} actions={"AnatomicalStructure/"} removeItemById={removeItemById} />
-    );
+    return <TableComponent columns={columns} data={structureList} actions={"AnatomicalStructure/"} removeItemById={removeItemById} />;
 };
 
 export default AnatomicalStructureList;

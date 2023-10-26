@@ -1,9 +1,14 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
 import AnatomicalStructureList from "../../components/AnatomicalStructureList";
-import { createAnatomicalStructureSubject, updateAnatomicalStructureSubject } from "../../../requests/anatomicalStructureSubjectRequests";
+import {
+    createAnatomicalStructureSubject,
+    getAnatomicalStructureSubjectById,
+    updateAnatomicalStructureSubject,
+} from "../../../requests/anatomicalStructureSubjectRequests";
+import { AnatomicalStructureSubjectModel } from "../../../_types";
 import s from "./s.module.scss";
 
 const AnatomicalStructureSubjectEditPage = () => {
@@ -11,28 +16,26 @@ const AnatomicalStructureSubjectEditPage = () => {
     const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
 
-    // TODO: это состояние из запроса в useEffect будет использоваться позже
-    //const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>({});
+    const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>({});
 
     const formRef = useRef<HTMLFormElement | null>(null);
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
-    // TODO: этот useEffect будет использоваться позже
-    //useEffect(() => {
-    //    if (id) {
-    //        const fetchData = async () => {
-    //            try {
-    //                const result = await getAnatomicalStructureSubjectById(id);
-    //                setSubject(result);
-    //            } catch (error) {
-    //                console.error("Error fetching AnatomicalStructureSubjectList:", error);
-    //            }
-    //        };
+    useEffect(() => {
+        if (id) {
+            const fetchData = async () => {
+                try {
+                    const result = await getAnatomicalStructureSubjectById(id);
+                    setSubject(result);
+                } catch (error) {
+                    console.error("Error fetching AnatomicalStructureSubjectList:", error);
+                }
+            };
 
-    //        fetchData();
-    //    }
-    //}, [id]);
+            fetchData();
+        }
+    }, [id]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -103,7 +106,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     <Button>Save</Button>
                 </form>
             </div>
-            {id ? <AnatomicalStructureList subjectId={id} /> : null}
+            {id ? <AnatomicalStructureList anatomicalStructureList={subject.anatomicalStructures} /> : null}
         </div>
     );
 };

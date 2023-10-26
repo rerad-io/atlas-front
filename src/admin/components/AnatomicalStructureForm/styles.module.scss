@@ -1,0 +1,14 @@
+.form {
+    margin-top: 20px;
+    padding: 20px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 30px;
+    border: 2px solid $white5;
+}
+
+.sort_box {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}

@@ -49,3 +49,13 @@ export const deleteAnatomicalStructure = async (id: string) => {
     console.log("Error data", result.data);
     throw new Error("API returned unsuccessful message");
 };
+
+export const searchAnatomicalStructure = async (query: string) => {
+    const result = await axios.get(`${backendUrl}AnatomicalStructure?name=${query}`);
+    if (result.status >= 200 && result.status <= 300) {
+        return result.data;
+    }
+    console.log("Error status", result.status);
+    console.log("Error data", result.data);
+    throw new Error("API returned unsuccessful message");
+};
