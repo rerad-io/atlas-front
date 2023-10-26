@@ -6,10 +6,16 @@ function TableComponent({ columns, data, actions = "", removeItemById }) {
 
     const tableData = () => {
         return data.map((item, index) => (
-            <tr key={index} style={item.color && { backgroundColor: `#${item.color}` }}>
-                {Object.values(item).map((value, objectIndex) => (
-                    <td key={objectIndex}>{value}</td>
-                ))}
+            <tr key={index} style={item.subject ? { backgroundColor: `#${item.subject.color}` } : { backgroundColor: `#${item.color}` }}>
+                {item.subject ? (
+                    <>
+                        <td>{item.id}</td>
+                        <td>{item.name}</td>
+                        <td>{item.subject ? item.subject.name : ""}</td>
+                    </>
+                ) : (
+                    Object.values(item).map((value, objectIndex) => <td key={objectIndex}>{value}</td>)
+                )}
                 {actions ? (
                     <td className={s.actions}>
                         <div className={s.action_wrapper}>
