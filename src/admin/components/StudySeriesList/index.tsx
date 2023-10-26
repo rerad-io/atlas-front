@@ -42,7 +42,7 @@ const StudySeriesList = ({ seriesId }) => {
             <section className={s.section}>
                 <div className="container">
                     <div>
-                        <TableComponent {...{columns, data:studySeriesList, actions:"StudySeries/", removeItemById}}/>
+                        <TableComponent {...{ columns, data: studySeriesList, actions: "StudySeries/", removeItemById }} />
                     </div>
                 </div>
             </section>

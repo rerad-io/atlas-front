@@ -20,8 +20,6 @@ const StudyListTable = () => {
         fetchDataAndSetStudyList();
     }, []);
 
-
-
     const removeItemById = async (itemId: string) => {
         try {
             const result = await deleteStudy(itemId);
@@ -35,7 +33,7 @@ const StudyListTable = () => {
 
     return (
         <div>
-            <TableComponent {...{columns, data:studyList, actions:"Study/", removeItemById}}/>
+            <TableComponent {...{ columns, data: studyList, actions: "Study/", removeItemById }} />
         </div>
     );
 };
