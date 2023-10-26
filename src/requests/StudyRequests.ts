@@ -3,7 +3,7 @@ import axios from "axios";
 const backendUrl = "https://atlas-api.d.medcol.io";
 
 export const getStudyList = async () => {
-    const result = await axios.get(`${backendUrl}/api/Study/`); // что со "/" в конце ?
+    const result = await axios.get(`${backendUrl}/api/Study`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -23,7 +23,7 @@ export const getStudyId = async (id) => {
 };
 
 export const createStudy = async (body) => {
-    const result = await axios.post(`${backendUrl}/api/Study/`, body); // что со "/" в конце ?
+    const result = await axios.post(`${backendUrl}/api/Study`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
