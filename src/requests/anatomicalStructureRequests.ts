@@ -3,7 +3,7 @@ import { backendUrl } from "./backendUrl";
 import { AnatomicalStructure } from "../_types";
 
 export const getAnatomicalStructureList = async () => {
-    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure/`);
+    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
