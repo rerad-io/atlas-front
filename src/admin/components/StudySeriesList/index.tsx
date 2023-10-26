@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "../../../components/UI/Button";
 import TableComponent from "../../../components/UI/TableComponent";
-import { getStudySeriesList } from "../../../requests/StudySeriesRequests";
+import { getStudySeriesList, deleteStudySeries } from "../../../requests/StudySeriesRequests";
 import s from "./s.module.css";
 
 const StudySeriesList = ({ seriesId }) => {
@@ -23,6 +23,17 @@ const StudySeriesList = ({ seriesId }) => {
         fetchDataAndSetStudySeriesList();
     }, []);
 
+    const removeItemById = async (itemId: string) => {
+        try {
+            const result = await deleteStudySeries(itemId);
+            if (result === 204) {
+                setStudySeriesList(studySeriesList.filter((item) => item.id !== itemId));
+            }
+        } catch (error) {
+            console.error("Error fetching StudySeriesList:", error);
+        }
+    };
+
     return (
         <div className={s.page}>
             <h3>Список серий исследования</h3>
@@ -31,7 +42,7 @@ const StudySeriesList = ({ seriesId }) => {
             <section className={s.section}>
                 <div className="container">
                     <div>
-                        <TableComponent columns={columns} data={studySeriesList} actions={"/admin/StudySeries/"} />
+                        <TableComponent {...{columns, data:studySeriesList, actions:"StudySeries/", removeItemById}}/>
                     </div>
                 </div>
             </section>

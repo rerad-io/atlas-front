@@ -37,6 +37,8 @@ const StudyEditPage = () => {
             obj[key] = value as string;
         });
 
+        // console.log("StudyEditPage", obj);
+
         if (id) {
             const fetchDataAndUpdateStudy = async () => {
                 try {

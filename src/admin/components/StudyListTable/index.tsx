@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
-import { getStudyList } from "../../../requests/StudyRequests";
+import { getStudyList, deleteStudy } from "../../../requests/StudyRequests";
 
 const StudyListTable = () => {
     const columns = ["Id", "ExternalId", "Name", "Description", "PreviewFrame", "Actions"];
@@ -20,9 +20,22 @@ const StudyListTable = () => {
         fetchDataAndSetStudyList();
     }, []);
 
+
+
+    const removeItemById = async (itemId: string) => {
+        try {
+            const result = await deleteStudy(itemId);
+            if (result === 204) {
+                setStudyList(studyList.filter((item) => item.id !== itemId));
+            }
+        } catch (error) {
+            console.error("Error fetching StudyListTable:", error);
+        }
+    };
+
     return (
         <div>
-            <TableComponent columns={columns} data={studyList} actions={"/admin/Study/"} />
+            <TableComponent {...{columns, data:studyList, actions:"Study/", removeItemById}}/>
         </div>
     );
 };
