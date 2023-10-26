@@ -39,7 +39,6 @@ const StudySeriesEditPage = () => {
         formData.forEach((value, key) => {
             obj[key] = value as string;
         });
-        // console.log("StudySeriesEditPage", obj);
 
         //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
         // const file_preview = formData.get("PreviewFrame") as File;
