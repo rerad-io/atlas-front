@@ -10,7 +10,7 @@ interface ButtonProps {
     type?: "button" | "submit" | "reset";
 }
 
-export default function Button({ children, to, className, ...props }: ButtonProps) {
+export default function Button({ children, to, type, className, ...props }: ButtonProps) {
     const buttonClassName = [s.button, className].join(" ");
     if (to) {
         return (
@@ -20,7 +20,7 @@ export default function Button({ children, to, className, ...props }: ButtonProp
         );
     } else {
         return (
-            <button className={buttonClassName} {...props}>
+            <button className={buttonClassName} {...props} type={type}>
                 {children}
             </button>
         );
