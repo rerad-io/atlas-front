@@ -1,18 +1,20 @@
 import Button from "../../../components/UI/Button";
 import { useState } from "react";
 import s from "./styles.module.scss";
-import { searchAnatomicalStructure } from "../../../requests/anatomicalStructureRequests";
+import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 
 const AnatomicalStructureForm = ({ setAnatomicalStructureList }) => {
     const [value, setValue] = useState<string>("");
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const searchName = e.currentTarget.name.value;
-        if (searchName) {
+        const queryParams = {
+            name: e.currentTarget.name.value,
+        };
+        if (queryParams) {
             const fetchData = async () => {
                 try {
-                    const result = await searchAnatomicalStructure(searchName);
+                    const result = await getAnatomicalStructureList(queryParams);
                     setAnatomicalStructureList(result);
                 } catch (error) {
                     console.error("Error fetching Search AnatomicalStructure:", error);
@@ -20,7 +22,6 @@ const AnatomicalStructureForm = ({ setAnatomicalStructureList }) => {
             };
 
             fetchData();
-            setValue("");
         }
     };
 

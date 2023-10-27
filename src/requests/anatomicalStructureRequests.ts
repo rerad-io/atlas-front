@@ -2,8 +2,19 @@ import axios from "axios";
 import { backendUrl } from "./backendUrl";
 import { AnatomicalStructure } from "../_types";
 
-export const getAnatomicalStructureList = async () => {
-    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure`);
+const prepareQuery = (parameters: Record<string, unknown>) => {
+    if (parameters) {
+        const queryParams = Object.entries(parameters)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join("&");
+        return queryParams ? `?${queryParams}` : "";
+    } else {
+        return "";
+    }
+};
+
+export const getAnatomicalStructureList = async (parameters: Record<string, unknown>) => {
+    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure${prepareQuery(parameters)}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -50,12 +61,12 @@ export const deleteAnatomicalStructure = async (id: string) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const searchAnatomicalStructure = async (query: string) => {
-    const result = await axios.get(`${backendUrl}AnatomicalStructure?name=${query}`);
-    if (result.status >= 200 && result.status <= 300) {
-        return result.data;
-    }
-    console.log("Error status", result.status);
-    console.log("Error data", result.data);
-    throw new Error("API returned unsuccessful message");
-};
+//export const searchAnatomicalStructure = async (query: string) => {
+//    const result = await axios.get(`${backendUrl}AnatomicalStructure?name=${query}`);
+//    if (result.status >= 200 && result.status <= 300) {
+//        return result.data;
+//    }
+//    console.log("Error status", result.status);
+//    console.log("Error data", result.data);
+//    throw new Error("API returned unsuccessful message");
+//};
