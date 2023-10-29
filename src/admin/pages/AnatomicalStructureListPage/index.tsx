@@ -26,7 +26,7 @@ const AnatomicalStructureListPage = () => {
         <div className={s.page}>
             <div className="container">
                 <h1 className="title ">Анатомические структуры</h1>
-                <AnatomicalStructureForm setAnatomicalStructureList={setAnatomicalStructureList} />
+                <AnatomicalStructureForm {...{ anatomicalStructureList, setAnatomicalStructureList }} />
                 <Button to="/admin/AnatomicalStructure/create" style={{ marginTop: "30px" }}>
                     Add new Anatomical Structure
                 </Button>

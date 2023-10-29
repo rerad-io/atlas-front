@@ -2,15 +2,12 @@ import axios from "axios";
 import { backendUrl } from "./backendUrl";
 import { AnatomicalStructure } from "../_types";
 
-const prepareQuery = (parameters: Record<string, unknown>) => {
+const prepareQuery = (parameters: Record<string, unknown>): string => {
     if (parameters) {
-        const queryParams = Object.entries(parameters)
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-            .join("&");
-        return queryParams ? `?${queryParams}` : "";
-    } else {
-        return "";
+        const queryParams = new URLSearchParams(parameters as Record<string, string>).toString();
+        return `?${queryParams}`;
     }
+    return "";
 };
 
 export const getAnatomicalStructureList = async (parameters: Record<string, unknown>) => {
