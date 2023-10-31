@@ -18,7 +18,7 @@ export default function App() {
             Component: AppIndex,
         },
         {
-            path: "/Study/:id",
+            path: "/:id",
             Component: StudyPage,
         },
         {

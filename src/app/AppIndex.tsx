@@ -12,7 +12,7 @@ const AppIndex = () => {
                         <ul className={s.studies_list}>
                             {studiesList.map((item, index) => (
                                 <li className={s.studies_item} key={index}>
-                                    <NavLink className={s.link} to={`/Study/${item.id}`}>
+                                    <NavLink className={s.link} to={`/${item.id}`}>
                                         {item.name}
                                     </NavLink>
                                 </li>
