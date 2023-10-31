@@ -3,24 +3,25 @@ import TableComponent from "../../../components/UI/TableComponent";
 import { deleteAnatomicalStructure, getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { AnatomicalStructure } from "../../../_types";
 
-const AnatomicalStructureList = ({ anatomicalStructureList }) => {
+type Props = {
+	anatomicalStructureList: AnatomicalStructure[],
+}
+
+const AnatomicalStructureList = ({ anatomicalStructureList }:Props) => {
     const [structureList, setStructureList] = useState<AnatomicalStructure[]>(anatomicalStructureList);
     const [columns, setColumns] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getAnatomicalStructureList();
+                const result = await getAnatomicalStructureList({});
                 setStructureList(result);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureList:", error);
             }
         };
-
-        if (!structureList) {
             fetchData();
-        }
-    }, [structureList]);
+    }, []);
 
     useEffect(() => {
         if (structureList.length) {
