@@ -18,7 +18,7 @@ const AnatomicalStructureSubjectEditPage = () => {
 
     const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>();
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
-		const [columns, setColumns] = useState<string[]>([]);
+    const [columns, setColumns] = useState<string[]>([]);
 
     const formRef = useRef<HTMLFormElement | null>(null);
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
@@ -40,13 +40,13 @@ const AnatomicalStructureSubjectEditPage = () => {
         }
     }, [id]);
 
-		useEffect(() => {
-			if (anatomicalStructureList.length) {
-					const columnsTitles = Object.keys(anatomicalStructureList[0]);
-					columnsTitles.push("Actions");
-					setColumns(columnsTitles);
-			}
-	}, [anatomicalStructureList]);
+    useEffect(() => {
+        if (anatomicalStructureList.length) {
+            const columnsTitles = Object.keys(anatomicalStructureList[0]);
+            columnsTitles.push("Actions");
+            setColumns(columnsTitles);
+        }
+    }, [anatomicalStructureList]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -54,10 +54,10 @@ const AnatomicalStructureSubjectEditPage = () => {
         const newSubject: Record<string, string> = {};
 
         formData.forEach((value, key) => {
-						newSubject[key] = value as string;
-						if (key === 'color') {
-								newSubject.color = value.slice(1) as string;
-						}
+            newSubject[key] = value as string;
+            if (key === "color") {
+                newSubject.color = value.slice(1) as string;
+            }
         });
 
         if (newSubject.name) {
@@ -73,16 +73,16 @@ const AnatomicalStructureSubjectEditPage = () => {
                     } else {
                         const createdSubject = await createAnatomicalStructureSubject(newSubject);
                         if (!createAnother) {
-													navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
-                        } else{
-													if(createdSubject){
-														notifySuccess("Тема создана успешно!");
-													}else{
-														notifyError("ошибка!");
-													}
-												}
-												}
-											} catch (error) {
+                            navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
+                        } else {
+                            if (createdSubject) {
+                                notifySuccess("Тема создана успешно!");
+                            } else {
+                                notifyError("ошибка!");
+                            }
+                        }
+                    }
+                } catch (error) {
                     console.error("Error fetching AnatomicalStructureSubjectList:", error);
                 }
             };
@@ -102,16 +102,15 @@ const AnatomicalStructureSubjectEditPage = () => {
                 <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
                         Theme Name*:
-                        <input type="text" name="name" id="themeName" placeholder={subject?.name} required/>
+                        <input type="text" name="name" id="themeName" placeholder={subject?.name} required />
                     </label>
                     <label htmlFor="themeColor">
                         Theme Color*:
-												{subject ?
-											<input type="color" name="color" id="themeColor" value = {`#${subject.color}`} required/>
-												:
-												<input type="color" name="color" id="themeColor" required/>
-												}
-                       
+                        {subject ? (
+                            <input type="color" name="color" id="themeColor" value={`#${subject.color}`} required />
+                        ) : (
+                            <input type="color" name="color" id="themeColor" required />
+                        )}
                     </label>
                     {typeof id === "undefined" ? (
                         <label htmlFor="createAnother">
@@ -130,7 +129,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     <Button>Save</Button>
                 </form>
             </div>
-            {id ? <AnatomicalStructureList  {...{anatomicalStructureList, columns}}/> : null}
+            {id ? <AnatomicalStructureList {...{ anatomicalStructureList, columns }} /> : null}
         </div>
     );
 };

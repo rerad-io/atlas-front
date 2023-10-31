@@ -74,12 +74,12 @@ const AnatomicalStructureEditPage = () => {
                     if (!createAnother) {
                         navigate(`/admin/AnatomicalStructure/${createdStructure.id}`);
                     } else {
-											if (createdStructure?.id) {
-													notifySuccess("обьект создан!");
-											} else {
-													notifyError("ошибка!");
-											}
-									}
+                        if (createdStructure?.id) {
+                            notifySuccess("обьект создан!");
+                        } else {
+                            notifyError("ошибка!");
+                        }
+                    }
                 } catch (error) {
                     console.error("Error fetching AnatomicalStructureList:", error);
                 }
@@ -105,7 +105,9 @@ const AnatomicalStructureEditPage = () => {
                                 <input type="text" name="anatomicalStructureSubjectId" />
                             ) : (
                                 <select name="anatomicalStructureSubjectId" required>
-																	<option disabled value={''}>выбрать</option>
+                                    <option disabled value={""}>
+                                        выбрать
+                                    </option>
                                     {subjectsList.map((subject) => (
                                         <option key={subject.id}>{subject.name}</option>
                                     ))}
@@ -114,7 +116,7 @@ const AnatomicalStructureEditPage = () => {
                         </label>
                         <label>
                             Structure Name*:
-                            <input type="text" name="name" placeholder={structure.name} required/>
+                            <input type="text" name="name" placeholder={structure.name} required />
                         </label>
                         {typeof id === "undefined" ? (
                             <label>

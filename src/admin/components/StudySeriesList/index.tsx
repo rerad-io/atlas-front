@@ -24,17 +24,17 @@ const StudySeriesList = ({ seriesId }) => {
     }, []);
 
     const removeItemById = async (itemId: string) => {
-			const isAlert = confirm("уверены что хотите удалить?");
-			if(isAlert){
-				try {
-					const result = await deleteStudySeries(itemId);
-					if (result === 204) {
-						setStudySeriesList(studySeriesList.filter((item) => item.id !== itemId));
-					}
-        } catch (error) {
-					console.error("Error fetching StudySeriesList:", error);
+        const isAlert = confirm("уверены что хотите удалить?");
+        if (isAlert) {
+            try {
+                const result = await deleteStudySeries(itemId);
+                if (result === 204) {
+                    setStudySeriesList(studySeriesList.filter((item) => item.id !== itemId));
+                }
+            } catch (error) {
+                console.error("Error fetching StudySeriesList:", error);
+            }
         }
-			}
     };
 
     return (

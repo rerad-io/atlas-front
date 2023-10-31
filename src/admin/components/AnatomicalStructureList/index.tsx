@@ -5,28 +5,28 @@ import { AnatomicalStructure } from "../../../_types";
 
 type Props = {
     anatomicalStructureList: AnatomicalStructure[];
-		columns:string[];
+    columns: string[];
 };
 
 const AnatomicalStructureList = ({ anatomicalStructureList, columns }: Props) => {
     const [structureList, setStructureList] = useState<AnatomicalStructure[]>(anatomicalStructureList);
 
     useEffect(() => {
-                setStructureList(anatomicalStructureList);
+        setStructureList(anatomicalStructureList);
     }, [anatomicalStructureList]);
 
     const removeItemById = async (itemId: string) => {
-			const isAlert = confirm("уверены что хотите удалить?");
-			if(isAlert){
-				try {
-					const result = await deleteAnatomicalStructure(itemId);
-					if (result === 204) {
-						setStructureList(structureList.filter((item) => item.id !== itemId));
-					}
-        } catch (error) {
-					console.error("Error fetching AnatomicalStructureSubjectList:", error);
+        const isAlert = confirm("уверены что хотите удалить?");
+        if (isAlert) {
+            try {
+                const result = await deleteAnatomicalStructure(itemId);
+                if (result === 204) {
+                    setStructureList(structureList.filter((item) => item.id !== itemId));
+                }
+            } catch (error) {
+                console.error("Error fetching AnatomicalStructureSubjectList:", error);
+            }
         }
-			}
     };
 
     return <TableComponent columns={columns} data={structureList} actions={"AnatomicalStructure/"} removeItemById={removeItemById} />;

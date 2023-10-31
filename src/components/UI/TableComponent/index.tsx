@@ -6,7 +6,14 @@ function TableComponent({ columns, data, actions = "", removeItemById }) {
 
     const tableData = () => {
         return data.map((item, index) => (
-            <tr key={index} style={item.anatomicalStructureSubject ? { backgroundColor: `#${item.anatomicalStructureSubject.color}` } : { backgroundColor: `#${item.color}` }}>
+            <tr
+                key={index}
+                style={
+                    item.anatomicalStructureSubject
+                        ? { backgroundColor: `#${item.anatomicalStructureSubject.color}` }
+                        : { backgroundColor: `#${item.color}` }
+                }
+            >
                 {item.anatomicalStructureSubject ? (
                     <>
                         <td>{item.id}</td>

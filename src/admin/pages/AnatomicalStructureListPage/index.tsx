@@ -8,8 +8,8 @@ import { getAnatomicalStructureList } from "../../../requests/anatomicalStructur
 
 const AnatomicalStructureListPage = () => {
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
-		const [columns, setColumns] = useState<string[]>([]);
-		
+    const [columns, setColumns] = useState<string[]>([]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -23,24 +23,24 @@ const AnatomicalStructureListPage = () => {
         fetchData();
     }, []);
 
-		useEffect(() => {
-			if (anatomicalStructureList.length) {
-					const columnsTitles = Object.keys(anatomicalStructureList[0]);
-					columnsTitles.push("Actions");
-					setColumns(columnsTitles);
-			}
-	}, [anatomicalStructureList]);
+    useEffect(() => {
+        if (anatomicalStructureList.length) {
+            const columnsTitles = Object.keys(anatomicalStructureList[0]);
+            columnsTitles.push("Actions");
+            setColumns(columnsTitles);
+        }
+    }, [anatomicalStructureList]);
 
     return (
         <div className={s.page}>
             <div className="container">
                 <h1 className="title ">Анатомические структуры</h1>
-                <AnatomicalStructureForm {...{setAnatomicalStructureList, columns }} />
+                <AnatomicalStructureForm {...{ setAnatomicalStructureList, columns }} />
                 <Button to="/admin/AnatomicalStructure/create" style={{ marginTop: "30px" }}>
                     Add new Anatomical Structure
                 </Button>
             </div>
-            <AnatomicalStructureList {...{anatomicalStructureList, columns}} />
+            <AnatomicalStructureList {...{ anatomicalStructureList, columns }} />
         </div>
     );
 };

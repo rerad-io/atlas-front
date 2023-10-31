@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnatomicalStructure, AnatomicalStructureSubject } from "../../../_types";
 
 type Props = {
-		columns: string[];
+    columns: string[];
     setAnatomicalStructureList: Dispatch<SetStateAction<AnatomicalStructure[]>>;
 };
 
@@ -68,7 +68,7 @@ const AnatomicalStructureForm = ({ columns, setAnatomicalStructureList }: Props)
                     Сортировка
                     <select name="orderBy" defaultValue={"name"}>
                         <option value={"name"}>по имени структуры</option>
-                        {columns.slice(1,-1).map((el) => (
+                        {columns.slice(1, -1).map((el) => (
                             <option key={el.id} value={el.id}>
                                 {el}
                             </option>
