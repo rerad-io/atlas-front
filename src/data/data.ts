@@ -37,3 +37,22 @@ export const galleryList = [
         alt: "photo6",
     },
 ];
+
+export const studiesList = [
+    {
+        id: "study1",
+        name: "исследование 1",
+    },
+    {
+        id: "study2",
+        name: "исследование 2",
+    },
+    {
+        id: "study3",
+        name: "исследование 3",
+    },
+    {
+        id: "study4",
+        name: "исследование 4",
+    },
+];
