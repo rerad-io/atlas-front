@@ -4,10 +4,10 @@ import { deleteAnatomicalStructure, getAnatomicalStructureList } from "../../../
 import { AnatomicalStructure } from "../../../_types";
 
 type Props = {
-	anatomicalStructureList: AnatomicalStructure[],
-}
+    anatomicalStructureList: AnatomicalStructure[];
+};
 
-const AnatomicalStructureList = ({ anatomicalStructureList }:Props) => {
+const AnatomicalStructureList = ({ anatomicalStructureList }: Props) => {
     const [structureList, setStructureList] = useState<AnatomicalStructure[]>(anatomicalStructureList);
     const [columns, setColumns] = useState<string[]>([]);
 
@@ -20,7 +20,7 @@ const AnatomicalStructureList = ({ anatomicalStructureList }:Props) => {
                 console.error("Error fetching AnatomicalStructureList:", error);
             }
         };
-            fetchData();
+        fetchData();
     }, []);
 
     useEffect(() => {

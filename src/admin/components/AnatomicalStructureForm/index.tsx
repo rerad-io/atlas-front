@@ -6,11 +6,11 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnatomicalStructure, AnatomicalStructureSubject } from "../../../_types";
 
 type Props = {
-	anatomicalStructureList: AnatomicalStructure[],
-	setAnatomicalStructureList: Dispatch<SetStateAction<AnatomicalStructure[]>>
-}
+    anatomicalStructureList: AnatomicalStructure[];
+    setAnatomicalStructureList: Dispatch<SetStateAction<AnatomicalStructure[]>>;
+};
 
-const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructureList }:Props) => {
+const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructureList }: Props) => {
     const [anatomicalStructureSubjectList, setAnatomicalStructureSubjectList] = useState<AnatomicalStructureSubject[]>([]);
 
     useEffect(() => {
@@ -56,11 +56,9 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
                 <label>
                     Тема
                     <select name="anatomicalStructureSubjectId" defaultValue={"all"}>
-                        <option value={"all"}>
-                            все 
-                        </option>
+                        <option value={"all"}>все</option>
                         {anatomicalStructureSubjectList.map((el) => (
-                            <option key={el.id} value={el.id} >
+                            <option key={el.id} value={el.id}>
                                 {el.name}
                             </option>
                         ))}
@@ -69,9 +67,7 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
                 <label>
                     Сортировка
                     <select name="orderBy" defaultValue={"name"}>
-                        <option  value={"name"}>
-                            по имени структуры 
-                        </option>
+                        <option value={"name"}>по имени структуры</option>
                         {anatomicalStructureList.map((el) => (
                             <option key={el.id} value={el.id}>
                                 {el.name}
@@ -82,9 +78,7 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
                 <label>
                     Направление сортировки
                     <select name="orderByDirection" defaultValue={"asc"}>
-                        <option value={"asc"} >
-                            от А до Я
-                        </option>
+                        <option value={"asc"}>от А до Я</option>
                         <option value={"desc"}>от Я до А</option>
                     </select>
                 </label>

@@ -8,7 +8,7 @@ import {
     getAnatomicalStructureSubjectById,
     updateAnatomicalStructureSubject,
 } from "../../../requests/anatomicalStructureSubjectRequests";
-import { AnatomicalStructureSubjectModel } from "../../../_types";
+import { AnatomicalStructure, AnatomicalStructureSubjectModel } from "../../../_types";
 import s from "./s.module.scss";
 
 const AnatomicalStructureSubjectEditPage = () => {
@@ -16,7 +16,8 @@ const AnatomicalStructureSubjectEditPage = () => {
     const navigate = useNavigate();
     const [createAnother, setCreateAnother] = useState(false);
 
-    const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>({});
+    const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>();
+    const [structures, setStructures] = useState<AnatomicalStructure[]>([]);
 
     const formRef = useRef<HTMLFormElement | null>(null);
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
@@ -28,6 +29,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                 try {
                     const result = await getAnatomicalStructureSubjectById(id);
                     setSubject(result);
+                    setStructures(result.anatomicalStructures);
                 } catch (error) {
                     console.error("Error fetching AnatomicalStructureSubjectList:", error);
                 }
@@ -61,6 +63,12 @@ const AnatomicalStructureSubjectEditPage = () => {
                         const createdSubject = await createAnatomicalStructureSubject(newSubject);
                         if (!createAnother) {
                             navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
+                        } else {
+                            if (createdSubject?.id) {
+                                notifySuccess("обьект создан!");
+                            } else {
+                                notifyError("ошибка!");
+                            }
                         }
                     }
                 } catch (error) {
@@ -83,11 +91,11 @@ const AnatomicalStructureSubjectEditPage = () => {
                 <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
                         Theme Name:
-                        <input type="text" name="name" id="themeName" />
+                        <input type="text" name="name" id="themeName" placeholder={subject?.name} />
                     </label>
                     <label htmlFor="themeColor">
                         Theme Color:
-                        <input type="color" name="color" id="themeColor" />
+                        <input type="color" name="color" id="themeColor" value={`#${subject?.color}`} />
                     </label>
                     {typeof id === "undefined" ? (
                         <label htmlFor="createAnother">
@@ -106,7 +114,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     <Button>Save</Button>
                 </form>
             </div>
-            {id ? <AnatomicalStructureList anatomicalStructureList={subject.anatomicalStructures} /> : null}
+            {id ? <AnatomicalStructureList anatomicalStructureList={structures} /> : null}
         </div>
     );
 };
