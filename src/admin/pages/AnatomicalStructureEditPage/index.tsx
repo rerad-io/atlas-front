@@ -73,7 +73,13 @@ const AnatomicalStructureEditPage = () => {
                     const createdStructure = await createAnatomicalStructure(newStructure);
                     if (!createAnother) {
                         navigate(`/admin/AnatomicalStructure/${createdStructure.id}`);
-                    }
+                    } else {
+											if (createdStructure?.id) {
+													notifySuccess("обьект создан!");
+											} else {
+													notifyError("ошибка!");
+											}
+									}
                 } catch (error) {
                     console.error("Error fetching AnatomicalStructureList:", error);
                 }

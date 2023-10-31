@@ -6,11 +6,11 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AnatomicalStructure, AnatomicalStructureSubject } from "../../../_types";
 
 type Props = {
-    anatomicalStructureList: AnatomicalStructure[];
+		columns: string[];
     setAnatomicalStructureList: Dispatch<SetStateAction<AnatomicalStructure[]>>;
 };
 
-const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructureList }: Props) => {
+const AnatomicalStructureForm = ({ columns, setAnatomicalStructureList }: Props) => {
     const [anatomicalStructureSubjectList, setAnatomicalStructureSubjectList] = useState<AnatomicalStructureSubject[]>([]);
 
     useEffect(() => {
@@ -68,9 +68,9 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
                     Сортировка
                     <select name="orderBy" defaultValue={"name"}>
                         <option value={"name"}>по имени структуры</option>
-                        {anatomicalStructureList.map((el) => (
+                        {columns.slice(1,-1).map((el) => (
                             <option key={el.id} value={el.id}>
-                                {el.name}
+                                {el}
                             </option>
                         ))}
                     </select>

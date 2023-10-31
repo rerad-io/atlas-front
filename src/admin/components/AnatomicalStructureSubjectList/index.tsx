@@ -29,6 +29,8 @@ const AnatomicalStructureSubjectList = () => {
     }, [subjectsList]);
 
     const removeItemById = async (itemId: string) => {
+			const isAlert = confirm("уверены что хотите удалить?");
+			if(isAlert){
         try {
             const result = await deleteAnatomicalStructureSubject(itemId);
             if (result === 204) {
@@ -37,6 +39,7 @@ const AnatomicalStructureSubjectList = () => {
         } catch (error) {
             console.error("Error fetching AnatomicalStructureSubjectList:", error);
         }
+			}
     };
     return <TableComponent columns={columns} data={subjectsList} actions={"AnatomicalStructureSubject/"} removeItemById={removeItemById} />;
 };
