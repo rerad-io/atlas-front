@@ -94,11 +94,12 @@ const AnatomicalStructureEditPage = () => {
                     <h1 className="title">{id ? `Редактирование` : `Создание`} Анатомической структуры</h1>
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                         <label>
-                            Subject Name:
+                            Subject Name*:
                             {id ? (
                                 <input type="text" name="anatomicalStructureSubjectId" />
                             ) : (
-                                <select name="anatomicalStructureSubjectId">
+                                <select name="anatomicalStructureSubjectId" required>
+																	<option disabled value={''}>выбрать</option>
                                     {subjectsList.map((subject) => (
                                         <option key={subject.id}>{subject.name}</option>
                                     ))}
@@ -106,8 +107,8 @@ const AnatomicalStructureEditPage = () => {
                             )}
                         </label>
                         <label>
-                            Structure Name:
-                            <input type="text" name="name" placeholder={structure.name} />
+                            Structure Name*:
+                            <input type="text" name="name" placeholder={structure.name} required/>
                         </label>
                         {typeof id === "undefined" ? (
                             <label>

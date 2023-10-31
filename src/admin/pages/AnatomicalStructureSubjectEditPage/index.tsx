@@ -90,12 +90,12 @@ const AnatomicalStructureSubjectEditPage = () => {
                 <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
                 <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
-                        Theme Name:
-                        <input type="text" name="name" id="themeName" placeholder={subject?.name} />
+                        Theme Name*:
+                        <input type="text" name="name" id="themeName" placeholder={subject?.name} required/>
                     </label>
                     <label htmlFor="themeColor">
-                        Theme Color:
-                        <input type="color" name="color" id="themeColor" value={`#${subject?.color}`} />
+                        Theme Color*:
+                        <input type="color" name="color" id="themeColor" value = {subject ? `#${subject?.color}` : `#ffffff`} required/>
                     </label>
                     {typeof id === "undefined" ? (
                         <label htmlFor="createAnother">
