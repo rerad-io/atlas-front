@@ -9,12 +9,17 @@ import AnatomicalStructureEditPage from "./admin/pages/AnatomicalStructureEditPa
 import StudyListPage from "./admin/pages/StudyListPage";
 import StudyEditPage from "./admin/pages/StudyEditPage";
 import StudySeriesEditPage from "./admin/pages/StudySeriesEditPage";
+import StudyPage from "./app/pages/StudyPage";
 
 export default function App() {
     const routes = [
         {
             path: "/",
             Component: AppIndex,
+        },
+        {
+            path: "/:id",
+            Component: StudyPage,
         },
         {
             path: "/admin",

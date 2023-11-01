@@ -6,6 +6,8 @@
     Миксины (алиасы) для общего использования медиа-запросов
 */
 
+$trn: 0.4s ease-in;
+
 /*  Adaptivity for different devices / Адаптивность под разные устройства  */
 @mixin desktop {
     @media only screen and (min-width: 1025px) {

@@ -1,0 +1,40 @@
+.page {
+    padding: 50px 0;
+}
+
+.studies_list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.studies_item {
+    position: relative;
+    padding-left: 15px;
+}
+.studies_item::before {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background-color: $white5;
+}
+
+.link {
+    text-decoration: underline;
+    text-decoration-color: $blue10;
+    transition: color $trn;
+    outline: none;
+}
+
+.link:focus {
+    text-decoration-color: $blue;
+}
+.link:hover {
+    color: $blue10;
+}
