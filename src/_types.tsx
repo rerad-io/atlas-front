@@ -33,3 +33,11 @@ export type AnatomicalStructureSubjectModel = {
     color: string;
     anatomicalStructures: AnatomicalStructure[];
 };
+
+export type Study = {
+	id: string;
+	externalId: string;
+	name: string;
+	description: string;
+	previewFrame: string;
+}

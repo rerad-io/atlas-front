@@ -56,3 +56,61 @@ export const studiesList = [
         name: "исследование 4",
     },
 ];
+
+export const seriesData = [
+	{
+		id: "serie 1",
+		name: "T 1",
+		list:[
+			{
+        id: "1",
+        img: arm,
+        alt: "photo1",
+    },
+    {
+        id: "2",
+        img: had,
+        alt: "photo2",
+    },
+    {
+        id: "3",
+        img: lag,
+        alt: "photo3",
+    },
+		]
+	},
+	{
+		id: "serie 2",
+		name: "T 2",
+		list:[ {
+			id: "4",
+			img: had2,
+			alt: "photo4",
+	},
+	{
+			id: "5",
+			img: arm,
+			alt: "photo5",
+	},]
+	},
+	{
+		id: "serie 3",
+		name: "T 3",
+		list:[
+			{
+			id: "2",
+			img: had,
+			alt: "photo2",
+	},
+	{
+			id: "3",
+			img: lag,
+			alt: "photo3",
+	},
+	{
+			id: "4",
+			img: had2,
+			alt: "photo4",
+	},]
+	},
+]
