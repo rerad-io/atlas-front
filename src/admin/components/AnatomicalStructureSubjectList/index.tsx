@@ -29,13 +29,16 @@ const AnatomicalStructureSubjectList = () => {
     }, [subjectsList]);
 
     const removeItemById = async (itemId: string) => {
-        try {
-            const result = await deleteAnatomicalStructureSubject(itemId);
-            if (result === 204) {
-                setSubjectsList(subjectsList.filter((item) => item.id !== itemId));
+        const isAlert = confirm("уверены что хотите удалить?");
+        if (isAlert) {
+            try {
+                const result = await deleteAnatomicalStructureSubject(itemId);
+                if (result === 204) {
+                    setSubjectsList(subjectsList.filter((item) => item.id !== itemId));
+                }
+            } catch (error) {
+                console.error("Error fetching AnatomicalStructureSubjectList:", error);
             }
-        } catch (error) {
-            console.error("Error fetching AnatomicalStructureSubjectList:", error);
         }
     };
     return <TableComponent columns={columns} data={subjectsList} actions={"AnatomicalStructureSubject/"} removeItemById={removeItemById} />;

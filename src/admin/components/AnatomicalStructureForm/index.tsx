@@ -2,15 +2,21 @@ import Button from "../../../components/UI/Button";
 import s from "./styles.module.scss";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { AnatomicalStructure, AnatomicalStructureSubject } from "../../../_types";
 
-const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructureList }) => {
-    const [anatomicalStructureSubjectList, setAnatomicalStructureSubjectList] = useState([]);
+type Props = {
+    columns: string[];
+    setAnatomicalStructureList: Dispatch<SetStateAction<AnatomicalStructure[]>>;
+};
+
+const AnatomicalStructureForm = ({ columns, setAnatomicalStructureList }: Props) => {
+    const [anatomicalStructureSubjectList, setAnatomicalStructureSubjectList] = useState<AnatomicalStructureSubject[]>([]);
 
     useEffect(() => {
         const fetchDataAndSetAnatomicalStructureSubject = async () => {
             try {
-                const result = await getAnatomicalStructureSubjectList();
+                const result: AnatomicalStructureSubject[] = await getAnatomicalStructureSubjectList();
                 setAnatomicalStructureSubjectList(result);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureForm:", error);
@@ -44,15 +50,13 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
             <form className={s.form} onSubmit={submit}>
                 <h2>Фильтры</h2>
                 <label>
-                    Название:
+                    Название
                     <input type="input" name="name" placeholder="Search..." />
                 </label>
                 <label>
-                    Тема:
-                    <select name="anatomicalStructureSubjectId">
-                        <option disabled selected>
-                            default
-                        </option>
+                    Тема
+                    <select name="anatomicalStructureSubjectId" defaultValue={"all"}>
+                        <option value={"all"}>все</option>
                         {anatomicalStructureSubjectList.map((el) => (
                             <option key={el.id} value={el.id}>
                                 {el.name}
@@ -61,26 +65,21 @@ const AnatomicalStructureForm = ({ anatomicalStructureList, setAnatomicalStructu
                     </select>
                 </label>
                 <label>
-                    Сортировка:
-                    <select name="orderBy">
-                        <option disabled selected>
-                            default
-                        </option>
-                        {anatomicalStructureList.map((el) => (
+                    Сортировка
+                    <select name="orderBy" defaultValue={"name"}>
+                        <option value={"name"}>по имени структуры</option>
+                        {columns.slice(1, -1).map((el) => (
                             <option key={el.id} value={el.id}>
-                                {el.name}
+                                {el}
                             </option>
                         ))}
                     </select>
                 </label>
                 <label>
-                    Направление сортировки:
-                    <select name="orderByDirection">
-                        <option disabled>default</option>
-                        <option value={"asc"} selected>
-                            asc
-                        </option>
-                        <option value={"desc"}>desc</option>
+                    Направление сортировки
+                    <select name="orderByDirection" defaultValue={"asc"}>
+                        <option value={"asc"}>от А до Я</option>
+                        <option value={"desc"}>от Я до А</option>
                     </select>
                 </label>
 

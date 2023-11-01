@@ -73,6 +73,12 @@ const AnatomicalStructureEditPage = () => {
                     const createdStructure = await createAnatomicalStructure(newStructure);
                     if (!createAnother) {
                         navigate(`/admin/AnatomicalStructure/${createdStructure.id}`);
+                    } else {
+                        if (createdStructure?.id) {
+                            notifySuccess("обьект создан!");
+                        } else {
+                            notifyError("ошибка!");
+                        }
                     }
                 } catch (error) {
                     console.error("Error fetching AnatomicalStructureList:", error);
@@ -94,11 +100,14 @@ const AnatomicalStructureEditPage = () => {
                     <h1 className="title">{id ? `Редактирование` : `Создание`} Анатомической структуры</h1>
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                         <label>
-                            Subject Name:
+                            Subject Name*:
                             {id ? (
                                 <input type="text" name="anatomicalStructureSubjectId" />
                             ) : (
-                                <select name="anatomicalStructureSubjectId">
+                                <select name="anatomicalStructureSubjectId" required>
+                                    <option disabled value={""}>
+                                        выбрать
+                                    </option>
                                     {subjectsList.map((subject) => (
                                         <option key={subject.id}>{subject.name}</option>
                                     ))}
@@ -106,8 +115,8 @@ const AnatomicalStructureEditPage = () => {
                             )}
                         </label>
                         <label>
-                            Structure Name:
-                            <input type="text" name="name" placeholder={structure.name} />
+                            Structure Name*:
+                            <input type="text" name="name" placeholder={structure.name} required />
                         </label>
                         {typeof id === "undefined" ? (
                             <label>
