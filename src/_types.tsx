@@ -33,3 +33,34 @@ export type AnatomicalStructureSubjectModel = {
     color: string;
     anatomicalStructures: AnatomicalStructure[];
 };
+
+export type Study = {
+    id: string;
+    externalId: string;
+    name: string;
+    description: string;
+    previewFrame: string;
+};
+
+export type Series = {
+    id: string;
+    study: Study; // Ссылка на объект Исследование
+    number: number;
+    name: string;
+    previewFrame: string;
+    instanceCount: number; // Количество кадров
+    sagitalFrame: string;
+    coronalFrame: string;
+};
+
+export type InstanceData = {
+    id: string;
+    study: Study; // Ссылка на объект Исследование
+    series: Series; // Ссылка на объект Серия исследования
+    structure: AnatomicalStructure; // Ссылка на объект Анатомическая структура
+    instanceNumber: number;
+    type: string; // Перечисление (Enum) для типа данных
+    x: number;
+    y: number;
+    path: string;
+};

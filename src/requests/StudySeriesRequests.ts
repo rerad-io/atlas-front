@@ -1,9 +1,8 @@
 import axios from "axios";
-
-const backendUrl = "https://atlas-api.d.medcol.io";
+import { backendUrl } from "./backendUrl";
 
 export const getStudySeriesList = async () => {
-    const result = await axios.get(`${backendUrl}/api/Series`);
+    const result = await axios.get(`${backendUrl}Series`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -12,8 +11,8 @@ export const getStudySeriesList = async () => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const getStudySeriesId = async (id) => {
-    const result = await axios.get(`${backendUrl}/api/Series/${id}`);
+export const getStudySeriesId = async (id: string) => {
+    const result = await axios.get(`${backendUrl}Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -22,8 +21,8 @@ export const getStudySeriesId = async (id) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const createStudySeries = async (body) => {
-    const result = await axios.post(`${backendUrl}/api/Series`, body);
+export const createStudySeries = async (body: Record<string, unknown>) => {
+    const result = await axios.post(`${backendUrl}Series`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -32,8 +31,8 @@ export const createStudySeries = async (body) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const updateStudySeries = async (body, id) => {
-    const result = await axios.put(`${backendUrl}/api/Series/${id}`, body);
+export const updateStudySeries = async (body: Record<string, unknown>, id: string) => {
+    const result = await axios.put(`${backendUrl}Series/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -42,8 +41,8 @@ export const updateStudySeries = async (body, id) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const deleteStudySeries = async (id) => {
-    const result = await axios.delete(`${backendUrl}/api/Series/${id}`);
+export const deleteStudySeries = async (id: string) => {
+    const result = await axios.delete(`${backendUrl}Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }

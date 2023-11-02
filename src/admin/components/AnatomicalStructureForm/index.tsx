@@ -68,8 +68,8 @@ const AnatomicalStructureForm = ({ columns, setAnatomicalStructureList }: Props)
                     Сортировка
                     <select name="orderBy" defaultValue={"name"}>
                         <option value={"name"}>по имени структуры</option>
-                        {columns.slice(1, -1).map((el) => (
-                            <option key={el.id} value={el.id}>
+                        {columns.slice(1, -1).map((el, index) => (
+                            <option key={index} value={el.id}>
                                 {el}
                             </option>
                         ))}

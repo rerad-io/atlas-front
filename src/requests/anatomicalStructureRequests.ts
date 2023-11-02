@@ -30,7 +30,7 @@ export const getAnatomicalStructureById = async (id: string) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const createAnatomicalStructure = async (body: { name?: string; color?: string }) => {
+export const createAnatomicalStructure = async (body: Record<string, unknown>) => {
     const result = await axios.post(`${backendUrl}AnatomicalStructure/`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
@@ -40,7 +40,7 @@ export const createAnatomicalStructure = async (body: { name?: string; color?: s
     throw new Error("API returned unsuccessful message");
 };
 
-export const updateAnatomicalStructure = async (id: string, body: { name?: string; color?: string }) => {
+export const updateAnatomicalStructure = async (id: string, body: Record<string, unknown>) => {
     const result = await axios.put(`${backendUrl}AnatomicalStructure/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
