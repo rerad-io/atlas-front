@@ -11,7 +11,7 @@ export const getStudySeriesList = async () => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const getStudySeriesId = async (id:string) => {
+export const getStudySeriesId = async (id: string) => {
     const result = await axios.get(`${backendUrl}Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
@@ -21,7 +21,7 @@ export const getStudySeriesId = async (id:string) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const createStudySeries = async (body:Record<string, unknown>) => {
+export const createStudySeries = async (body: Record<string, unknown>) => {
     const result = await axios.post(`${backendUrl}Series`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
@@ -31,7 +31,7 @@ export const createStudySeries = async (body:Record<string, unknown>) => {
     throw new Error("API returned unsuccessful message");
 };
 
-export const updateStudySeries = async (body:Record<string, unknown>, id:string) => {
+export const updateStudySeries = async (body: Record<string, unknown>, id: string) => {
     const result = await axios.put(`${backendUrl}Series/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
@@ -41,7 +41,7 @@ export const updateStudySeries = async (body:Record<string, unknown>, id:string)
     throw new Error("API returned unsuccessful message");
 };
 
-export const deleteStudySeries = async (id:string) => {
+export const deleteStudySeries = async (id: string) => {
     const result = await axios.delete(`${backendUrl}Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;

@@ -1,77 +1,99 @@
 import { useParams } from "react-router-dom";
 import s from "./styles.module.scss";
 import { useEffect, useState } from "react";
-import { seriesData, studiesList } from "../../../data/data";
+import { instanceList, seriesData, studiesList } from "../../../data/data";
+import TableComponent from "../../../components/UI/TableComponent";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
 
-		const [study, setStudy] = useState<any>({});
-		const [series, setSeries] = useState<any[]>([]);
-		const [activeSeries, setActiveSeries] = useState<any[]>(series[0]?.list);
-		const [activeNumber, setActiveNumber] =useState<string>(series[0]?.id);
-	
-		useEffect(()=>{
-			//получить данные о самом исследовании
-			//в ответsetStudyе должен быть массив с записями объекта InstanceData
-			//Массив с записями объекта Series
-			const fetchData = async () => {
-				try {
-						//const tempStudy = await getStudyId(id);
-						//const tempSeries = await getStudySeriesId(id);
-						
-						const elem = studiesList.find(elem => elem.id === id);
-						setStudy(elem);
-						const tempSeries = seriesData;
-						setSeries(tempSeries);
-				} catch (error) {
-						console.error("Error fetching AnatomicalStructureList:", error);
-				}
-		};
+    const [study, setStudy] = useState({});
+    const [series, setSeries] = useState([]);
+    const [activeNumber, setActiveNumber] = useState<string>(series[0]?.id);
+    const [activeSeries, setActiveSeries] = useState(series[0]);
+    const [instances, setInstances] = useState([]);
+    const [instanceColumns, setInstanceColumns] = useState<string[]>([]);
 
-		fetchData();
-		},[])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                //получить данные о самом исследовании
+                //в ответset Studyе должен быть массив с записями объекта InstanceData
+                //Массив с записями объекта Series
+                // TODO: данные нужно получить из базы
+                //const tempStudy = await getStudyId(id);
+                //const tempSeries = await getStudySeriesId(id);
 
-		useEffect(()=> {
-			if(series.length){
-				setActiveSeries(series[0].list)
-				setActiveNumber(series[0].id)
-			}
-		},[series])
+                const elem = studiesList.find((elem) => elem.id === id);
+                setStudy(elem);
 
-		const handleClick = (id:string)=> {
-			const elem = series.find(elem => elem.id === id)
-			setActiveNumber(elem.id)
-			setActiveSeries(elem.list);
-		}
+                const instance = instanceList;
+                setInstances(instance.filter((item) => item.study === id));
+                const tempSeries = seriesData;
+                setSeries(tempSeries.filter((item) => item.study === id));
+            } catch (error) {
+                console.error("Error fetching AnatomicalStructureList:", error);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    useEffect(() => {
+        if (series.length) {
+            setActiveNumber(series[0].id);
+            setActiveSeries(series[0]);
+        }
+    }, [series]);
+
+    useEffect(() => {
+        if (instances.length) {
+            const columnsTitles = Object.keys(instances[0]);
+            setInstanceColumns(columnsTitles);
+        }
+    }, [instances]);
+
+    const handleClick = (id: string) => {
+        const elem = series.find((elem) => elem.id === id);
+        setActiveNumber(elem.id);
+        setActiveSeries(elem);
+    };
     return (
         <div className={s.page}>
             <section>
                 <div className="container">
                     <h1 className="title">Исследование</h1>
-										<p>ID: {study?.id}</p>
-										<p>name: {study?.name}</p>
+                    <TableComponent data={Object.entries(study)} />
                 </div>
             </section>
-						<section>
-							<div className="container">
-							<ul style={{display: "flex", gap: "5px"}}>
-								{activeSeries?.map((item, index)=>
-								<li key={index}>
-									<img src={item.img} alt={item.alt} style={{width: "50px", height: "50px", objectFit: "cover"}}/>
-								</li>)}
-							</ul>
-							<ul style={{marginTop: "15px", cursor:"pointer"}}>
-								{series.map((item, index)=>
-								<li 
-
-								key={index}
-								onClick={()=>handleClick(item.id)}>
-									{`${item.name} ${item.id === activeNumber ? "(active)": ''}`}
-								</li>)}
-							</ul>
-							</div>
-						</section>
+            <section>
+                <div className="container">
+                    <h2>Серии исследования {`"${study.name}"`}</h2>
+                    {activeSeries ? <TableComponent data={Object.entries(activeSeries)} /> : ""}
+                </div>
+            </section>
+            <section>
+                <div className="container">
+                    <h2>Инстансы исследования {`"${study.name}"`}</h2>
+                    {instances.length ? <TableComponent columns={instanceColumns} data={instances} /> : ""}
+                </div>
+            </section>
+            <section>
+                <div className="container">
+                    <img
+                        src={activeSeries?.previewFrame}
+                        alt={activeSeries?.name}
+                        style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                    />
+                    <ul style={{ marginTop: "15px", cursor: "pointer" }}>
+                        {series.map((item, index) => (
+                            <li key={index} onClick={() => handleClick(item.id)}>
+                                {`${item.name} ${item.id === activeNumber ? "(active)" : ""}`}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
         </div>
     );
 };
