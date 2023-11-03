@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TableComponent from "../../../components/UI/TableComponent";
-import { deleteAnatomicalStructureSubject, getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
+import { deleteAnatomicalStructureSubject, getAnatomicalStructureSubjectById, getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
 import { AnatomicalStructureSubject } from "../../../_types";
 
 const AnatomicalStructureSubjectList = () => {
@@ -29,17 +29,24 @@ const AnatomicalStructureSubjectList = () => {
     }, [subjectsList]);
 
     const removeItemById = async (itemId: string) => {
-        const isAlert = confirm("уверены что хотите удалить?");
+			const targetSubject = await getAnatomicalStructureSubjectById(itemId);
+			if(!targetSubject.anatomicalStructures.length){
+
+				
+				const isAlert = confirm("уверены, что хотите удалить?");
         if (isAlert) {
-            try {
-                const result = await deleteAnatomicalStructureSubject(itemId);
-                if (result === 204) {
-                    setSubjectsList(subjectsList.filter((item) => item.id !== itemId));
-                }
-            } catch (error) {
-                console.error("Error fetching AnatomicalStructureSubjectList:", error);
-            }
+					try {
+						const result = await deleteAnatomicalStructureSubject(itemId);
+						if (result === 204) {
+							setSubjectsList(subjectsList.filter((item) => item.id !== itemId));
+						} 
+					} catch (error) {
+						console.error("Error fetching AnatomicalStructureSubjectList:", error);
+					}
         }
+			}else{
+				alert("В этой теме есть анатомические структуры. Сперва нужно их удалить")
+			}
     };
     return <TableComponent columns={columns} data={subjectsList} actions={"AnatomicalStructureSubject/"} removeItemById={removeItemById} />;
 };
