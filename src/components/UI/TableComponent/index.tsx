@@ -4,7 +4,6 @@ import s from "./styles.module.scss";
 function TableComponent({ columns = [], data = [], actions = "", removeItemById = null }) {
     const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
 
-    //console.log("🚀 ~ file: index.tsx:53 ~ TableComponent ~ data:", data);
     const tableData = () => {
         return data.map((item, index) => (
             <tr
