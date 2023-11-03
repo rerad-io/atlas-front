@@ -44,11 +44,11 @@ export type Study = {
 
 export type Series = {
     id: string;
-    study: Study; // Ссылка на объект Исследование
+    study: Study;
     number: number;
     name: string;
     previewFrame: string;
-    instanceCount: number; // Количество кадров
+    instanceCount: number;
     sagitalFrame: string;
     coronalFrame: string;
 };
