@@ -69,10 +69,10 @@ export const galleryList = [
 //    },
 //];
 
-const studyID_1 = "1acaebd3-7150-4800-93f0-36c462a52f38";
-const studyID_2 = "6454db3d-bc87-4747-9b5f-2088c552405c";
-const studyID_3 = "9e71b9e5-ff3c-4256-997a-2ad709bf6367";
-const studyID_4 = "2d3147c7-235f-4010-af91-401461999ec8";
+const studyID_1 = "80824070-8536-4e23-91fa-3be3d75d1bd0";
+const studyID_2 = "dd2e241c-4ddc-4711-910e-721ae07b5007";
+const studyID_3 = "84a41dc8-bb94-48e7-aee9-5a32c73f56f7";
+const studyID_4 = "fa000a82-d00a-4cf8-9698-4f18dc539d72";
 
 export const seriesData = [
     {

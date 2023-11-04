@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import s from "./s.module.css";
 import Button from "../../../components/UI/Button";
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 const StudyEditPage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+		const formRef = useRef<HTMLFormElement | null>(null);
     const [createAnother, setCreateAnother] = useState(false);
 
     const [study, setStudy] = useState();
@@ -30,11 +31,12 @@ const StudyEditPage = () => {
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-
         const obj: Record<string, string> = {};
 
         formData.forEach((value, key) => {
-            obj[key] = value as string;
+					if (key !== "createAnother" && key !== "externalId") {
+						obj[key] = value as string;
+				}
         });
 
         if (id) {
@@ -52,10 +54,13 @@ const StudyEditPage = () => {
         } else {
             const fetchDataAndCreateStudy = async () => {
                 try {
-                    await createStudy(obj);
+                    const data = await createStudy(obj);
+                    console.log("🚀 ~ file: index.tsx:58 ~ fetchDataAndCreateStudy ~ data:", data)
                     if (!createAnother) {
                         navigate(`/admin/Study`);
-                    }
+                    } else {
+											toast.success("Исследование создано успешно!");
+										}
                 } catch (error) {
                     toast.error("Study create - Error");
                     console.log("Error StudyEditPage, method POST", error);
@@ -63,7 +68,10 @@ const StudyEditPage = () => {
             };
             fetchDataAndCreateStudy();
         }
-        e.target.reset();
+
+        if (formRef.current) {
+            formRef.current.reset();
+        }
     };
 
     // TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
@@ -85,8 +93,8 @@ const StudyEditPage = () => {
 
     return (
         <div className={s.page}>
-            <h1>Создание/Редактирование Исследования</h1>
-            <form onSubmit={onSubmitHandler} className={s.form}>
+					<h1 className="title">{id ? `Редактирование` : `Создание`} Исследования</h1>
+            <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                 <label htmlFor="externalId">
                     External Id:
                     <input required type="text" name="externalId" id="externalId" defaultValue={study?.externalId} />
@@ -120,7 +128,7 @@ const StudyEditPage = () => {
                 <Button>Save</Button>
             </form>
 
-            {typeof id !== "undefined" ? <StudySeriesList seriesId={id} /> : null}
+            {id ? <StudySeriesList seriesId={id} /> : null}
         </div>
     );
 };

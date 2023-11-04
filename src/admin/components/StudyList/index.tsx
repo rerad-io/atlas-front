@@ -15,7 +15,9 @@ const StudyList = ({ studyList, columns }: Props) => {
 			setList(studyList);
 	}, [studyList]);
 
-    const removeItemById = async (itemId: string) => {
+    const removeItemById = async (itemId: string) => {		
+			const isAlert = confirm("уверены что хотите удалить?");
+		if (isAlert) {
         try {
             const result = await deleteStudy(itemId);
             if (result === 204) {
@@ -24,6 +26,7 @@ const StudyList = ({ studyList, columns }: Props) => {
         } catch (error) {
             console.error("Error fetching StudyListTable:", error);
         }
+			}
     };
 
     return (
