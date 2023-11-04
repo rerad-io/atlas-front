@@ -38,135 +38,84 @@ export const galleryList = [
     },
 ];
 
-export const studiesList = [
-    {
-        id: "study1",
-        externalId: "uuid1",
-        name: "Исследование головного мозга",
-        description: "описание исследования головного мозга",
-        previewFrame: had,
-    },
-    {
-        id: "study2",
-        externalId: "uuid2",
-        name: "Исследование руки",
-        description: "описание исследования руки",
-        previewFrame: arm,
-    },
-    {
-        id: "study3",
-        externalId: "uuid3",
-        name: "Исследование ноги",
-        description: "описание исследования ноги",
-        previewFrame: lag,
-    },
-    {
-        id: "study4",
-        externalId: "uuid4",
-        name: "Исследование HR",
-        description: "описание исследования HR",
-        previewFrame: had2,
-    },
-];
+//export const studiesList = [
+//    {
+//        id: "study1",
+//        externalId: "uuid1",
+//        name: "Исследование головного мозга",
+//        description: "описание исследования головного мозга",
+//        previewFrame: had,
+//    },
+//    {
+//        id: "study2",
+//        externalId: "uuid2",
+//        name: "Исследование руки",
+//        description: "описание исследования руки",
+//        previewFrame: arm,
+//    },
+//    {
+//        id: "study3",
+//        externalId: "uuid3",
+//        name: "Исследование ноги",
+//        description: "описание исследования ноги",
+//        previewFrame: lag,
+//    },
+//    {
+//        id: "study4",
+//        externalId: "uuid4",
+//        name: "Исследование HR",
+//        description: "описание исследования HR",
+//        previewFrame: had2,
+//    },
+//];
 
-//export const seriesData = [
-//	{
-//		id: "serie 1",
-//		name: "T 1",
-//		study: "study1",
-//		number: 1,
-//		list:[
-//			{
-//        id: "1",
-//        img: arm,
-//        alt: "photo1",
-//    },
-//    {
-//        id: "2",
-//        img: had,
-//        alt: "photo2",
-//    },
-//    {
-//        id: "3",
-//        img: lag,
-//        alt: "photo3",
-//    },
-//		]
-//	},
-//	{
-//		id: "serie 2",
-//		name: "T 2",
-//		study: "study2",
-//		number: 2,
-//		list:[ {
-//			id: "4",
-//			img: had2,
-//			alt: "photo4",
-//	},
-//	{
-//			id: "5",
-//			img: arm,
-//			alt: "photo5",
-//	},]
-//	},
-//	{
-//		id: "serie 3",
-//		name: "T 3",
-//		study: "study3",
-//		number: 3,
-//		list:[
-//			{
-//			id: "2",
-//			img: had,
-//			alt: "photo2",
-//	},
-//	{
-//			id: "3",
-//			img: lag,
-//			alt: "photo3",
-//	},
-//	{
-//			id: "4",
-//			img: had2,
-//			alt: "photo4",
-//	},]
-//	},
-//]
+const studyID_1 = "1acaebd3-7150-4800-93f0-36c462a52f38";
+const studyID_2 = "6454db3d-bc87-4747-9b5f-2088c552405c";
+const studyID_3 = "9e71b9e5-ff3c-4256-997a-2ad709bf6367";
+const studyID_4 = "2d3147c7-235f-4010-af91-401461999ec8";
 
 export const seriesData = [
     {
         id: "serie 1",
-        study: "study1",
+        study: {
+            id: studyID_1,
+        },
         number: 1,
         name: "T 1",
         previewFrame: had,
-        instanceCount: 2,
+        instanceCount: 10,
         sagitalFrame: had,
-        coronalFrame: had,
+        coronalFrame: had2,
     },
     {
         id: "serie 2",
-        study: "study1",
+        study: {
+            id: studyID_1,
+        },
         number: 2,
         name: "T 2",
         previewFrame: had,
-        instanceCount: 2,
+        instanceCount: 8,
         sagitalFrame: had,
-        coronalFrame: had,
+        coronalFrame: had2,
     },
     {
         id: "serie 3",
-        study: "study1",
+        study: {
+            id: studyID_1,
+        },
         number: 3,
         name: "T 3",
         previewFrame: had,
-        instanceCount: 2,
+        instanceCount: 8,
         sagitalFrame: had,
-        coronalFrame: had,
+        coronalFrame: had2,
     },
     {
         id: "serie 4",
-        study: "study2",
+        study: {
+            id: studyID_2,
+        },
         number: 4,
         name: "T 4",
         previewFrame: arm,
@@ -176,7 +125,9 @@ export const seriesData = [
     },
     {
         id: "serie 5",
-        study: "study2",
+        study: {
+            id: studyID_2,
+        },
         number: 5,
         name: "T 5",
         previewFrame: arm,
@@ -186,7 +137,9 @@ export const seriesData = [
     },
     {
         id: "serie 6",
-        study: "study3",
+        study: {
+            id: studyID_3,
+        },
         number: 6,
         name: "T 6",
         previewFrame: lag,
@@ -196,7 +149,9 @@ export const seriesData = [
     },
     {
         id: "serie 7",
-        study: "study3",
+        study: {
+            id: studyID_3,
+        },
         number: 7,
         name: "T 7",
         previewFrame: lag,
@@ -206,7 +161,9 @@ export const seriesData = [
     },
     {
         id: "serie 8",
-        study: "study4",
+        study: {
+            id: studyID_4,
+        },
         number: 8,
         name: "T 8",
         previewFrame: had2,
