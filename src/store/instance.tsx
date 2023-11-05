@@ -33,10 +33,10 @@ const instanceSlice = createSlice({
             state.studies = action.payload;
         },
         getSeriesList(state, action) {
-					const seriesObject = action.payload.reduce((acc, serie) => {
-						acc[serie.number] = {...serie};
-						return acc;
-				}, {});
+            const seriesObject = action.payload.reduce((acc, serie) => {
+                acc[serie.number] = { ...serie };
+                return acc;
+            }, {});
             state.series = seriesObject;
         },
         getInstanceList(state, action) {

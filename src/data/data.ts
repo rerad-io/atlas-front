@@ -74,7 +74,7 @@ const studyID_2 = "dd2e241c-4ddc-4711-910e-721ae07b5007";
 const studyID_3 = "84a41dc8-bb94-48e7-aee9-5a32c73f56f7";
 const studyID_4 = "fa000a82-d00a-4cf8-9698-4f18dc539d72";
 
-export const seriesData = [
+export const temporarySeriesData = [
     {
         id: "serie 1",
         study: {

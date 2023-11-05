@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 const StudyEditPage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-		const formRef = useRef<HTMLFormElement | null>(null);
+    const formRef = useRef<HTMLFormElement | null>(null);
     const [createAnother, setCreateAnother] = useState(false);
 
     const [study, setStudy] = useState();
@@ -34,9 +34,9 @@ const StudyEditPage = () => {
         const obj: Record<string, string> = {};
 
         formData.forEach((value, key) => {
-					if (key !== "createAnother" && key !== "externalId") {
-						obj[key] = value as string;
-				}
+            if (key !== "createAnother" && key !== "externalId") {
+                obj[key] = value as string;
+            }
         });
 
         if (id) {
@@ -55,12 +55,15 @@ const StudyEditPage = () => {
             const fetchDataAndCreateStudy = async () => {
                 try {
                     const data = await createStudy(obj);
-                    console.log("🚀 ~ file: index.tsx:58 ~ fetchDataAndCreateStudy ~ data:", data)
-                    if (!createAnother) {
-                        navigate(`/admin/Study`);
+                    if (data) {
+                        if (!createAnother) {
+                            navigate(`/admin/Study`);
+                        } else {
+                            toast.success("Исследование создано успешно!");
+                        }
                     } else {
-											toast.success("Исследование создано успешно!");
-										}
+                        toast.error("Ошибка создания исследования");
+                    }
                 } catch (error) {
                     toast.error("Study create - Error");
                     console.log("Error StudyEditPage, method POST", error);
@@ -93,12 +96,15 @@ const StudyEditPage = () => {
 
     return (
         <div className={s.page}>
-					<h1 className="title">{id ? `Редактирование` : `Создание`} Исследования</h1>
+            <h1 className="title">{id ? `Редактирование` : `Создание`} Исследования</h1>
             <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
-                <label htmlFor="externalId">
+                {
+                    // TODO: раскоментировать после добавление в базе этого поля при создании иследования
+                    /*<label htmlFor="externalId">
                     External Id:
                     <input required type="text" name="externalId" id="externalId" defaultValue={study?.externalId} />
-                </label>
+                </label>*/
+                }
                 <label htmlFor="studyName">
                     Study Name:
                     <input required type="text" name="name" id="studyName" defaultValue={study?.name} />
@@ -128,7 +134,7 @@ const StudyEditPage = () => {
                 <Button>Save</Button>
             </form>
 
-            {id ? <StudySeriesList seriesId={id} /> : null}
+            {id ? <StudySeriesList studyId={id} /> : null}
         </div>
     );
 };
