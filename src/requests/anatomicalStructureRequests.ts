@@ -1,6 +1,6 @@
 import axios from "axios";
 import { backendUrl } from "./backendUrl";
-import { AnatomicalStructure } from "../_types";
+import { AnatomicalStructure, AnatomicalStructureModel } from "../_types";
 
 const prepareQuery = (parameters: Record<string, unknown>): string => {
     if (parameters) {
@@ -21,7 +21,7 @@ export const getAnatomicalStructureList = async (parameters: Record<string, unkn
 };
 
 export const getAnatomicalStructureById = async (id: string) => {
-    const result = await axios.get<AnatomicalStructure>(`${backendUrl}AnatomicalStructure/${id}`);
+    const result = await axios.get<AnatomicalStructureModel>(`${backendUrl}AnatomicalStructure/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }

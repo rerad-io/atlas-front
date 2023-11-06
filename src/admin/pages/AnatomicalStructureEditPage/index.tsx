@@ -8,85 +8,98 @@ import {
     updateAnatomicalStructure,
 } from "../../../requests/anatomicalStructureRequests";
 import { getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
+import { AnatomicalStructureModel, AnatomicalStructureSubject } from "../../../_types";
 import s from "./styles.module.scss";
 
 const AnatomicalStructureEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const [createAnother, setCreateAnother] = useState(false);
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const [subjectsList, setSubjectsList] = useState([]);
-    const [structure, setStructure] = useState({});
+    const [createAnother, setCreateAnother] = useState(false);
+
+    const [subjectsList, setSubjectsList] = useState<AnatomicalStructureSubject[]>([]);
+    const [structure, setStructure] = useState<AnatomicalStructureModel>();
+    const [subject, setSubject] = useState<AnatomicalStructureSubject>();
 
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     useEffect(() => {
-        const fetchStructureData = async () => {
+        const fetchStructureData = async (structureId: string = "") => {
             try {
-                const result = await getAnatomicalStructureById(id);
-                setStructure(result);
+                const targetStructure: AnatomicalStructureModel = await getAnatomicalStructureById(structureId);
+                setStructure(targetStructure);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureSubjectList:", error);
             }
         };
-
-        const fetchSubjectData = async () => {
+        const fetchSubjectsData = async () => {
             try {
-                const result = await getAnatomicalStructureSubjectList();
-                setSubjectsList(result);
+                const subjects: AnatomicalStructureSubject[] = await getAnatomicalStructureSubjectList();
+                setSubjectsList(subjects);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureSubjectList:", error);
             }
         };
         if (id) {
-            fetchStructureData();
-        } else {
-            fetchSubjectData();
+            fetchStructureData(id);
         }
+        fetchSubjectsData();
     }, [id]);
+
+    useEffect(() => {
+        setSubject(structure?.anatomicalStructureSubject);
+    }, [structure]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const newStructure: Record<string, string> = {};
-
-        formData.forEach((value, key) => {
-            newStructure[key] = value as string;
-            const elem = subjectsList.find((elem) => elem.name === value);
-            if (elem) {
-                newStructure.anatomicalStructureSubjectId = elem.id as string;
+        const targetSubject = subjectsList.find((subject) => subject.name === formData.get("anatomicalStructureSubjectId"));
+        const newStructure: { name: string; anatomicalStructureSubject: { id: string } } = {
+            name: formData.get("name") as string,
+            anatomicalStructureSubject: {
+                id: targetSubject?.id || "",
+            },
+        };
+        const fetchDataUpdate = async (structureId: string, object: { name: string; anatomicalStructureSubject: { id: string } }) => {
+            try {
+                const updatedStructure = await updateAnatomicalStructure(structureId, object);
+                if (updatedStructure) {
+                    notifySuccess("изменение успешно!");
+                } else {
+                    notifyError("ошибка!");
+                }
+            } catch (error) {
+                notifyError("ошибка!");
+                console.error("Error fetching AnatomicalStructureList:", error);
             }
-        });
+        };
+
+        const fetchDataCreate = async (object: { name: string; anatomicalStructureSubject: { id: string } }) => {
+            try {
+                const createdStructure = await createAnatomicalStructure(object);
+                if (!createAnother) {
+                    navigate(`/admin/AnatomicalStructure`);
+                } else {
+                    if (createdStructure?.id) {
+                        notifySuccess("обьект создан!");
+                    } else {
+                        notifyError("ошибка!");
+                    }
+                }
+            } catch (error) {
+                notifyError("ошибка!");
+                console.error("Error fetching AnatomicalStructureList:", error);
+            }
+        };
 
         if (id) {
-            const updatedStructure = updateAnatomicalStructure(id, newStructure);
-            if (updatedStructure?.id) {
-                notifySuccess("изменение успешно!");
-            } else {
-                notifyError("ошибка!");
-            }
+            fetchDataUpdate(id, newStructure);
         } else {
-            const fetchData = async () => {
-                try {
-                    const createdStructure = await createAnatomicalStructure(newStructure);
-                    if (!createAnother) {
-                        navigate(`/admin/AnatomicalStructure/${createdStructure.id}`);
-                    } else {
-                        if (createdStructure?.id) {
-                            notifySuccess("обьект создан!");
-                        } else {
-                            notifyError("ошибка!");
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error fetching AnatomicalStructureList:", error);
-                }
-            };
-
-            fetchData();
+            fetchDataCreate(newStructure);
         }
+
         if (formRef.current) {
             formRef.current.reset();
         }
@@ -99,12 +112,12 @@ const AnatomicalStructureEditPage = () => {
                     <Toaster />
                     <h1 className="title">{id ? `Редактирование` : `Создание`} Анатомической структуры</h1>
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
-                        <label>
-                            Subject Name*:
-                            {id ? (
-                                <input type="text" name="anatomicalStructureSubjectId" />
-                            ) : (
-                                <select name="anatomicalStructureSubjectId" required>
+                        {
+                            // TODO: На данный момент тему при редактировании Анатомической структуры
+                            // поменять нельзя. При изменениии раскоментировать select
+                            /*<label>
+                            Subject Name:
+																<select name="anatomicalStructureSubjectId" required>
                                     <option disabled value={""}>
                                         выбрать
                                     </option>
@@ -112,11 +125,16 @@ const AnatomicalStructureEditPage = () => {
                                         <option key={subject.id}>{subject.name}</option>
                                     ))}
                                 </select>
-                            )}
-                        </label>
+                        </label>*/
+                        }
+                        <p>
+                            {" "}
+                            Subject Name: <b>{subject?.name}</b>
+                        </p>
+
                         <label>
                             Structure Name*:
-                            <input type="text" name="name" placeholder={structure.name} required />
+                            <input type="text" name="name" placeholder={structure?.name} required />
                         </label>
                         {typeof id === "undefined" ? (
                             <label>

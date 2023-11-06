@@ -82,7 +82,7 @@ const AnatomicalStructureSubjectEditPage = () => {
 
                     if (createdSubject) {
                         if (!createAnother) {
-                            navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
+                            navigate(`/admin/AnatomicalStructureSubject`);
                         } else {
                             notifySuccess("Тема создана успешно!");
                         }
