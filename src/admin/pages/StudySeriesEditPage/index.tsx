@@ -1,32 +1,33 @@
 import { useLocation, useParams } from "react-router-dom";
-import s from "./s.module.css";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
-import { galleryList } from "../../../data/data";
 import FrameSelector from "../../components/FrameSelector";
 import RenderComponent from "../../components/RenderComponent";
-import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import toast from "react-hot-toast";
+import { createStudySeries, updateStudySeries } from "../../../requests/StudySeriesRequests";
+import { galleryList, temporarySeriesData } from "../../../data/data";
+import s from "./s.module.css";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
     const [studySeries, setStudySeries] = useState();
-
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const seriesId = searchParams.get("seriesId");
+    const studyId = searchParams.get("studyId");
 
     useEffect(() => {
         if (id) {
-            const fetchDataAndsetStudySeriesId = async () => {
+            const fetchDataAndsetStudyseriesId = async () => {
                 try {
-                    const result = await getStudySeriesId(id);
+                    // TODO: данные получать из базы
+                    //const result = await getStudyseriesId(id);
+                    const result = temporarySeriesData.find((item) => item.id === id);
                     setStudySeries(result);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
             };
-            fetchDataAndsetStudySeriesId();
+            fetchDataAndsetStudyseriesId();
         }
     }, [id]);
 
@@ -71,7 +72,6 @@ const StudySeriesEditPage = () => {
         } else {
             const fetchDataAndCreateStudySeries = async () => {
                 try {
-                    // console.log(obj);
                     await createStudySeries(obj);
                     toast.success("Study Series created!");
                 } catch (error) {
@@ -129,7 +129,14 @@ const StudySeriesEditPage = () => {
                 <form onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="Study">
                         Study:
-                        <input type="text" name="study" id="Study" defaultValue={seriesId} disabled style={{ width: "400px" }} />{" "}
+                        <input
+                            type="text"
+                            name="study"
+                            id="Study"
+                            defaultValue={studyId ? studyId : studySeries?.study?.id}
+                            disabled
+                            style={{ width: "400px" }}
+                        />
                     </label>
                     <label htmlFor="StudySeriesName">
                         Study Series Name:
@@ -151,6 +158,10 @@ const StudySeriesEditPage = () => {
                         Coronal Frame:
                         <input type="text" name="coronalFrame" id="CoronalFrame" defaultValue={studySeries?.coronalFrame}></input>
                     </label>
+                    <label htmlFor="instanceCount">
+                        Instance Count:
+                        <input type="number" name="instanceCount" id="instanceCount" defaultValue={studySeries?.instanceCount}></input>
+                    </label>
 
                     <Button>Save</Button>
                 </form>
@@ -165,31 +176,7 @@ const StudySeriesEditPage = () => {
                         }}
                     >
                         <div className="container">
-                            <div
-                                className={s.frame_wrapper}
-                                style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    alignItems: "flex-start",
-                                    gap: "20px",
-                                }}
-                            >
-                                <RenderComponent currentFrame={currentFrame} />
-                                <div
-                                    style={{
-                                        overflow: "hidden",
-                                    }}
-                                >
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed adipisci voluptatem corporis qui voluptate
-                                    veritatis commodi iste est quis vero! Dolorem asperiores eos reprehenderit quisquam nam earum obcaecati
-                                    repellendus commodi magnam, odio distinctio minima exercitationem ea doloremque labore voluptatibus.
-                                    Error, nulla expedita omnis maiores veniam temporibus minima fuga tempora neque magnam iure illum, earum
-                                    vel saepe, animi laudantium! Voluptatem, aut suscipit. Fugiat est, harum iste ipsam explicabo ullam?
-                                    Dolor consequuntur, perferendis facilis veniam commodi cupiditate voluptatum rem ratione esse magni vel
-                                    iste. Tempora sint culpa, quasi asperiores sit atque est magni explicabo et quam in ducimus commodi
-                                    harum placeat veritatis.
-                                </div>
-                            </div>
+                            <RenderComponent currentFrame={currentFrame} />
                         </div>
                     </section>
                 </>

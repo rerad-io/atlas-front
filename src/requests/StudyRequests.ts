@@ -44,7 +44,7 @@ export const updateStudy = async (body: Record<string, unknown>, id: string) => 
 export const deleteStudy = async (id: string) => {
     const result = await axios.delete(`${backendUrl}Study/${id}`);
     if (result.status >= 200 && result.status <= 300) {
-        return result.data;
+        return result.status;
     }
     console.log("Error status: ", result.status);
     console.log("Error data: ", result.data);

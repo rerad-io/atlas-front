@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
 import Button from "../../../components/UI/Button";
 import TableComponent from "../../../components/UI/TableComponent";
-import { getStudySeriesList, deleteStudySeries } from "../../../requests/StudySeriesRequests";
+import { deleteStudySeries } from "../../../requests/StudySeriesRequests";
+import { temporarySeriesData } from "../../../data/data";
+import { Series } from "../../../_types";
 import s from "./s.module.css";
 
-const StudySeriesList = ({ seriesId }) => {
-    const columns = ["Id", "Study", "Number", "Name", "PreviewFrame", "InstanceCount", "SagitalFrame", "CoronalFrame", "Actions"];
-
-    const [studySeriesList, setStudySeriesList] = useState([]);
+const StudySeriesList = ({ studyId }) => {
+    const [studySeriesList, setStudySeriesList] = useState<Series[]>([]);
+    const [columns, setColumns] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchDataAndSetStudySeriesList = async () => {
             try {
-                const result = await getStudySeriesList();
-                setStudySeriesList(result);
+                // TODO: раскоментировать с рабочей базой
+                //const temporarySeriesData = await getStudySeriesList();
+                const seriesData = temporarySeriesData.map(({ study, ...rest }) => {
+                    return { ...rest, studyId: study.id };
+                });
+                setStudySeriesList(seriesData);
+                const columnsTitles = Object.keys(seriesData[0]);
+                columnsTitles.push("Actions");
+                setColumns(columnsTitles);
                 // TODO: добавить метод фильтр и отфильтровать по study
                 //setStudySeriesList(result.filter(el => el.id === seriesId));
             } catch (error) {
@@ -24,7 +32,7 @@ const StudySeriesList = ({ seriesId }) => {
     }, []);
 
     const removeItemById = async (itemId: string) => {
-        const isAlert = confirm("уверены что хотите удалить?");
+        const isAlert = confirm("уверены, что хотите удалить?");
         if (isAlert) {
             try {
                 const result = await deleteStudySeries(itemId);
@@ -40,8 +48,7 @@ const StudySeriesList = ({ seriesId }) => {
     return (
         <div className={s.page}>
             <h3>Список серий исследования</h3>
-
-            <Button to={`/admin/StudySeries/create?seriesId=${seriesId}`}>Добавить серию исследования</Button>
+            <Button to={`/admin/StudySeries/create?studyId=${studyId}`}>Добавить серию исследования</Button>
             <section className={s.section}>
                 <div className="container">
                     <div>
