@@ -7,22 +7,29 @@ import RenderComponent from "../../../components/RenderComponent";
 import { createStudySeries, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import { galleryList, temporarySeriesData } from "../../../data/data";
 import s from "./s.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { addSeriesList } from "../../../store/instance";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
+		const dispatch = useDispatch();
+
+		const { instances } = useSelector(({ instance }) => instance);
     const [studySeries, setStudySeries] = useState();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const studyId = searchParams.get("studyId");
+		const [currentFrame, setCurrentFrame] = useState();
 
     useEffect(() => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
+									const result = temporarySeriesData.find((item) => item.id === id);
+									setStudySeries(result);
                     // TODO: данные получать из базы
                     //const result = await getStudyseriesId(id);
-                    const result = temporarySeriesData.find((item) => item.id === id);
-                    setStudySeries(result);
+										dispatch(addSeriesList(temporarySeriesData.filter((serie) => serie.study.id === result?.study?.id)));
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -30,6 +37,11 @@ const StudySeriesEditPage = () => {
             fetchDataAndsetStudyseriesId();
         }
     }, [id]);
+    useEffect(() => {
+			setCurrentFrame(instances[studySeries?.number]?.[0]);
+    }, [studySeries]);
+
+
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -102,24 +114,9 @@ const StudySeriesEditPage = () => {
     //     });
     // };
 
-    const frameList: {
-        id: string;
-        img: string;
-        alt: string;
-    }[] = galleryList;
-    const [currentFrame, setCurrentFrame] = useState(frameList[0]);
-
     const handleClick = (id: string) => {
-        const newFrame: {
-            id: string;
-            img: string;
-            alt: string;
-        } = frameList.find((elem) => elem.id === id) as {
-            id: string;
-            img: string;
-            alt: string;
-        };
-        setCurrentFrame(newFrame);
+        const newFrame = instances[studySeries?.number];
+        setCurrentFrame(newFrame[id]);
     };
 
     return (
@@ -168,17 +165,8 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    <FrameSelector frameList={frameList} handleClick={handleClick} />
-                    <section
-                        className={s.frame_info}
-                        style={{
-                            padding: "20px 0",
-                        }}
-                    >
-                        <div className="container">
-                            <RenderComponent currentFrame={currentFrame} />
-                        </div>
-                    </section>
+                  <FrameSelector frameList={instances[studySeries?.number]} handleClick={handleClick} />
+                  <RenderComponent currentFrame={currentFrame} />
                 </>
             ) : null}
         </div>

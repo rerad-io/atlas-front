@@ -1,18 +1,14 @@
 import s from "./styles.module.scss";
 
-type RenderComponentProps = {
-    currentFrame: {
-        id: string;
-        img: string;
-        alt: string;
-    };
-};
-
-const RenderComponent = (props: RenderComponentProps) => {
+const RenderComponent = ({currentFrame}) => {
     return (
-        <div className={s.current_frame}>
-            <img src={props.currentFrame.img} alt={props.currentFrame.alt} />
+			<section className={s.frame_info}>
+			<div className="container">
+			<div className={s.current_frame}>
+            <img src={currentFrame?.path} alt={currentFrame?.id} />
         </div>
+			</div>
+	</section>
     );
 };
 

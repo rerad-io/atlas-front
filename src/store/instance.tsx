@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AnatomicalStructureSubject, InstanceData, Series, Study } from "../_types";
 import { v4 as uuidv4 } from "uuid";
+import { pathList } from "../data/data";
 
 export type InstanceState = {
     study: Study;
@@ -12,20 +13,10 @@ export type InstanceState = {
 
 const initialState: InstanceState = {
     study: {},
-    studies: [], // список исследований
-    series: {
-        //1: { /* данные для серии с номером 1 */ },
-        //2: { /* данные для серии с номером 2 */ },
-        // и так далее
-    },
-    instances: {
-        //1: [...], // массив данных экземпляров для серии с номером 1
-        //2: [...], // массив данных экземпляров для серии с номером 2
-        // и так далее
-    },
-    availableAnatomicalStructureSubjects: [
-        //"Тема 1", "Тема 2", /* и так далее */
-    ],
+    studies: [], 
+    series: {},
+    instances: {},
+    availableAnatomicalStructureSubjects: [],
 };
 
 const instanceSlice = createSlice({
@@ -41,7 +32,7 @@ const instanceSlice = createSlice({
         addStudiesList(state, action) {
             state.studies = action.payload;
         },
-        addSeriesList(state, action) {
+        addSeriesList(state, action) {		
             const seriesObject = action.payload.reduce((acc, serie) => {
                 acc[serie.number] = { ...serie };
                 return acc;
@@ -58,15 +49,17 @@ const instanceSlice = createSlice({
                         id: uuidv4(),
                         study: { id: serie.study.id },
                         series: { id: serie.id },
-                        path: `/dicom-studies/${state.study.externalId}/series/${serie.number}/instances/${index}.png`,
+												// TODO: раскоментировать при рабочей базе
+												path: Object.values(pathList[index]),
+                        //path: `/dicom-studies/${state.study.externalId}/series/${serie.number}/instances/${index}.png`,
                         instanceNumber: index,
                         x: 0,
                         y: 0,
                     });
                 }
                 return acc;
-            }, {});
-            state.instances = instancesObject;
+							}, {});
+							state.instances = instancesObject;
         },
     },
 });
