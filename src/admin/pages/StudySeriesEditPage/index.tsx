@@ -5,43 +5,41 @@ import Button from "../../../components/UI/Button";
 import FrameSelector from "../../../components/FrameSelector";
 import RenderComponent from "../../../components/RenderComponent";
 import { createStudySeries, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import { galleryList, temporarySeriesData } from "../../../data/data";
-import s from "./s.module.css";
+import { temporarySeriesData } from "../../../data/data";
 import { useDispatch, useSelector } from "react-redux";
-import { addSeriesList } from "../../../store/instance";
+import { setSeriesList } from "../../../store/instance";
+import s from "./s.module.css";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
-		const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-		const { instances } = useSelector(({ instance }) => instance);
+    const { instances } = useSelector(({ instance }) => instance);
     const [studySeries, setStudySeries] = useState();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const studyId = searchParams.get("studyId");
-		const [currentFrame, setCurrentFrame] = useState();
+    const [currentFrame, setCurrentFrame] = useState();
 
     useEffect(() => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
-									const result = temporarySeriesData.find((item) => item.id === id);
-									setStudySeries(result);
+                    const result = temporarySeriesData.find((item) => item.id === id);
+                    setStudySeries(result);
                     // TODO: данные получать из базы
                     //const result = await getStudyseriesId(id);
-										dispatch(addSeriesList(temporarySeriesData.filter((serie) => serie.study.id === result?.study?.id)));
+                    dispatch(setSeriesList(temporarySeriesData.filter((serie) => serie.study.id === result?.study?.id)));
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
             };
             fetchDataAndsetStudyseriesId();
         }
-    }, [id]);
+    }, [id, dispatch]);
     useEffect(() => {
-			setCurrentFrame(instances[studySeries?.number]?.[0]);
-    }, [studySeries]);
-
-
+        setCurrentFrame(instances[studySeries?.number]?.[0]);
+    }, [studySeries, instances]);
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -165,8 +163,8 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                  <FrameSelector frameList={instances[studySeries?.number]} handleClick={handleClick} />
-                  <RenderComponent currentFrame={currentFrame} />
+                    <FrameSelector frameList={instances[studySeries?.number]} handleClick={handleClick} />
+                    <RenderComponent currentFrame={currentFrame} />
                 </>
             ) : null}
         </div>

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import s from "./styles.module.scss";
 import { getStudyList } from "../requests/StudyRequests";
-import { addStudiesList } from "../store/instance";
+import { setStudiesList } from "../store/instance";
+import s from "./styles.module.scss";
 
 const AppIndex = () => {
     const { studies } = useSelector((store) => store.instance);
@@ -13,7 +13,7 @@ const AppIndex = () => {
         const fetchData = async () => {
             try {
                 const studiesList = await getStudyList();
-                dispatch(addStudiesList(studiesList));
+                dispatch(setStudiesList(studiesList));
             } catch (error) {
                 console.error("Error fetching AppIndex:", error);
             }

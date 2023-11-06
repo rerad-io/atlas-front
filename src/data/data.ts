@@ -6,22 +6,22 @@ const lag: string = "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/ima
 const had2: string = "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg";
 
 export const pathList = [
-	{ 1:"https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg"},
-	{ 2:"https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg"},
-	{ 3:"https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg"},
-	{ 4:"https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg"},
-	{ 5:"https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg"},
-	{ 6:"https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg"},
-	{ 7:"https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg"},
-	{ 8:"https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg"},
-	{ 9:"https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg"},
-	{ 10:"https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg"},
-	{ 11:"https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg"},
-	{ 12:"https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg"},
-	{ 13:"https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg"},
-	{ 14:"https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg"},
-	{ 15:"https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg"},
-]
+    { 1: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 2: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 3: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 4: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 5: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 6: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 7: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 8: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 9: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 10: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 11: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 12: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 13: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 14: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 15: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+];
 
 export const galleryList = [
     {

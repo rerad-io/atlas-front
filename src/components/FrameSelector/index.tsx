@@ -1,6 +1,6 @@
 import s from "./styles.module.scss";
 
-const FrameSelector = ({frameList, handleClick}) => {
+const FrameSelector = ({ frameList, handleClick }) => {
     const slideWidth: number = 80;
     return (
         <section>

@@ -2,18 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AnatomicalStructureSubject, InstanceData, Series, Study } from "../_types";
 import { v4 as uuidv4 } from "uuid";
 import { pathList } from "../data/data";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type InstanceState = {
     study: Study;
-    studies?: Study[];
-    series?: Record<number, Series>;
-    instances?: Record<number, InstanceData[]>;
-    availableAnatomicalStructureSubjects?: AnatomicalStructureSubject[];
+    studies: Study[];
+    series: Record<number, Series>;
+    instanceData: Record<number, InstanceData[]>;
+    availableAnatomicalStructureSubjects: AnatomicalStructureSubject[];
 };
 
 const initialState: InstanceState = {
     study: {},
-    studies: [], 
+    studies: [],
     series: {},
     instances: {},
     availableAnatomicalStructureSubjects: [],
@@ -23,24 +24,30 @@ const instanceSlice = createSlice({
     name: "instance",
     initialState,
     reducers: {
-        addAnatomicalStructuresSubjects(state, action) {
-            state.availableAnatomicalStructureSubjects = action.payload;
+        setAnatomicalStructuresSubjects: (state, { payload }: PayloadAction<AnatomicalStructureSubject[]>) => {
+            state.availableAnatomicalStructureSubjects = payload;
         },
-        addStudy(state, action) {
-            state.study = action.payload;
+        setStudy: (state, { payload }: PayloadAction<Study>) => {
+            state.study = payload;
         },
-        addStudiesList(state, action) {
-            state.studies = action.payload;
+        setStudiesList: (state, { payload }: PayloadAction<Study[]>) => {
+            state.studies = payload;
         },
-        addSeriesList(state, action) {		
-            const seriesObject = action.payload.reduce((acc, serie) => {
+        setSeriesList: (state, { payload }: PayloadAction<Series[]>) => {
+            const seriesObject = payload.reduce((acc, serie) => {
                 acc[serie.number] = { ...serie };
                 return acc;
             }, {});
             state.series = seriesObject;
 
-            const instancesObject = action.payload.reduce((acc, serie) => {
+            // TODO: с рабочей базой использоать данные instanceData с бэкэнда
+            const instancesObject = payload.reduce((acc, serie) => {
+                //const instancesObject = payload.reduce((acc, instance) => {
+                //seriesObject.forEach(serie => {
                 const instanceId = serie.number;
+                //acc[instanceId] = { ...instance };
+                //});
+                //return acc;
                 if (!acc[instanceId]) {
                     acc[instanceId] = [];
                 }
@@ -49,8 +56,8 @@ const instanceSlice = createSlice({
                         id: uuidv4(),
                         study: { id: serie.study.id },
                         series: { id: serie.id },
-												// TODO: раскоментировать при рабочей базе
-												path: Object.values(pathList[index]),
+                        // TODO: раскоментировать при рабочей базе
+                        path: Object.values(pathList[index]),
                         //path: `/dicom-studies/${state.study.externalId}/series/${serie.number}/instances/${index}.png`,
                         instanceNumber: index,
                         x: 0,
@@ -58,13 +65,13 @@ const instanceSlice = createSlice({
                     });
                 }
                 return acc;
-							}, {});
-							state.instances = instancesObject;
+            }, {});
+            state.instances = instancesObject;
         },
     },
 });
 
-export const { addStudy, addStudiesList, addSeriesList, addAnatomicalStructuresSubjects } = instanceSlice.actions;
+export const { setStudy, setStudiesList, setSeriesList, setAnatomicalStructuresSubjects } = instanceSlice.actions;
 
 export default instanceSlice.reducer;
 
