@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { temporarySeriesData } from "../../../data/data";
 import { getStudyId } from "../../../requests/StudyRequests";
-import { addAnatomicalStructuresSubjects, addSeriesList, addStudy } from "../../../store/instance";
+import { setAnatomicalStructuresSubjects, setSeriesList, setStudy } from "../../../store/instance";
 import { Series } from "../../../_types";
 import TableComponent from "../../../components/UI/TableComponent";
 import { getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
@@ -13,7 +13,7 @@ const StudyPage = () => {
     const { id } = useParams<string>();
     const dispatch = useDispatch();
 
-    const { study, series, instances } = useSelector(({ instance }) => instance);
+    const { study, series, instanceData } = useSelector(({ instance }) => instance);
     const [activeSerie, setActiveSerie] = useState<Series>();
     const [activeInstases, setActiveInstances] = useState();
 
@@ -22,12 +22,12 @@ const StudyPage = () => {
             const fetchStudyData = async (studyId: string) => {
                 try {
                     const tempStudy = await getStudyId(studyId);
-                    dispatch(addStudy(tempStudy));
+                    dispatch(setStudy(tempStudy));
                     const tempStudiesList = await getAnatomicalStructureSubjectList();
-                    dispatch(addAnatomicalStructuresSubjects(tempStudiesList));
+                    dispatch(setAnatomicalStructuresSubjects(tempStudiesList));
                     // TODO: раскоментировать при рабочей базе, убрать ипмпорт seriesData
                     //const temporarySeriesData = await getStudySeriesList();
-                    dispatch(addSeriesList(temporarySeriesData.filter((serie) => serie.study.id === studyId)));
+                    dispatch(setSeriesList(temporarySeriesData.filter((serie) => serie.study.id === studyId)));
                 } catch (error) {
                     console.error("Error fetching StudyPage:", error);
                 }
@@ -44,13 +44,13 @@ const StudyPage = () => {
     }, [series]);
 
     useEffect(() => {
-        setActiveInstances(instances[activeSerie?.number]);
-    }, [activeSerie, instances]);
+        setActiveInstances(instanceData[activeSerie?.number]);
+    }, [activeSerie, instanceData]);
 
     const handleClick = (number: string) => {
         const targetSerie: Series = series[number];
         setActiveSerie(targetSerie);
-        setActiveInstances(instances[number]);
+        setActiveInstances(instanceData[number]);
     };
 
     return (
