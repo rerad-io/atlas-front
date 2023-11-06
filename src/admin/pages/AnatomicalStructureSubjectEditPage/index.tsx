@@ -19,24 +19,26 @@ const AnatomicalStructureSubjectEditPage = () => {
     const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>();
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
     const [columns, setColumns] = useState<string[]>([]);
+    const [subjectColor, setSubjectColor] = useState<string>(subject ? `#${subject.color}` : "000000");
 
     const formRef = useRef<HTMLFormElement | null>(null);
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const result = await getAnatomicalStructureSubjectById(id);
-                    setSubject(result);
-                    setAnatomicalStructureList(result.anatomicalStructures);
-                } catch (error) {
-                    console.error("Error fetching AnatomicalStructureSubjectList:", error);
-                }
-            };
+        const fetchData = async (subjectId: string) => {
+            try {
+                const result = await getAnatomicalStructureSubjectById(subjectId);
+                setSubject(result);
+                setSubjectColor(`#${result.color}`);
+                setAnatomicalStructureList(result.anatomicalStructures);
+            } catch (error) {
+                console.error("Error fetching AnatomicalStructureSubjectList:", error);
+            }
+        };
 
-            fetchData();
+        if (id) {
+            fetchData(id);
         }
     }, [id]);
 
@@ -60,39 +62,52 @@ const AnatomicalStructureSubjectEditPage = () => {
             }
         });
 
-        if (newSubject.name) {
-            const fetchData = async () => {
+        if (newSubject.name && newSubject.color) {
+            const fetchDataUpdate = async (subjectId: string, obj: { name?: string; color?: string }) => {
                 try {
-                    if (id) {
-                        const updatedSubject = updateAnatomicalStructureSubject(id, newSubject);
-                        if (updatedSubject?.id) {
-                            notifySuccess("изменение успешно!");
-                        } else {
-                            notifyError("ошибка!");
-                        }
+                    const updatedSubject = await updateAnatomicalStructureSubject(subjectId, obj);
+                    if (updatedSubject?.id) {
+                        notifySuccess("изменение успешно!");
                     } else {
-                        const createdSubject = await createAnatomicalStructureSubject(newSubject);
-                        if (!createAnother) {
-                            navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
-                        } else {
-                            if (createdSubject) {
-                                notifySuccess("Тема создана успешно!");
-                            } else {
-                                notifyError("ошибка!");
-                            }
-                        }
+                        notifyError("ошибка!");
                     }
                 } catch (error) {
                     console.error("Error fetching AnatomicalStructureSubjectList:", error);
                 }
             };
 
-            fetchData();
-        }
+            const fetchDataCreate = async (obj: { name?: string; color?: string }) => {
+                try {
+                    const createdSubject = await createAnatomicalStructureSubject(obj);
 
-        if (formRef.current) {
-            formRef.current.reset();
+                    if (createdSubject) {
+                        if (!createAnother) {
+                            navigate(`/admin/AnatomicalStructureSubject/${createdSubject.id}`);
+                        } else {
+                            notifySuccess("Тема создана успешно!");
+                        }
+                    } else {
+                        notifyError("ошибка!");
+                    }
+                } catch (error) {
+                    console.error("Error fetching AnatomicalStructureSubjectList:", error);
+                }
+            };
+
+            if (id) {
+                fetchDataUpdate(id, newSubject);
+            } else {
+                fetchDataCreate(newSubject);
+            }
+
+            if (formRef.current) {
+                formRef.current.reset();
+            }
         }
+    };
+
+    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSubjectColor(e.target.value);
     };
 
     return (
@@ -107,7 +122,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     <label htmlFor="themeColor">
                         Theme Color*:
                         {subject ? (
-                            <input type="color" name="color" id="themeColor" value={`#${subject.color}`} required />
+                            <input type="color" name="color" id="themeColor" value={subjectColor} onChange={handleColorChange} required />
                         ) : (
                             <input type="color" name="color" id="themeColor" required />
                         )}
