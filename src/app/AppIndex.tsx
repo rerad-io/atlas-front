@@ -3,30 +3,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { getStudyList } from "../requests/StudyRequests";
 import { setStudiesList } from "../store/instance";
+import { WhiteBoardCanvas } from "./components/WhiteBoardCanvas";
 import s from "./styles.module.scss";
+import { CanvasInstance } from "./components/CanvasInstance";
 
 const AppIndex = () => {
-    const { studies } = useSelector((store) => store.instance);
-    const dispatch = useDispatch();
+    //const { studies } = useSelector((store) => store.instance);
+    //const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const studiesList = await getStudyList();
-                dispatch(setStudiesList(studiesList));
-            } catch (error) {
-                console.error("Error fetching AppIndex:", error);
-            }
-        };
+    //useEffect(() => {
+    //    const fetchData = async () => {
+    //        try {
+    //            const studiesList = await getStudyList();
+    //            dispatch(setStudiesList(studiesList));
+    //        } catch (error) {
+    //            console.error("Error fetching AppIndex:", error);
+    //        }
+    //    };
 
-        fetchData();
-    }, [dispatch]);
+    //    fetchData();
+    //}, [dispatch]);
 
     return (
         <div className={s.page}>
             <section className={s.menu_section}>
                 <div className="container">
-                    <div className={s.studies_menu}>
+                    {/*<div className={s.studies_menu}>
                         <h1 className="title">Исследования:</h1>
                         <ul className={s.studies_list}>
                             {studies?.map((item, index) => (
@@ -37,7 +39,10 @@ const AppIndex = () => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div>*/}
+
+										<WhiteBoardCanvas/>
+										{/*<CanvasInstance/>*/}
                 </div>
             </section>
         </div>
