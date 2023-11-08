@@ -51,8 +51,7 @@ const StudyPage = () => {
             setActiveInstances(currentInstance);
             setCurrentFrame(currentInstance[0]);
         }
-    }, [activeSerie, instances]);
-
+    }, [activeSerie]);
 
     const handleClick = (number: string) => {
         const targetSerie: Series = series[number];
