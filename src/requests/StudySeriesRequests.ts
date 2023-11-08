@@ -22,7 +22,8 @@ export const getStudySeriesId = async (id: string) => {
 };
 
 export const createStudySeries = async (body: Record<string, unknown>) => {
-    const result = await axios.post(`${backendUrl}Series`, body);
+    console.log("🚀 ~ file: StudySeriesRequests.ts:25 ~ createStudySeries ~ body:", body);
+    const result = await axios.post(`${backendUrl}Series/`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }
@@ -32,6 +33,7 @@ export const createStudySeries = async (body: Record<string, unknown>) => {
 };
 
 export const updateStudySeries = async (body: Record<string, unknown>, id: string) => {
+    console.log("🚀 ~ file: StudySeriesRequests.ts:38 ~ updateStudySeries ~ body:", body);
     const result = await axios.put(`${backendUrl}Series/${id}`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;

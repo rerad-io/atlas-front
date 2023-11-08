@@ -48,6 +48,9 @@ const instanceSlice = createSlice({
                 //acc[instanceId] = { ...instance };
                 //});
                 //return acc;
+
+                // TODO: исправить на формирование обьекта
+
                 if (!acc[instanceId]) {
                     acc[instanceId] = [];
                 }
@@ -66,7 +69,7 @@ const instanceSlice = createSlice({
                 }
                 return acc;
             }, {});
-            state.instances = instancesObject;
+            state.instanceData = instancesObject;
         },
     },
 });

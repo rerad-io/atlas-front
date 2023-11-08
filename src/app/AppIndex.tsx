@@ -7,6 +7,7 @@ import { WhiteBoardCanvas } from "./components/WhiteBoardCanvas";
 import s from "./styles.module.scss";
 import { CanvasInstance } from "./components/CanvasInstance";
 
+
 const AppIndex = () => {
     //const { studies } = useSelector((store) => store.instance);
     //const dispatch = useDispatch();
