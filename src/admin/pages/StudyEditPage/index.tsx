@@ -99,11 +99,17 @@ const StudyEditPage = () => {
             <h1 className="title">{id ? `Редактирование` : `Создание`} Исследования</h1>
             <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                 {
-                    // TODO: раскоментировать после добавление в базе этого поля при создании иследования
-                    /*<label htmlFor="externalId">
-                    External Id:
-                    <input required type="text" name="externalId" id="externalId" defaultValue={study?.externalId} />
-                </label>*/
+                    <label htmlFor="externalId">
+                        External Id:
+                        <input
+                            required
+                            type="text"
+                            name="externalId"
+                            id="externalId"
+                            defaultValue={study?.externalId}
+                            style={{ width: "300px" }}
+                        />
+                    </label>
                 }
                 <label htmlFor="studyName">
                     Study Name:
@@ -134,7 +140,7 @@ const StudyEditPage = () => {
                 <Button>Save</Button>
             </form>
 
-            {id ? <StudySeriesList studyId={id} /> : null}
+            {id ? <StudySeriesList seriesList={study?.seriesList} studyId={id} /> : null}
         </div>
     );
 };
