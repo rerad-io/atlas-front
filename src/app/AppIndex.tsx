@@ -5,6 +5,7 @@ import { getStudyList } from "../requests/StudyRequests";
 import { setStudiesList } from "../store/instance";
 import s from "./styles.module.scss";
 
+
 const AppIndex = () => {
     const { studies } = useSelector((store) => store.instance);
     const dispatch = useDispatch();

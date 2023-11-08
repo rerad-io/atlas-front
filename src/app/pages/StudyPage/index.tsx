@@ -14,7 +14,7 @@ const StudyPage = () => {
     const { id } = useParams<string>();
     const dispatch = useDispatch();
 
-    const { study, series, instances } = useSelector(({ instance }) => instance);
+    const { study, series, instanceData } = useSelector(({ instance }) => instance);
     const [activeSerie, setActiveSerie] = useState<Series>();
     const [activeInstases, setActiveInstances] = useState();
     const [currentFrame, setCurrentFrame] = useState();
@@ -53,10 +53,11 @@ const StudyPage = () => {
         }
     }, [activeSerie, instances]);
 
+
     const handleClick = (number: string) => {
         const targetSerie: Series = series[number];
         setActiveSerie(targetSerie);
-        setActiveInstances(instances[number]);
+        setActiveInstances(instanceData[number]);
     };
 
     const handleCurrentFrame = (currentId: string) => {
