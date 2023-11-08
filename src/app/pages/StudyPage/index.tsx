@@ -1,50 +1,56 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { temporarySeriesData } from "../../../data/data";
-import TableComponent from "../../../components/UI/TableComponent";
-import s from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { temporarySeriesData } from "../../../data/data";
 import { getStudyId } from "../../../requests/StudyRequests";
-import { getSeriesList } from "../../../store/instance";
+import { setAnatomicalStructuresSubjects, setSeriesList, setStudy } from "../../../store/instance";
+import { Series } from "../../../_types";
+import TableComponent from "../../../components/UI/TableComponent";
+import { getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
+import s from "./styles.module.scss";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
-
-    const { series } = useSelector((store) => store.instance);
     const dispatch = useDispatch();
 
-    const [study, setStudy] = useState({});
-    const [activeNumber, setActiveNumber] = useState<string>(Object.values(series)[0]?.id);
+    const { study, series, instanceData } = useSelector(({ instance }) => instance);
+    const [activeSerie, setActiveSerie] = useState<Series>();
+    const [activeInstases, setActiveInstances] = useState();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // TODO: данные нужно получить из базы
-                if (id) {
-                    const tempStudy = await getStudyId(id);
-                    setStudy(tempStudy);
+        if (id) {
+            const fetchStudyData = async (studyId: string) => {
+                try {
+                    const tempStudy = await getStudyId(studyId);
+                    dispatch(setStudy(tempStudy));
+                    const tempStudiesList = await getAnatomicalStructureSubjectList();
+                    dispatch(setAnatomicalStructuresSubjects(tempStudiesList));
                     // TODO: раскоментировать при рабочей базе, убрать ипмпорт seriesData
-                    //const seriesData = await getStudySeriesList();
-                    dispatch(getSeriesList(temporarySeriesData.filter((serie) => serie.study.id === id)));
+                    //const temporarySeriesData = await getStudySeriesList();
+                    dispatch(setSeriesList(temporarySeriesData.filter((serie) => serie.study.id === studyId)));
+                } catch (error) {
+                    console.error("Error fetching StudyPage:", error);
                 }
-            } catch (error) {
-                console.error("Error fetching StudyPage:", error);
-            }
-        };
+            };
 
-        fetchData();
+            fetchStudyData(id);
+        }
     }, [id, dispatch]);
 
     useEffect(() => {
         if (series) {
-            setActiveNumber(Object.values(series)[0]?.id);
-            setActiveSeries(series[0]);
+            setActiveSerie(Object.values(series)[0]);
         }
     }, [series]);
 
-    const handleClick = (id: string) => {
-        const elem = Object.values(series).find((elem) => elem.id === id);
-        setActiveNumber(elem.id);
+    useEffect(() => {
+        setActiveInstances(instanceData[activeSerie?.number]);
+    }, [activeSerie, instanceData]);
+
+    const handleClick = (number: string) => {
+        const targetSerie: Series = series[number];
+        setActiveSerie(targetSerie);
+        setActiveInstances(instanceData[number]);
     };
 
     return (
@@ -57,8 +63,46 @@ const StudyPage = () => {
             </section>
             <section>
                 <div className="container">
-                    {study.name ? <h2>Серии исследования {`"${study.name}"`}</h2> : <h2>Loading...</h2>}
-                    {series ? <TableComponent data={Object.keys(series)} /> : ""}
+                    {study.name ? <h2>Активная серия исследования {`"${study.name}"`}</h2> : <h2>Loading...</h2>}
+                    <div style={{ padding: "20px 0", display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                            <span>ID: {activeSerie?.id}</span>
+                            <span>Name: {activeSerie?.name}</span>
+                        </div>
+                    </div>
+                    <div style={{ display: "flex", gap: "2px" }}>
+                        <div>
+                            <span style={{ display: "block" }}>Sagital</span>
+                            <img
+                                style={{ width: "60px", height: "60px" }}
+                                src={activeSerie?.sagitalFrame}
+                                alt={`Serie ${activeSerie?.name} sagitalFrame`}
+                            />
+                        </div>
+                        <div>
+                            <span style={{ display: "block" }}>Coronal</span>
+                            <img
+                                style={{ width: "60px", height: "60px" }}
+                                src={activeSerie?.coronalFrame}
+                                alt={`Serie ${activeSerie?.name} coronalFrame`}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div className="container">
+                    {study.name ? <h2>Инстансы исследования {`"${study.name}"`}</h2> : <h2>Loading...</h2>}
+                    <ul style={{ padding: "20px 0", display: "flex", flexDirection: "column", gap: "10px" }}>
+                        {activeInstases?.map((item, index) => (
+                            <li key={index}>
+                                <div style={{ display: "flex", gap: "10px" }}>
+                                    <span>Instance Number: {item.instanceNumber}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </section>
 
@@ -66,8 +110,8 @@ const StudyPage = () => {
                 <div className="container">
                     <ul style={{ marginTop: "15px", cursor: "pointer" }}>
                         {Object.values(series).map((item, index) => (
-                            <li key={index} onClick={() => handleClick(item.id)}>
-                                {`${item.name} ${item.id === activeNumber ? "(active)" : ""}`}
+                            <li key={index} onClick={() => handleClick(item.number)}>
+                                {`${item.name} ${item.number === activeSerie?.number ? "(active)" : ""}`}
                             </li>
                         ))}
                     </ul>

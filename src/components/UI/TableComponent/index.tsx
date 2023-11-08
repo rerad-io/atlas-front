@@ -3,7 +3,6 @@ import s from "./styles.module.scss";
 
 function TableComponent({ columns = [], data = [], actions = "", removeItemById = null }) {
     const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
-
     const tableData = () => {
         return data.map((item, index) => (
             <tr
