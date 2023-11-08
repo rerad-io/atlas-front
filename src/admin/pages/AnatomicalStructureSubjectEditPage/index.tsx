@@ -98,10 +98,9 @@ const AnatomicalStructureSubjectEditPage = () => {
                 fetchDataUpdate(id, newSubject);
             } else {
                 fetchDataCreate(newSubject);
-            }
-
-            if (formRef.current) {
-                formRef.current.reset();
+                if (formRef.current) {
+                    formRef.current.reset();
+                }
             }
         }
     };

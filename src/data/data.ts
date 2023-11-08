@@ -5,6 +5,24 @@ const had: string = "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kuma
 const lag: string = "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg";
 const had2: string = "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg";
 
+export const pathList = [
+    { 1: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 2: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 3: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 4: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 5: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 6: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 7: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 8: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 9: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 10: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+    { 11: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 12: "https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg" },
+    { 13: "https://www.jospt.org/cms/10.2519/jospt.2016.0408/asset/images/medium/jospt-494-fig001.jpg" },
+    { 14: "https://www.healthpages.org/wp-content/uploads/hand-x-ray-768x923.jpg" },
+    { 15: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
+];
+
 export const galleryList = [
     {
         id: "1",
@@ -69,10 +87,10 @@ export const galleryList = [
 //    },
 //];
 
-const studyID_1 = "80824070-8536-4e23-91fa-3be3d75d1bd0";
-const studyID_2 = "dd2e241c-4ddc-4711-910e-721ae07b5007";
-const studyID_3 = "84a41dc8-bb94-48e7-aee9-5a32c73f56f7";
-const studyID_4 = "fa000a82-d00a-4cf8-9698-4f18dc539d72";
+const studyID_1 = "97031477-0e81-4fa6-aecc-657bb9310db9";
+const studyID_2 = "1b1d2cee-8560-4dd7-9315-da9c034aaf0f";
+const studyID_3 = "903b782c-42d4-483f-86ec-bdea34bb269f";
+const studyID_4 = "c97d38d2-a5e9-4c91-9ca1-198302980d34";
 
 const serieID_1 = "serie 1";
 const serieID_2 = "serie 2";
@@ -83,9 +101,9 @@ const serieID_6 = "serie 6";
 const serieID_7 = "serie 7";
 const serieID_8 = "serie 8";
 
-const structureId_1 = "e1f9f341-c237-4b3f-b377-d367e7ce7fd2";
-const structureId_2 = "914776eb-0bfa-4a4f-b713-91dc215e508b";
-const structureId_3 = "12df651b-5831-46ba-8675-4679b4cbfcc8";
+const structureId_1 = "270187dd-e455-4277-926d-a5e0340b5e0c";
+const structureId_2 = "95fa456a-f489-4fa5-bc31-f6b18f92dc4e";
+const structureId_3 = "42896ff5-dade-467d-9e66-7df4a7a6695f";
 
 export const temporarySeriesData = [
     {

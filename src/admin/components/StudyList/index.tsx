@@ -9,9 +9,12 @@ type Props = {
 };
 const StudyList = ({ studyList, columns }: Props) => {
     const [list, setList] = useState(studyList);
-
     useEffect(() => {
-        setList(studyList);
+        const shortList = studyList.map((element) => ({
+            ...element,
+            seriesList: "",
+        }));
+        setList(shortList);
     }, [studyList]);
 
     const removeItemById = async (itemId: string) => {

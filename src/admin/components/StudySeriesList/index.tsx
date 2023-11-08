@@ -2,34 +2,28 @@ import { useEffect, useState } from "react";
 import Button from "../../../components/UI/Button";
 import TableComponent from "../../../components/UI/TableComponent";
 import { deleteStudySeries } from "../../../requests/StudySeriesRequests";
-import { temporarySeriesData } from "../../../data/data";
 import { Series } from "../../../_types";
 import s from "./s.module.css";
 
-const StudySeriesList = ({ studyId }) => {
+const StudySeriesList = ({ seriesList, studyId }) => {
     const [studySeriesList, setStudySeriesList] = useState<Series[]>([]);
     const [columns, setColumns] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchDataAndSetStudySeriesList = async () => {
             try {
-                // TODO: раскоментировать с рабочей базой
-                //const temporarySeriesData = await getStudySeriesList();
-                const seriesData = temporarySeriesData.map(({ study, ...rest }) => {
-                    return { ...rest, studyId: study.id };
-                });
-                setStudySeriesList(seriesData);
-                const columnsTitles = Object.keys(seriesData[0]);
-                columnsTitles.push("Actions");
-                setColumns(columnsTitles);
-                // TODO: добавить метод фильтр и отфильтровать по study
-                //setStudySeriesList(result.filter(el => el.id === seriesId));
+                setStudySeriesList(seriesList);
+                if (seriesList) {
+                    const columnsTitles = Object.keys(seriesList[0]);
+                    columnsTitles.push("Actions");
+                    setColumns(columnsTitles);
+                }
             } catch (error) {
-                console.error("StudySeriesListTable - ", error);
+                console.error("StudySeriesList - ", error);
             }
         };
         fetchDataAndSetStudySeriesList();
-    }, []);
+    }, [seriesList]);
 
     const removeItemById = async (itemId: string) => {
         const isAlert = confirm("уверены, что хотите удалить?");

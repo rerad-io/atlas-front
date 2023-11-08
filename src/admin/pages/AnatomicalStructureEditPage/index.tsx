@@ -98,10 +98,9 @@ const AnatomicalStructureEditPage = () => {
             fetchDataUpdate(id, newStructure);
         } else {
             fetchDataCreate(newStructure);
-        }
-
-        if (formRef.current) {
-            formRef.current.reset();
+            if (formRef.current) {
+                formRef.current.reset();
+            }
         }
     };
 
@@ -112,12 +111,10 @@ const AnatomicalStructureEditPage = () => {
                     <Toaster />
                     <h1 className="title">{id ? `Редактирование` : `Создание`} Анатомической структуры</h1>
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
-                        {
-                            // TODO: На данный момент тему при редактировании Анатомической структуры
-                            // поменять нельзя. При изменениии раскоментировать select
-                            /*<label>
-                            Subject Name:
-																<select name="anatomicalStructureSubjectId" required>
+                        {!id ? (
+                            <label>
+                                Subject Name:
+                                <select name="anatomicalStructureSubjectId" required>
                                     <option disabled value={""}>
                                         выбрать
                                     </option>
@@ -125,12 +122,12 @@ const AnatomicalStructureEditPage = () => {
                                         <option key={subject.id}>{subject.name}</option>
                                     ))}
                                 </select>
-                        </label>*/
-                        }
-                        <p>
-                            {" "}
-                            Subject Name: <b>{subject?.name}</b>
-                        </p>
+                            </label>
+                        ) : (
+                            <p>
+                                Subject Name: <b>{subject?.name}</b>
+                            </p>
+                        )}
 
                         <label>
                             Structure Name*:

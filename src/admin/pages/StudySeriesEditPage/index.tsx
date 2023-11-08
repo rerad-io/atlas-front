@@ -2,15 +2,17 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
-import FrameSelector from "../../components/FrameSelector";
-import RenderComponent from "../../components/RenderComponent";
-import { createStudySeries, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import { galleryList, temporarySeriesData } from "../../../data/data";
+import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import s from "./s.module.css";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
+
     const [studySeries, setStudySeries] = useState();
+    // TODO: представление instanceData - раскоментировать когда будет исправлено
+    //const [instances, setInstances] = useState();
+    //const [currentFrame, setCurrentFrame] = useState();
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const studyId = searchParams.get("studyId");
@@ -19,10 +21,10 @@ const StudySeriesEditPage = () => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
-                    // TODO: данные получать из базы
-                    //const result = await getStudyseriesId(id);
-                    const result = temporarySeriesData.find((item) => item.id === id);
+                    const result = await getStudySeriesId(id);
                     setStudySeries(result);
+                    // TODO: представление instanceData - раскоментировать когда будет исправлено
+                    //setInstances(result.study.instanceDataList);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -60,7 +62,15 @@ const StudySeriesEditPage = () => {
         if (id) {
             const fetchDataAndUpdateStudySeries = async () => {
                 try {
-                    const updatedObj = await updateStudySeries(obj, id);
+                    const updatedObj = await updateStudySeries(
+                        {
+                            ...obj,
+                            study: {
+                                id: studySeries?.study?.id,
+                            },
+                        },
+                        id,
+                    );
                     setStudySeries(updatedObj);
                     toast.success("Study Series updated!");
                 } catch (error) {
@@ -72,7 +82,12 @@ const StudySeriesEditPage = () => {
         } else {
             const fetchDataAndCreateStudySeries = async () => {
                 try {
-                    await createStudySeries(obj);
+                    await createStudySeries({
+                        ...obj,
+                        study: {
+                            id: studyId,
+                        },
+                    });
                     toast.success("Study Series created!");
                 } catch (error) {
                     toast.error("Study Series create - error!");
@@ -102,25 +117,13 @@ const StudySeriesEditPage = () => {
     //     });
     // };
 
-    const frameList: {
-        id: string;
-        img: string;
-        alt: string;
-    }[] = galleryList;
-    const [currentFrame, setCurrentFrame] = useState(frameList[0]);
-
-    const handleClick = (id: string) => {
-        const newFrame: {
-            id: string;
-            img: string;
-            alt: string;
-        } = frameList.find((elem) => elem.id === id) as {
-            id: string;
-            img: string;
-            alt: string;
-        };
-        setCurrentFrame(newFrame);
-    };
+    {
+        /*// TODO: раскоментировать когда будут исправлены инстансы*/
+    }
+    //const handleClick = (id: string) => {
+    //    const newFrame = instances[studySeries?.number];
+    //    setCurrentFrame(newFrame[id]);
+    //};
 
     return (
         <div className={s.page}>
@@ -128,7 +131,7 @@ const StudySeriesEditPage = () => {
                 <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
                 <form onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="Study">
-                        Study:
+                        Study ID:
                         <input
                             type="text"
                             name="study"
@@ -139,11 +142,11 @@ const StudySeriesEditPage = () => {
                         />
                     </label>
                     <label htmlFor="StudySeriesName">
-                        Study Series Name:
+                        Series Name:
                         <input type="text" id="StudySeriesName" name="name" defaultValue={studySeries?.name} />
                     </label>
                     <label htmlFor="studyNumber">
-                        Study Number:
+                        Series Number:
                         <input type="number" id="studyNumber" name="number" defaultValue={studySeries?.number} />
                     </label>
                     <label htmlFor="PreviewFrame">
@@ -168,17 +171,9 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    <FrameSelector frameList={frameList} handleClick={handleClick} />
-                    <section
-                        className={s.frame_info}
-                        style={{
-                            padding: "20px 0",
-                        }}
-                    >
-                        <div className="container">
-                            <RenderComponent currentFrame={currentFrame} />
-                        </div>
-                    </section>
+                    {/*// TODO: раскоментировать когда будут исправлены инстансы*/}
+                    {/*<FrameSelector frameList={instances[studySeries?.number]} handleClick={handleClick} />*/}
+                    {/*<RenderComponent currentFrame={currentFrame} />*/}
                 </>
             ) : null}
         </div>
