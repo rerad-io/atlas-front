@@ -56,6 +56,7 @@ const StudyPage = () => {
                 setCurrentFrame(currentInstance[0]);
             }
         }
+
     }, [activeSerie, instanceData]);
 
     const handleClick = (number: string) => {
