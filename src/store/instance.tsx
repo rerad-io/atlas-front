@@ -1,7 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AnatomicalStructureSubject, InstanceData, Series, Study } from "../_types";
-import { v4 as uuidv4 } from "uuid";
-import { pathList } from "../data/data";
+import { AnatomicalStructure, InstanceData, Series, Study } from "../_types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 export type InstanceState = {
@@ -9,7 +7,7 @@ export type InstanceState = {
     studies: Study[];
     series: Record<number, Series>;
     instanceData: Record<number, InstanceData[]>;
-    availableAnatomicalStructureSubjects: AnatomicalStructureSubject[];
+    availableAnatomicalStructures: AnatomicalStructure[];
 };
 
 const initialState: InstanceState = {
@@ -17,15 +15,15 @@ const initialState: InstanceState = {
     studies: [],
     series: {},
     instances: {},
-    availableAnatomicalStructureSubjects: [],
+    availableAnatomicalStructures: [],
 };
 
 const instanceSlice = createSlice({
     name: "instance",
     initialState,
     reducers: {
-        setAnatomicalStructuresSubjects: (state, { payload }: PayloadAction<AnatomicalStructureSubject[]>) => {
-            state.availableAnatomicalStructureSubjects = payload;
+        setAnatomicalStructures: (state, { payload }: PayloadAction<AnatomicalStructure[]>) => {
+            state.availableAnatomicalStructures = payload;
         },
         setStudy: (state, { payload }: PayloadAction<Study>) => {
             state.study = payload;
@@ -34,47 +32,24 @@ const instanceSlice = createSlice({
             state.studies = payload;
         },
         setSeriesList: (state, { payload }: PayloadAction<Series[]>) => {
-            const seriesObject = payload.reduce((acc, serie) => {
+            const seriesObject = payload?.seriesList?.reduce((acc, serie) => {
                 acc[serie.number] = { ...serie };
                 return acc;
             }, {});
             state.series = seriesObject;
 
-            // TODO: с рабочей базой использоать данные instanceData с бэкэнда
-            const instancesObject = payload.reduce((acc, serie) => {
-                //const instancesObject = payload.reduce((acc, instance) => {
-                //seriesObject.forEach(serie => {
-                const instanceId = serie.number;
-                //acc[instanceId] = { ...instance };
-                //});
-                //return acc;
+            const result = {};
 
-                // TODO: исправить на формирование обьекта
-
-                if (!acc[instanceId]) {
-                    acc[instanceId] = [];
-                }
-                for (let index = 1; index <= serie.instanceCount; index++) {
-                    acc[instanceId].push({
-                        id: uuidv4(),
-                        study: { id: serie.study.id },
-                        series: { id: serie.id },
-                        // TODO: раскоментировать при рабочей базе
-                        path: Object.values(pathList[index]),
-                        //path: `/dicom-studies/${state.study.externalId}/series/${serie.number}/instances/${index}.png`,
-                        instanceNumber: index,
-                        x: 0,
-                        y: 0,
-                    });
-                }
-                return acc;
-            }, {});
-            state.instanceData = instancesObject;
+            payload?.seriesList?.forEach((series) => {
+                const filteredInstances = payload?.instanceDataList?.filter((instance) => instance.series === series.name);
+                result[series.number] = filteredInstances;
+            });
+            state.instanceData = result;
         },
     },
 });
 
-export const { setStudy, setStudiesList, setSeriesList, setAnatomicalStructuresSubjects } = instanceSlice.actions;
+export const { setStudy, setStudiesList, setSeriesList, setAnatomicalStructures } = instanceSlice.actions;
 
 export default instanceSlice.reducer;
 
@@ -91,3 +66,7 @@ export const instanceSelector = (state: { instance: InstanceState }) => state.in
 
 //	const instanceDatas = data.filter((item)=> item.seriesNumber === seriesNumber && item.instance === index)
 //}
+
+//filteredInstances.forEach(instance => {
+//	instance.path = `/dicom-studies/${instance.externalId}/series/${instance.seriesNumber}/instances/${instance.instanceNumber}.png`;
+//});

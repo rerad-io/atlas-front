@@ -1,6 +1,13 @@
+import { useState } from "react";
 import s from "./styles.module.scss";
 
-const FrameSelector = ({ frameList, handleClick }) => {
+const FrameSelector = ({ frameList, handleCurrentFrame }) => {
+    const [activeFrame, setactiveFrame] = useState(0);
+
+    const handleFrameActive = (frameIndex: string) => {
+        setactiveFrame(frameIndex);
+        handleCurrentFrame(frameIndex);
+    };
     const slideWidth: number = 80;
     return (
         <section>
@@ -10,14 +17,15 @@ const FrameSelector = ({ frameList, handleClick }) => {
                         {frameList?.map((slide, index) => (
                             <li
                                 key={index}
-                                className={s.slide}
+                                className={`${s.slide} ${s[activeFrame === index ? "active" : ""] || ""}`}
                                 style={{
                                     maxWidth: `${slideWidth}px`,
                                     maxHeight: `${slideWidth}px`,
+                                    color: "white",
                                 }}
-                                onClick={() => handleClick(index)}
+                                onClick={() => handleFrameActive(index)}
                             >
-                                <img src={slide?.path} alt={slide.serie?.id} className={s.slide_img} />
+                                {<img src={slide.path} alt={slide.instanceNumber} className={s.slide_img} />}
                             </li>
                         ))}
                     </ul>

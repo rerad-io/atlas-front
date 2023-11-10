@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { temporarySeriesData } from "../../../data/data";
 import { getStudyId } from "../../../requests/StudyRequests";
-import { setAnatomicalStructuresSubjects, setSeriesList, setStudy } from "../../../store/instance";
+import { setAnatomicalStructures, setSeriesList, setStudy } from "../../../store/instance";
 import { Series } from "../../../_types";
-import { getAnatomicalStructureSubjectList } from "../../../requests/anatomicalStructureSubjectRequests";
-import s from "./styles.module.scss";
 import FrameSelector from "../../../components/FrameSelector";
 import RenderComponent from "../../../components/RenderComponent";
+import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
+import { getInstanceDataList } from "../../../requests/instanceDataRequests";
+import s from "./styles.module.scss";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
@@ -25,11 +25,12 @@ const StudyPage = () => {
                 try {
                     const tempStudy = await getStudyId(studyId);
                     dispatch(setStudy(tempStudy));
-                    const tempStudiesList = await getAnatomicalStructureSubjectList();
-                    dispatch(setAnatomicalStructuresSubjects(tempStudiesList));
-                    // TODO: раскоментировать при рабочей базе, убрать ипмпорт seriesData
-                    //const temporarySeriesData = await getStudySeriesList();
-                    dispatch(setSeriesList(temporarySeriesData.filter((serie) => serie.study.id === studyId)));
+
+                    const instanceDataList = await getInstanceDataList({});
+                    dispatch(setSeriesList({ seriesList: tempStudy.seriesList, instanceDataList }));
+
+                    const tempStudiesList = await getAnatomicalStructureList({});
+                    dispatch(setAnatomicalStructures(tempStudiesList));
                 } catch (error) {
                     console.error("Error fetching StudyPage:", error);
                 }
@@ -41,26 +42,29 @@ const StudyPage = () => {
 
     useEffect(() => {
         if (series) {
-            setActiveSerie(Object.values(series)[0]);
+            if (series) {
+                setActiveSerie(Object.values(series)[0]);
+            }
         }
     }, [series]);
 
     useEffect(() => {
         if (activeSerie) {
-            const currentInstance = instances[activeSerie.number];
-            setActiveInstances(currentInstance);
-            setCurrentFrame(currentInstance[0]);
+            const currentInstance = instanceData[activeSerie.number];
+            if (currentInstance) {
+                setActiveInstances(currentInstance);
+                setCurrentFrame(currentInstance[0]);
+            }
         }
-    }, [activeSerie]);
+    }, [activeSerie, instanceData]);
 
     const handleClick = (number: string) => {
         const targetSerie: Series = series[number];
         setActiveSerie(targetSerie);
-        setActiveInstances(instanceData[number]);
     };
 
     const handleCurrentFrame = (currentId: string) => {
-        const currentInstance = instances[activeSerie.number];
+        const currentInstance = instanceData[activeSerie.number];
         setCurrentFrame(currentInstance[currentId]);
     };
 
@@ -69,7 +73,7 @@ const StudyPage = () => {
             <section>
                 <div className="container">{study.name ? <h1>Активная серия {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelector frameList={activeInstases} handleClick={handleCurrentFrame} />
+                    <FrameSelector frameList={activeInstases} handleCurrentFrame={handleCurrentFrame} />
                     <RenderComponent currentFrame={currentFrame} />
                 </div>
                 <div className="container">
