@@ -29,12 +29,12 @@ export const WhiteBoardCanvas = ({ frame }) => {
 
         return () => {
             if (fabricCanvas) {
-                // TODO: как закрывать отображение?
-                //fabricCanvas.dispose();
-                //setFabricCanvas(null);
+                fabricCanvas.dispose();
+                setFabricCanvas(null);
             }
         };
-    }, [fabricCanvas]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
