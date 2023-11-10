@@ -13,7 +13,7 @@ const AppIndex = () => {
         const fetchData = async () => {
             try {
                 const studiesList = await getStudyList();
-                dispatch(setStudiesList(studiesList.filter((elem) => elem.seriesList.length > 0)));
+                dispatch(setStudiesList(studiesList));
             } catch (error) {
                 console.error("Error fetching AppIndex:", error);
             }

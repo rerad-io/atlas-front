@@ -4,7 +4,7 @@ import s from "./styles.module.scss";
 const FrameSelector = ({ frameList, handleCurrentFrame }) => {
     const [activeFrame, setactiveFrame] = useState(0);
 
-    const handleFrameActive = (frameIndex: string) => {
+    const handleFrameActive = (frameIndex: number) => {
         setactiveFrame(frameIndex);
         handleCurrentFrame(frameIndex);
     };

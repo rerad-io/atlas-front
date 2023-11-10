@@ -1,5 +1,7 @@
 import { fabric } from "fabric";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { instanceSelector } from "../../store/instance";
 
 const createImage = (url: string, width: number, height: number, x: number, y: number) =>
     new Promise<fabric.Image>((resolve) => {
@@ -14,17 +16,14 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
         });
     });
 
-export const CanvasInstance = ({ fabricCanvas, frame }: { fabricCanvas: fabric.Canvas }) => {
-    const [framePosition, setFramePosition] = useState();
-
-    useEffect(() => {
-        setFramePosition(frame);
-    }, [frame]);
+export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }) => {
+	
+	const {currentInstanceData } = useSelector(instanceSelector);
 
     useEffect(() => {
         const point1 = new fabric.Circle({
-            top: framePosition?.y,
-            left: framePosition?.x,
+            top: frame?.y,
+            left: frame?.x,
             radius: 3,
             fill: "red",
         });
@@ -41,11 +40,13 @@ export const CanvasInstance = ({ fabricCanvas, frame }: { fabricCanvas: fabric.C
         fabricCanvas.add(layer3Point);
         fabricCanvas.renderAll();
 
-        createImage(framePosition?.path, 500, 500, 0, 0).then((img) => {
+        createImage(frame?.path, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();
         });
-    }, [fabricCanvas, framePosition]);
+
+		
+    }, [fabricCanvas, frame]);
 
     return <></>;
 };

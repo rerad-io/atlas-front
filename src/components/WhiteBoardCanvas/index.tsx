@@ -1,9 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
+import { useSelector } from "react-redux";
+import { instanceSelector } from "../../store/instance";
 
-export const WhiteBoardCanvas = ({ frame }) => {
+export const WhiteBoardCanvas = () => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
+
+	
+
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
 
     useEffect(() => {
@@ -29,17 +34,17 @@ export const WhiteBoardCanvas = ({ frame }) => {
 
         return () => {
             if (fabricCanvas) {
-                // TODO: как закрывать отображение?
-                //fabricCanvas.dispose();
-                //setFabricCanvas(null);
+                fabricCanvas.dispose();
+                setFabricCanvas(null);
             }
         };
-    }, [fabricCanvas]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <>
             <canvas ref={canvasEl} />
-            {fabricCanvas && <CanvasInstance fabricCanvas={fabricCanvas} frame={frame} />}
+            {fabricCanvas && <CanvasInstance fabricCanvas={fabricCanvas} />}
         </>
     );
 };

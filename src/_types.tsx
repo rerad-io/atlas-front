@@ -55,7 +55,13 @@ export type Series = {
 export type InstanceData = {
     id: string;
     study: Study; // Ссылка на объект Исследование
+    // TODO: Должны получить идентификатор исследования
+    studyId: string;
     series: Series; // Ссылка на объект Серия исследования
+    // TODO: Должны получить идентификатор серии
+    seriesId: string; 
+    // TODO: Должны получить порядковый номер серии
+    seriesNumber: number;
     structure: AnatomicalStructure; // Ссылка на объект Анатомическая структура
     instanceNumber: number;
     type: string; // Перечисление (Enum) для типа данных
