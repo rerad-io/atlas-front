@@ -9,6 +9,7 @@ type Props = {
 };
 const StudyList = ({ studyList, columns }: Props) => {
     const [list, setList] = useState(studyList);
+
     useEffect(() => {
         const shortList = studyList.map((element) => ({
             ...element,
