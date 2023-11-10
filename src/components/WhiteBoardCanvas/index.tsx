@@ -29,8 +29,9 @@ export const WhiteBoardCanvas = ({ frame }) => {
 
         return () => {
             if (fabricCanvas) {
-                fabricCanvas.dispose();
-                setFabricCanvas(null);
+                // TODO: как закрывать отображение?
+                //fabricCanvas.dispose();
+                //setFabricCanvas(null);
             }
         };
     }, [fabricCanvas]);
