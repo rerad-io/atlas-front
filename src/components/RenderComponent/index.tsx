@@ -1,3 +1,4 @@
+import { WhiteBoardCanvas } from "../WhiteBoardCanvas";
 import s from "./styles.module.scss";
 
 const RenderComponent = ({ currentFrame }) => {
@@ -5,7 +6,7 @@ const RenderComponent = ({ currentFrame }) => {
         <section className={s.frame_info}>
             <div className="container">
                 <div className={s.current_frame}>
-                    <img src={currentFrame?.path} alt={currentFrame?.id} />
+                    <WhiteBoardCanvas frame={currentFrame} />
                 </div>
             </div>
         </section>

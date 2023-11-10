@@ -107,6 +107,7 @@ const StudyEditPage = () => {
                             name="externalId"
                             id="externalId"
                             defaultValue={study?.externalId}
+                            placeholder={study?.externalId}
                             style={{ width: "300px" }}
                         />
                     </label>
