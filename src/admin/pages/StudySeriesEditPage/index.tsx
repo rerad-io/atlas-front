@@ -9,7 +9,7 @@ import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import { InstanceData } from "../../../_types";
-import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
+import { PointsFormCreate } from "../../components/PointsFormController";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -46,42 +46,43 @@ const StudySeriesEditPage = () => {
     }, [id]);
 
     useEffect(() => {
-			if(studySerie){
+        if (studySerie) {
+            // TODO: studyID должно браться из studySeries.study
+            const fetchStudyId = async () => {
+                try {
+                    const temporaryStudyList = await getStudyList();
+                    const tempStudy = temporaryStudyList.find((item) => {
+                        if (item.seriesList.length) {
+                            const tempSerie = item.seriesList.find((elem) => elem.id === studySerie?.id);
+                            return tempSerie;
+                        }
+                    });
+                    setStudy(tempStudy);
+                } catch (error) {
+                    console.error("StudySeriesEditPage - ", error);
+                }
+            };
 
-				// TODO: studyID должно браться из studySeries.study
-        const fetchStudyId = async () => {
-					try {
-						const temporaryStudyList = await getStudyList();
-						const tempStudy = temporaryStudyList.find((item) => {
-							if (item.seriesList.length) {
-								const tempSerie = item.seriesList.find((elem) => elem.id === studySerie?.id);
-								return tempSerie;
-							}
-						});
-						setStudy(tempStudy);
-					} catch (error) {
-						console.error("StudySeriesEditPage - ", error);
-					}
-        };
-				
-        fetchStudyId();
-			}
+            fetchStudyId();
+        }
     }, [studySerie]);
 
     useEffect(() => {
-			if(study){
-				// TODO: поиск инстанса должен быть сразу в серии
-        const fetchInstanceData = async () => {
-					try {
-						const temporaryInstance = await getInstanceDataList({});
-						const tempIstanceData = temporaryInstance.filter(item=> item.series = studySerie?.name && item.study === study?.name)
-						setInstances(tempIstanceData);
-					} catch (error) {
-						console.error("StudySeriesEditPage - ", error);
-					}
-        };
-				fetchInstanceData();
-			}
+        if (study) {
+            // TODO: поиск инстанса должен быть сразу в серии
+            const fetchInstanceData = async () => {
+                try {
+                    const temporaryInstance = await getInstanceDataList({});
+                    const tempIstanceData = temporaryInstance.filter(
+                        (item) => (item.series = studySerie?.name && item.study === study?.name),
+                    );
+                    setInstances(tempIstanceData);
+                } catch (error) {
+                    console.error("StudySeriesEditPage - ", error);
+                }
+            };
+            fetchInstanceData();
+        }
     }, [studySerie, study]);
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -93,22 +94,6 @@ const StudySeriesEditPage = () => {
         formData.forEach((value, key) => {
             obj[key] = value as string;
         });
-
-        //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
-        // const file_preview = formData.get("PreviewFrame") as File;
-        // const file_sagital = formData.get("SagitalFrame") as File;
-        // const file_coronal = formData.get("CoronalFrame") as File;
-
-        // if (file_preview && file_preview.type.startsWith("image/")) {
-        //     //промис чтения файла
-        //     obj["PreviewFrame"] = Date.now() + "_P" + file_preview.name;
-        //     obj["SagitalFrame"] = Date.now() + "_S" + file_sagital.name;
-        //     obj["CoronalFrame"] = Date.now() + "_C" + file_coronal.name;
-
-        //     // функция сохранения изображение на сервак - раскоментировать вместе с функцией readFile
-        //     // const imgData = await readFile(file);
-        //     // SAVE_IMAGE_FUNCTION(imgData);
-        // }
 
         if (id) {
             const fetchDataAndUpdateStudySeries = async () => {
@@ -150,31 +135,6 @@ const StudySeriesEditPage = () => {
 
         e.target.reset();
     };
-
-    //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
-    // const readFile = (file: File): Promise<string> => {
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-
-    //         reader.onload = (e) => {
-    //             resolve(e.target.result as string);
-    //         };
-
-    //         reader.onerror = (error) => {
-    //             reject(error);
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     });
-    // };
-
-    {
-        /*// TODO: раскоментировать когда будут исправлены инстансы*/
-    }
-    //const handleClick = (id: string) => {
-    //    const newFrame = instances[studySeries?.number];
-    //    setCurrentFrame(newFrame[id]);
-    //};
 
     return (
         <div className={s.page}>
@@ -224,10 +184,9 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    {/*// TODO: раскоментировать когда будут исправлены инстансы*/}
-                    <FrameSelectorComponent instances={instances}/>
+                    <FrameSelectorComponent instances={instances} />
                     <RenderComponent />
-										<SeriesControlComponent studySerie={studySerie}/>
+                    {id ? <PointsFormCreate /> : null}
                 </>
             ) : null}
         </div>

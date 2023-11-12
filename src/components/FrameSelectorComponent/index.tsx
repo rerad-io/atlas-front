@@ -7,28 +7,28 @@ import { InstanceData } from "../../_types";
 const slideWidth: number = 80;
 
 type Props = {
-	instances?: InstanceData[];
-}
+    instances?: InstanceData[];
+};
 
-const FrameSelectorComponent = ({instances}:Props) => {
+const FrameSelectorComponent = ({ instances }: Props) => {
     const dispatch = useDispatch();
 
     const { currentInstanceData } = useSelector(instanceSelector);
-  	const [instancesFrame, setInstancesFrame] = useState<InstanceData[]>([]);
+    const [instancesFrame, setInstancesFrame] = useState<InstanceData[]>([]);
     const [activeFrame, setActiveFrame] = useState(0);
 
     useEffect(() => {
-			if(instances?.length){
-				setInstancesFrame(instances);
-			}else{
-				setInstancesFrame(Object.values(currentInstanceData).flat());
-			}
+        if (instances?.length) {
+            setInstancesFrame(instances);
+        } else {
+            setInstancesFrame(Object.values(currentInstanceData).flat());
+        }
         setActiveFrame(0);
 
-				return ()=>{
-					setInstancesFrame([]);
-					setActiveFrame(0);
-				}
+        return () => {
+            setInstancesFrame([]);
+            setActiveFrame(0);
+        };
     }, [instances, currentInstanceData]);
 
     const handleCurrentFrame = (index: number, instanceNumber: number) => {
@@ -41,19 +41,19 @@ const FrameSelectorComponent = ({instances}:Props) => {
                 <div className={s.slider} style={{ maxWidth: `calc(${instancesFrame?.length}*${slideWidth}px)` }}>
                     <ul className={s.slider_wrapper}>
                         {instancesFrame?.map((slide, index) => (
-                                <li
-                                    key={index}
-                                    className={`${s.slide} ${s[activeFrame === index ? "active" : ""] || ""}`}
-                                    style={{
-                                        maxWidth: `${slideWidth}px`,
-                                        maxHeight: `${slideWidth}px`,
-                                        color: "white",
-                                    }}
-                                    onClick={() => handleCurrentFrame(index, slide.instanceNumber)}
-                                >
-                                    {<img src={slide.path} alt={`${slide.instanceNumber}`} className={s.slide_img} />}
-                                </li>
-                            ))}
+                            <li
+                                key={index}
+                                className={`${s.slide} ${s[activeFrame === index ? "active" : ""] || ""}`}
+                                style={{
+                                    maxWidth: `${slideWidth}px`,
+                                    maxHeight: `${slideWidth}px`,
+                                    color: "white",
+                                }}
+                                onClick={() => handleCurrentFrame(index, slide.instanceNumber)}
+                            >
+                                {<img src={slide.path} alt={`${slide.instanceNumber}`} className={s.slide_img} />}
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

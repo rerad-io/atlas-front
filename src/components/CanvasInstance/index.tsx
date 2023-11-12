@@ -23,28 +23,26 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(new fabric.Group([]));
-		const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
+    const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
 
-		useEffect(() => {
+    useEffect(() => {
         const fetchInstanceData = async () => {
-				
-					try {
-						if(currentInstanceData.length){
-							setCurrentFrame(currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber));
-						}else {
-						const instanceList = await getInstanceDataList({});
-						const targetFrame = instanceList.find(item => item.instanceNumber === currentInstanceNumber);
-						if(targetFrame){	
-								setCurrentFrame(targetFrame);
-							}
-						}
-					} catch (error) {
-						console.error("StudySeriesEditPage - ", error);
-					}
+            try {
+                if (currentInstanceData.length) {
+                    setCurrentFrame(currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber));
+                } else {
+                    const instanceList = await getInstanceDataList({});
+                    const targetFrame = instanceList.find((item) => item.instanceNumber === currentInstanceNumber);
+                    if (targetFrame) {
+                        setCurrentFrame(targetFrame);
+                    }
+                }
+            } catch (error) {
+                console.error("StudySeriesEditPage - ", error);
+            }
         };
-				fetchInstanceData();
+        fetchInstanceData();
     }, [currentInstanceNumber]);
-
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -74,9 +72,7 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
         fabricCanvas.add(layer2Frame);
         fabricCanvas.add(pointsLayer);
         fabricCanvas.renderAll();
-
-				//const currentFrame = currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber);
-
+				
         createImage(currentFrame?.path, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();
