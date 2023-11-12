@@ -2,21 +2,26 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { instanceSelector, setCurrentInstanceNumber } from "../../store/instance";
 import s from "./styles.module.scss";
+import { InstanceData } from "../../_types";
 
 const slideWidth: number = 80;
 
-const FrameSelectorComponent = ({instances}) => {
+type Props = {
+	instances?: InstanceData[];
+}
+
+const FrameSelectorComponent = ({instances}:Props) => {
     const dispatch = useDispatch();
 
-    const { instanceData } = useSelector(instanceSelector);
-    const [instancesFrame, setInstancesFrame] = useState([]);
+    const { currentInstanceData } = useSelector(instanceSelector);
+  	const [instancesFrame, setInstancesFrame] = useState<InstanceData[]>([]);
     const [activeFrame, setActiveFrame] = useState(0);
 
     useEffect(() => {
 			if(instances?.length){
 				setInstancesFrame(instances);
 			}else{
-				setInstancesFrame(Object.values(instanceData).flat());
+				setInstancesFrame(Object.values(currentInstanceData).flat());
 			}
         setActiveFrame(0);
 
@@ -24,7 +29,7 @@ const FrameSelectorComponent = ({instances}) => {
 					setInstancesFrame([]);
 					setActiveFrame(0);
 				}
-    }, [instances, instanceData]);
+    }, [instances, currentInstanceData]);
 
     const handleCurrentFrame = (index: number, instanceNumber: number) => {
         setActiveFrame(index);
@@ -46,7 +51,7 @@ const FrameSelectorComponent = ({instances}) => {
                                     }}
                                     onClick={() => handleCurrentFrame(index, slide.instanceNumber)}
                                 >
-                                    {<img src={slide.path} alt={slide.instanceNumber} className={s.slide_img} />}
+                                    {<img src={slide.path} alt={`${slide.instanceNumber}`} className={s.slide_img} />}
                                 </li>
                             ))}
                     </ul>

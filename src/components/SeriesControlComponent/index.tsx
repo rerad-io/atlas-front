@@ -1,50 +1,66 @@
-import { useSelector } from "react-redux";
-import { instanceSelector } from "../../store/instance";
-import s from "./styles.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import {useState, useEffect} from "react";
+import { instanceSelector, setCurrentSereies } from "../../store/instance";
+import { Series } from "../../_types";
 
-export const SeriesControlComponent = () => {
-    //const { series, currentSeriesNumber } = useSelector(instanceSelector);
-    //console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ currentSeriesNumber:", currentSeriesNumber)
-    //console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ series:", series)
+type Props={
+	studySerie: Series;
+}
 
-    //const changeSerie = (number: number) => {
-    //const targetSerie: Series = series[number];
-    //setActiveSerie(targetSerie);
-    //dispatch(setCurrentSereies(number));
-    //};
+export const SeriesControlComponent = ({studySerie}:Props) => {
+
+	const dispatch = useDispatch();
+    const { series, currentSeriesNumber } = useSelector(instanceSelector);
+	
+		const [currentSerie, setCurrentSerie] = useState<Series>({});
+	
+		useEffect(()=>{
+			if(Object.keys(series).length){
+				setCurrentSerie(Object.values(series).find(item => item.number ===currentSeriesNumber));
+			} else {
+				setCurrentSerie(studySerie);
+			}
+		},[studySerie, series,currentSeriesNumber])
+
+    const changeSerie = (number: number) => {
+    dispatch(setCurrentSereies(number));
+    };
 
     return (
         <section>
-            {/*<div className="container">
+            <div className="container">
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
                         <div>
                             <span style={{ display: "block" }}>Sagital</span>
                             <img
                                 style={{ width: "60px", height: "60px" }}
-                                src={activeSerie?.sagitalFrame}
-                                alt={`Serie ${activeSerie?.name} sagitalFrame`}
+                                src={currentSerie?.sagitalFrame}
+                                alt={`Serie ${currentSerie?.name} sagitalFrame`}
                             />
                         </div>
                         <div>
                             <span style={{ display: "block" }}>Coronal</span>
                             <img
                                 style={{ width: "60px", height: "60px" }}
-                                src={activeSerie?.coronalFrame}
-                                alt={`Serie ${activeSerie?.name} coronalFrame`}
+                                src={currentSerie?.coronalFrame}
+                                alt={`Serie ${currentSerie?.name} coronalFrame`}
                             />
                         </div>
                     </div>
                     <ul style={{ marginTop: "15px", cursor: "pointer", display: "flex", gap: "5px" }}>
                         {Object.values(series).map((item, index) => (
-                            <li style={{ textAlign: "center", width: "60px" }} key={index} onClick={() => changeSerie(item.number)}>
+                            <li 
+														style={{ textAlign: "center", width: "80px", flexShrink: "0" }} 
+														key={index} 
+														onClick={() => changeSerie(item.number)}>
                                 <span style={{ display: "block" }}>{item.name}</span>
-                                {`${item.number === activeSerie?.number ? "(active)" : ""}`}
+                                {`${item.number === currentSerie?.number ? "(active)" : ""}`}
                             </li>
                         ))}
                     </ul>
                 </div>
-            </div>*/}
+            </div>
         </section>
     );
 };

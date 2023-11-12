@@ -9,6 +9,7 @@ import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import { InstanceData } from "../../../_types";
+import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -226,6 +227,7 @@ const StudySeriesEditPage = () => {
                     {/*// TODO: раскоментировать когда будут исправлены инстансы*/}
                     <FrameSelectorComponent instances={instances}/>
                     <RenderComponent />
+										<SeriesControlComponent studySerie={studySerie}/>
                 </>
             ) : null}
         </div>
