@@ -7,16 +7,19 @@ import s from "./s.module.css";
 import { getStudyList } from "../../../requests/StudyRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
+import { getInstanceDataList } from "../../../requests/instanceDataRequests";
+import { InstanceData } from "../../../_types";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
     const [studySerie, setStudySerie] = useState();
-    console.log("🚀 ~ file: index.tsx:13 ~ StudySeriesEditPage ~ studySerie:", studySerie);
+    //console.log("🚀 ~ file: index.tsx:13 ~ StudySeriesEditPage ~ studySerie:", studySerie);
     // TODO: ID study должно браться из studySeries.study
     const [study, setStudy] = useState();
+    //console.log("🚀 ~ file: index.tsx:20 ~ StudySeriesEditPage ~ study:", study)
     // TODO: представление instanceData - раскоментировать когда будет исправлено
-    const [instances, setInstances] = useState();
+    const [instances, setInstances] = useState<InstanceData[]>();
     //console.log("🚀 ~ file: index.tsx:15 ~ StudySeriesEditPage ~ instances:", instances)
     //const [currentFrame, setCurrentFrame] = useState();
 
@@ -34,7 +37,6 @@ const StudySeriesEditPage = () => {
                     const targetSerie = temporarySeriesList.find((item) => item.id === id);
                     // =========
                     setStudySerie(targetSerie);
-                    //setInstances(targetSerie.study.instanceDataList);
                     // TODO: представление instanceData - раскоментировать когда будет исправлено
                     //setInstances(result.study.instanceDataList);
                 } catch (error) {
@@ -46,23 +48,43 @@ const StudySeriesEditPage = () => {
     }, [id]);
 
     useEffect(() => {
-        // TODO: studyID должно браться из studySeries.study
+			if(studySerie){
+
+				// TODO: studyID должно браться из studySeries.study
         const fetchStudyId = async () => {
-            try {
-                const temporaryStudyList = await getStudyList();
-                const tempStudy = temporaryStudyList.find((item) => {
-                    if (item.seriesList.length) {
-                        const tempSerie = item.seriesList.find((elem) => elem.id === studySerie?.id);
-                        return tempSerie;
-                    }
-                });
-                setStudy(tempStudy);
-            } catch (error) {
-                console.error("StudySeriesEditPage - ", error);
-            }
+					try {
+						const temporaryStudyList = await getStudyList();
+						const tempStudy = temporaryStudyList.find((item) => {
+							if (item.seriesList.length) {
+								const tempSerie = item.seriesList.find((elem) => elem.id === studySerie?.id);
+								return tempSerie;
+							}
+						});
+						setStudy(tempStudy);
+					} catch (error) {
+						console.error("StudySeriesEditPage - ", error);
+					}
         };
+				
         fetchStudyId();
+			}
     }, [studySerie]);
+
+    useEffect(() => {
+			if(study){
+				// TODO: поиск инстанса должен быть сразу в серии
+        const fetchInstanceData = async () => {
+					try {
+						const temporaryInstance = await getInstanceDataList({});
+						const tempIstanceData = temporaryInstance.filter(item=> item.series = studySerie?.name && item.study === study?.name)
+						setInstances(tempIstanceData);
+					} catch (error) {
+						console.error("StudySeriesEditPage - ", error);
+					}
+        };
+				fetchInstanceData();
+			}
+    }, [studySerie, study]);
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -205,7 +227,7 @@ const StudySeriesEditPage = () => {
             {id ? (
                 <>
                     {/*// TODO: раскоментировать когда будут исправлены инстансы*/}
-                    <FrameSelectorComponent />
+                    <FrameSelectorComponent instances={instances}/>
                     <RenderComponent />
                 </>
             ) : null}

@@ -5,28 +5,32 @@ import s from "./styles.module.scss";
 
 const slideWidth: number = 80;
 
-const FrameSelectorComponent = () => {
+const FrameSelectorComponent = ({instances}) => {
     const dispatch = useDispatch();
 
     const { instanceData } = useSelector(instanceSelector);
-    const [activeFrame, setactiveFrame] = useState(0);
+    const [instancesFrame, setInstancesFrame] = useState([]);
+    const [activeFrame, setActiveFrame] = useState(0);
 
     useEffect(() => {
-        setactiveFrame(0);
-    }, []);
+			if(instances?.length){
+				setInstancesFrame(instances);
+			}else{
+				setInstancesFrame(Object.values(instanceData).flat());
+			}
+        setActiveFrame(0);
+    }, [instances, instanceData]);
 
     const handleCurrentFrame = (index: number, instanceNumber: number) => {
-        setactiveFrame(index);
+        setActiveFrame(index);
         dispatch(setCurrentInstanceNumber(instanceNumber));
     };
     return (
         <section>
             <div className="container">
-                <div className={s.slider} style={{ maxWidth: `calc(${Object.values(instanceData).flat()?.length}*${slideWidth}px)` }}>
+                <div className={s.slider} style={{ maxWidth: `calc(${instancesFrame?.length}*${slideWidth}px)` }}>
                     <ul className={s.slider_wrapper}>
-                        {Object.values(instanceData)
-                            .flat()
-                            ?.map((slide, index) => (
+                        {instancesFrame?.map((slide, index) => (
                                 <li
                                     key={index}
                                     className={`${s.slide} ${s[activeFrame === index ? "active" : ""] || ""}`}
