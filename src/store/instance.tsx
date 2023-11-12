@@ -19,8 +19,8 @@ export type InstanceState = {
     // Dynamic data
 
     // Массив содержит список точек которые актуальны для текущей серии и для текущего кадра
-    currentInstanceData: InstanceData[]
-    
+    currentInstanceData: InstanceData[];
+
     currentInstanceNumber: number;
     currentSeriesNumber: number;
 };
@@ -31,7 +31,9 @@ const initialState: InstanceState = {
     series: {},
     instanceData: {},
     availableAnatomicalStructures: [],
-    currentInstanceData: []
+    currentInstanceData: [],
+		currentInstanceNumber:0,
+		currentSeriesNumber:1,
 };
 
 const instanceKey = (seriesNumber: number, instanceNumber: number): InstanceKey => `${seriesNumber}-${instanceNumber}`;
@@ -43,29 +45,60 @@ const instanceSlice = createSlice({
         setAnatomicalStructures: (state, { payload }: PayloadAction<AnatomicalStructure[]>) => {
             state.availableAnatomicalStructures = payload;
         },
-        setStudy: (state, { payload }: PayloadAction<Study & { series: Series[], instanceData : InstanceData[]}>) => {
+        setStudy: (state, { payload }: PayloadAction<Study & { seriesList: Series[]; instanceData: InstanceData[] }>) => {
+        //console.log("🚀 ~ file: instance.tsx:49 ~ payload:", payload)
+      
             state.study = {
-                id : payload.id,
-                externalId : payload.externalId,
-                name : payload.name,
-                description : payload.description,
-                previewFrame : payload.previewFrame,
-            }
-            state.series = payload.series.reduce((series, item, index) => {
-                series[index]=item;
-                return series;
-            }, {} as Record<number, Series>);
-            state.instanceData = payload.instanceData.reduce((instanceData, item) => {
-                const key = instanceKey(item.seriesNumber, item.instanceNumber);
-                instanceData[key] = [...instanceData[key], item];
-                return instanceData;
-            }, {} as Record<InstanceKey, InstanceData[]>);
+                id: payload.id,
+                externalId: payload.externalId,
+                name: payload.name,
+                description: payload.description,
+                previewFrame: payload.previewFrame,
+            };
+            state.series = payload.seriesList.reduce(
+                (series, item, index) => {
+                    series[index] = item;
+                    return series;
+                },
+                {} as Record<number, Series>,
+            );
+						//			// TODO: бэкэнд должен возвращать seriesNumber в 
+            //state.instanceData = payload.instanceData.reduce(
+            //    (instanceData, item) => {
+            //        //const key = instanceKey(item.seriesNumber, item.instanceNumber);
+            //        const key = instanceKey(item.seriesNumber, item.instanceNumber);
+						//				if(!instanceData[key]){
+						//					instanceData[key] = [];
+						//				}
+						//				instanceData[key].push(item);
+            //        return instanceData;
+            //    },
+            //    {} as Record<InstanceKey, InstanceData[]>,
+            //);
+						let accum: Record<number, InstanceData[]> ={};
 
+						payload.seriesList.forEach((item) =>{
+							const seriesKey = item.number;
 
+							accum = payload.instanceData.reduce(
+                (instanceData, item) => {
+                    const key = instanceKey(seriesKey, item.instanceNumber);
+										if(!instanceData[key]){
+											instanceData[key] = [];
+										}
+										instanceData[key].push(item);
+                    return instanceData;
+                },
+                {} as Record<InstanceKey, InstanceData[]>,
+            );
+						})
+					
+						state.instanceData = accum; 
+ 
             // Пример структуры
             // state.instanceData = {
             //     "1-1": [
-            //         {x:1, y: 1, ...}, 
+            //         {x:1, y: 1, ...},
             //         {x:100, y: 100, ...}
             //     ],
             //     "1-2": [
@@ -73,19 +106,18 @@ const instanceSlice = createSlice({
             //         {x:97, y: 96, ...}]
             // }
 
-
             state.currentInstanceData = [];
-        },
-        setCurrentSereies: (state, { payload} : PayloadAction<number>) => {
+        },                                                      
+        setCurrentSereies: (state, { payload }: PayloadAction<number>) => {
             state.currentSeriesNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
-            state.currentInstanceData = state.instanceData[key];
+            state.currentInstanceData = state.instanceData[key]??[];
         },
-        setCurrentInstanceNumber: (state, { payload} : PayloadAction<number>) => {
+        setCurrentInstanceNumber: (state, { payload }: PayloadAction<number>) => {
             state.currentInstanceNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
-            state.currentInstanceData = state.instanceData[key];
-        }
+            state.currentInstanceData = state.instanceData[key]??[];
+        },
     },
 });
 

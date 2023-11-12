@@ -1,37 +1,44 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudyId } from "../../../requests/StudyRequests";
-import { instanceSelector, setAnatomicalStructures, setCurrentInstanceNumber, setCurrentSereies, setSeriesList, setStudy } from "../../../store/instance";
-import { Series } from "../../../_types";
-import FrameSelector from "../../../components/FrameSelector";
-import RenderComponent from "../../../components/RenderComponent";
+import {
+    instanceSelector,
+    setAnatomicalStructures,
+    setCurrentInstanceNumber,
+    setCurrentSereies,
+    setStudy,
+} from "../../../store/instance";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
+import { WhiteBoardCanvas } from "../../../components/WhiteBoardCanvas";
+import FrameSelector from "../../../components/FrameSelector";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
     const dispatch = useDispatch();
 
-    const { study, series, currentInstanceData } = useSelector(instanceSelector);
-    //console.log("🚀 ~ file: index.tsx:18 ~ StudyPage ~ study:", study)
-    //const [activeSerie, setActiveSerie] = useState<Series>({} as Series);
-    //const [activeInstases, setActiveInstances] = useState([]);
-    //const [currentFrame, setCurrentFrame] = useState({});
+    const {study} = useSelector(instanceSelector);
 
-    useLayoutEffect(() => {
-			if (id ) {
-					console.log("🚀 ~ file: index.tsx:25 ~ useLayoutEffect ~ study:", study.id)
-            const fetchStudyData = async (studyId: string) => {
-                try {
+    useEffect(() => {
+			if (id && id !== study.id) {
+			const fetchStudyData = async (studyId: string) => {
+				try {
                     const targetStudy = await getStudyId(studyId);
                     const instanceDataList = await getInstanceDataList({});
 
-                    dispatch(setStudy({
-                        ...targetStudy,
-                        instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
-                    }));
+                    dispatch(
+                        setStudy({
+													...targetStudy,
+														// TODO: из бека фильтровать по ID 
+                            instanceData: instanceDataList.filter((item) => item.study === targetStudy.name),
+                            //instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
+                            //instanceData: instanceDataList,
+													}),
+													);
+										dispatch(setCurrentSereies(1));
+										dispatch(setCurrentInstanceNumber(0));
 
                     const tempStudiesList = await getAnatomicalStructureList({});
                     dispatch(setAnatomicalStructures(tempStudiesList));
@@ -40,42 +47,14 @@ const StudyPage = () => {
                 }
             };
 
-            fetchStudyData(id); 
-        } 
-
-    //    return () => {
-    //    setActiveSerie({});
-    //    setActiveInstances([]);
-    //    setCurrentFrame({});
-    //};
-    }, [id, dispatch]);
-
-    //useEffect(() => {
-    //    if (Object.keys(series).length) {
-    //        setActiveSerie(Object.values(series)[0]);
-    //    }
-    //}, [series]);
-
-    //useEffect(() => {
-    //    if (Object.keys(activeSerie).length) {
-    //        const currentInstance = currentInstanceData[activeSerie.number];
-    //        if (currentInstance) {
-    //            setActiveInstances(currentInstance);
-    //            setCurrentFrame(currentInstance[0]);
-    //        }
-    //    }
-    //}, [activeSerie, instanceData]);
+            fetchStudyData(id);
+        }
+    }, [id, study.id, dispatch]);
 
     const changeSerie = (number: number) => {
         //const targetSerie: Series = series[number];
         //setActiveSerie(targetSerie);
-				dispatch(setCurrentSereies(number))
-			};
-			
-			const handleCurrentFrame = (number: number) => {
-				//const currentInstance = instanceData[activeSerie.number];
-        //setCurrentFrame(currentInstance[currentId]);
-				dispatch(setCurrentInstanceNumber(number))
+        dispatch(setCurrentSereies(number));
     };
 
     return (
@@ -84,10 +63,10 @@ const StudyPage = () => {
             {Object.keys(study).length ? (
                 <section>
                     <div style={{ marginTop: "30px" }}>
-                        <FrameSelector frameList={activeInstases} handleCurrentFrame={handleCurrentFrame} />
-                        <RenderComponent />
+                        <FrameSelector/>
+                        <WhiteBoardCanvas />
                     </div>
-                    <div className="container">
+                    {/*<div className="container">
                         <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
                                 <div>
@@ -116,7 +95,7 @@ const StudyPage = () => {
                                 ))}
                             </ul>
                         </div>
-                    </div>
+                    </div>*/}
                 </section>
             ) : (
                 <div className="container">

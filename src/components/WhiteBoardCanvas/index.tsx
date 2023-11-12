@@ -1,13 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
-import { useSelector } from "react-redux";
-import { instanceSelector } from "../../store/instance";
+import s from "./styles.module.scss";
 
 export const WhiteBoardCanvas = () => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
-
-	
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
 
@@ -42,9 +39,13 @@ export const WhiteBoardCanvas = () => {
     }, []);
 
     return (
-        <>
-            <canvas ref={canvasEl} />
+<section className={s.frame_info}>
+<div className="container">
+		<div className={s.current_frame}>
+		<canvas ref={canvasEl} />
             {fabricCanvas && <CanvasInstance fabricCanvas={fabricCanvas} />}
-        </>
+		</div>
+</div>
+</section>
     );
 };
