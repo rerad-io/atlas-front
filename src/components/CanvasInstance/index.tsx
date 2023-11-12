@@ -2,6 +2,8 @@ import { fabric } from "fabric";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
+import { getInstanceDataList } from "../../requests/instanceDataRequests";
+import { InstanceData } from "../../_types";
 
 const createImage = (url: string, width: number, height: number, x: number, y: number) =>
     new Promise<fabric.Image>((resolve) => {
@@ -21,6 +23,28 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(new fabric.Group([]));
+		const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
+
+		useEffect(() => {
+        const fetchInstanceData = async () => {
+				
+					try {
+						if(currentInstanceData.length){
+							setCurrentFrame(currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber));
+						}else {
+						const instanceList = await getInstanceDataList({});
+						const targetFrame = instanceList.find(item => item.instanceNumber === currentInstanceNumber);
+						if(targetFrame){	
+								setCurrentFrame(targetFrame);
+							}
+						}
+					} catch (error) {
+						console.error("StudySeriesEditPage - ", error);
+					}
+        };
+				fetchInstanceData();
+    }, [currentInstanceNumber]);
+
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -51,13 +75,13 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
         fabricCanvas.add(pointsLayer);
         fabricCanvas.renderAll();
 
-        const currentFrame = currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber);
+				//const currentFrame = currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber);
 
         createImage(currentFrame?.path, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();
         });
-    }, [fabricCanvas, currentInstanceData, currentInstanceNumber]);
+    }, [fabricCanvas, currentInstanceData, currentInstanceNumber, currentFrame]);
 
     return <></>;
 };

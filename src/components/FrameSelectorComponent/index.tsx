@@ -19,6 +19,11 @@ const FrameSelectorComponent = ({instances}) => {
 				setInstancesFrame(Object.values(instanceData).flat());
 			}
         setActiveFrame(0);
+
+				return ()=>{
+					setInstancesFrame([]);
+					setActiveFrame(0);
+				}
     }, [instances, instanceData]);
 
     const handleCurrentFrame = (index: number, instanceNumber: number) => {

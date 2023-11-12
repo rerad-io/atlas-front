@@ -14,13 +14,10 @@ const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
     const [studySerie, setStudySerie] = useState();
-    //console.log("🚀 ~ file: index.tsx:13 ~ StudySeriesEditPage ~ studySerie:", studySerie);
     // TODO: ID study должно браться из studySeries.study
     const [study, setStudy] = useState();
-    //console.log("🚀 ~ file: index.tsx:20 ~ StudySeriesEditPage ~ study:", study)
     // TODO: представление instanceData - раскоментировать когда будет исправлено
     const [instances, setInstances] = useState<InstanceData[]>();
-    //console.log("🚀 ~ file: index.tsx:15 ~ StudySeriesEditPage ~ instances:", instances)
     //const [currentFrame, setCurrentFrame] = useState();
 
     const location = useLocation();
