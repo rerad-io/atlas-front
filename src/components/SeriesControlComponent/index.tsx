@@ -3,16 +3,15 @@ import { instanceSelector } from "../../store/instance";
 import s from "./styles.module.scss";
 
 export const SeriesControlComponent = () => {
+    //const { series, currentSeriesNumber } = useSelector(instanceSelector);
+    //console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ currentSeriesNumber:", currentSeriesNumber)
+    //console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ series:", series)
 
-	//const { series, currentSeriesNumber } = useSelector(instanceSelector);
-	//console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ currentSeriesNumber:", currentSeriesNumber)
-	//console.log("🚀 ~ file: index.tsx:8 ~ SeriesControlComponent ~ series:", series)
-
-	//const changeSerie = (number: number) => {
-		//const targetSerie: Series = series[number];
-		//setActiveSerie(targetSerie);
-		//dispatch(setCurrentSereies(number));
-//};
+    //const changeSerie = (number: number) => {
+    //const targetSerie: Series = series[number];
+    //setActiveSerie(targetSerie);
+    //dispatch(setCurrentSereies(number));
+    //};
 
     return (
         <section>
