@@ -32,8 +32,8 @@ const initialState: InstanceState = {
     instanceData: {},
     availableAnatomicalStructures: [],
     currentInstanceData: [],
-		currentInstanceNumber:0,
-		currentSeriesNumber:1,
+    currentInstanceNumber: 0,
+    currentSeriesNumber: 1,
 };
 
 const instanceKey = (seriesNumber: number, instanceNumber: number): InstanceKey => `${seriesNumber}-${instanceNumber}`;
@@ -46,8 +46,8 @@ const instanceSlice = createSlice({
             state.availableAnatomicalStructures = payload;
         },
         setStudy: (state, { payload }: PayloadAction<Study & { seriesList: Series[]; instanceData: InstanceData[] }>) => {
-        //console.log("🚀 ~ file: instance.tsx:49 ~ payload:", payload)
-      
+            //console.log("🚀 ~ file: instance.tsx:49 ~ payload:", payload)
+
             state.study = {
                 id: payload.id,
                 externalId: payload.externalId,
@@ -62,39 +62,39 @@ const instanceSlice = createSlice({
                 },
                 {} as Record<number, Series>,
             );
-						//			// TODO: бэкэнд должен возвращать seriesNumber в 
+            //			// TODO: бэкэнд должен возвращать seriesNumber в
             //state.instanceData = payload.instanceData.reduce(
             //    (instanceData, item) => {
             //        //const key = instanceKey(item.seriesNumber, item.instanceNumber);
             //        const key = instanceKey(item.seriesNumber, item.instanceNumber);
-						//				if(!instanceData[key]){
-						//					instanceData[key] = [];
-						//				}
-						//				instanceData[key].push(item);
+            //				if(!instanceData[key]){
+            //					instanceData[key] = [];
+            //				}
+            //				instanceData[key].push(item);
             //        return instanceData;
             //    },
             //    {} as Record<InstanceKey, InstanceData[]>,
             //);
-						let accum: Record<number, InstanceData[]> ={};
+            let accum: Record<number, InstanceData[]> = {};
 
-						payload.seriesList.forEach((item) =>{
-							const seriesKey = item.number;
+            payload.seriesList.forEach((item) => {
+                const seriesKey = item.number;
 
-							accum = payload.instanceData.reduce(
-                (instanceData, item) => {
-                    const key = instanceKey(seriesKey, item.instanceNumber);
-										if(!instanceData[key]){
-											instanceData[key] = [];
-										}
-										instanceData[key].push(item);
-                    return instanceData;
-                },
-                {} as Record<InstanceKey, InstanceData[]>,
-            );
-						})
-					
-						state.instanceData = accum; 
- 
+                accum = payload.instanceData.reduce(
+                    (instanceData, item) => {
+                        const key = instanceKey(seriesKey, item.instanceNumber);
+                        if (!instanceData[key]) {
+                            instanceData[key] = [];
+                        }
+                        instanceData[key].push(item);
+                        return instanceData;
+                    },
+                    {} as Record<InstanceKey, InstanceData[]>,
+                );
+            });
+
+            state.instanceData = accum;
+
             // Пример структуры
             // state.instanceData = {
             //     "1-1": [
@@ -107,16 +107,16 @@ const instanceSlice = createSlice({
             // }
 
             state.currentInstanceData = [];
-        },                                                      
+        },
         setCurrentSereies: (state, { payload }: PayloadAction<number>) => {
             state.currentSeriesNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
-            state.currentInstanceData = state.instanceData[key]??[];
+            state.currentInstanceData = state.instanceData[key] ?? [];
         },
         setCurrentInstanceNumber: (state, { payload }: PayloadAction<number>) => {
             state.currentInstanceNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
-            state.currentInstanceData = state.instanceData[key]??[];
+            state.currentInstanceData = state.instanceData[key] ?? [];
         },
     },
 });

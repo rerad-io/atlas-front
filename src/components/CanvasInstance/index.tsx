@@ -17,32 +17,31 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
     });
 
 export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }) => {
-    const { currentInstanceData, currentInstanceNumber} = useSelector(instanceSelector);
+    const { currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(new fabric.Group([]));
- 
-useEffect(() => {
-	console.log("reload useEffect in CanvasInstance");
 
-	fabricObjects.current.forEach(fabricItem=>{
-		pointsLayer.removeWithUpdate(fabricItem);
-	});
-	
-	currentInstanceData.forEach((item) => {
-		const point = new fabric.Circle({
-			top: item.y,
-			left: item.x,
-			radius: 3,
-			fill: "red",
-		});
-		fabricObjects.current.push(point);
-		pointsLayer.addWithUpdate(point);
-	});
-}, [currentInstanceData]);
+    useEffect(() => {
+        console.log("reload useEffect in CanvasInstance");
 
-useEffect(() => {
-	
+        fabricObjects.current.forEach((fabricItem) => {
+            pointsLayer.removeWithUpdate(fabricItem);
+        });
+
+        currentInstanceData.forEach((item) => {
+            const point = new fabric.Circle({
+                top: item.y,
+                left: item.x,
+                radius: 3,
+                fill: "red",
+            });
+            fabricObjects.current.push(point);
+            pointsLayer.addWithUpdate(point);
+        });
+    }, [currentInstanceData]);
+
+    useEffect(() => {
         const layer1Bg = new fabric.Group([]);
 
         const layer2Frame = new fabric.Group([]);
@@ -52,8 +51,8 @@ useEffect(() => {
         fabricCanvas.add(pointsLayer);
         fabricCanvas.renderAll();
 
-				const currentFrame = currentInstanceData.find(item => item.instanceNumber === currentInstanceNumber);
-			
+        const currentFrame = currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber);
+
         createImage(currentFrame?.path, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();

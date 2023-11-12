@@ -5,14 +5,13 @@ import s from "./styles.module.scss";
 import { Study } from "../_types";
 
 const AppIndex = () => {
+    const [studiesList, setStadiesList] = useState<Study[]>();
 
-	const [studiesList, setStadiesList] = useState<Study[]>();
-   
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const tempList = await getStudyList();
-								setStadiesList(tempList);
+                setStadiesList(tempList);
             } catch (error) {
                 console.error("Error fetching AppIndex:", error);
             }

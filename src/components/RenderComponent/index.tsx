@@ -3,7 +3,7 @@ import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
 import s from "./styles.module.scss";
 
-export const WhiteBoardCanvas = () => {
+export const RenderComponent = () => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -39,13 +39,13 @@ export const WhiteBoardCanvas = () => {
     }, []);
 
     return (
-<section className={s.frame_info}>
-<div className="container">
-		<div className={s.current_frame}>
-		<canvas ref={canvasEl} />
-            {fabricCanvas && <CanvasInstance fabricCanvas={fabricCanvas} />}
-		</div>
-</div>
-</section>
+        <section className={s.frame_info}>
+            <div className="container">
+                <div className={s.current_frame}>
+                    <canvas ref={canvasEl} />
+                    {fabricCanvas && <CanvasInstance fabricCanvas={fabricCanvas} />}
+                </div>
+            </div>
+        </section>
     );
 };
