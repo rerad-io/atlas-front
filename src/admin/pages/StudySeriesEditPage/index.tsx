@@ -2,24 +2,20 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
-import { createStudySeries, getStudySeriesId, getStudySeriesList, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import s from "./s.module.css";
-import { getStudyList } from "../../../requests/StudyRequests";
+import { InstanceData } from "../../../_types";
+import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
+import { getStudyId } from "../../../requests/StudyRequests";
+import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
-import { getInstanceDataList } from "../../../requests/instanceDataRequests";
-import { InstanceData } from "../../../_types";
 import { PointsFormCreate } from "../../components/PointsFormController";
+import s from "./styles.module.scss";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
     const [studySerie, setStudySerie] = useState();
-    // TODO: ID study должно браться из studySeries.study
-    const [study, setStudy] = useState();
-    // TODO: представление instanceData - раскоментировать когда будет исправлено
     const [instances, setInstances] = useState<InstanceData[]>();
-    //const [currentFrame, setCurrentFrame] = useState();
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -29,14 +25,16 @@ const StudySeriesEditPage = () => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
-                    // TODO: получать серию по ID =====
-                    //const targetSerie = await getStudySeriesId(id);
-                    const temporarySeriesList = await getStudySeriesList();
-                    const targetSerie = temporarySeriesList.find((item) => item.id === id);
-                    // =========
+                    const targetSerie = await getStudySeriesId(id);
                     setStudySerie(targetSerie);
-                    // TODO: представление instanceData - раскоментировать когда будет исправлено
-                    //setInstances(result.study.instanceDataList);
+                    const temporaryInstance = await getInstanceDataList({});
+										// TODO: представление instanceData - раскоментировать когда будет 
+										const temporaryStudy = await getStudyId(targetSerie?.studyId);
+                    const tempIstanceData = temporaryInstance.filter(
+											//(item) => (item.seriesId === targetSerie?.id && item.studyItargetSerie?.studyIdd === ),
+											(item) => (item.series === targetSerie?.name && item.study === temporaryStudy.name),
+                    );
+                    setInstances(tempIstanceData);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -45,68 +43,20 @@ const StudySeriesEditPage = () => {
         }
     }, [id]);
 
-    useEffect(() => {
-        if (studySerie) {
-            // TODO: studyID должно браться из studySeries.study
-            const fetchStudyId = async () => {
-                try {
-                    const temporaryStudyList = await getStudyList();
-                    const tempStudy = temporaryStudyList.find((item) => {
-                        if (item.seriesList.length) {
-                            const tempSerie = item.seriesList.find((elem) => elem.id === studySerie?.id);
-                            return tempSerie;
-                        }
-                    });
-                    setStudy(tempStudy);
-                } catch (error) {
-                    console.error("StudySeriesEditPage - ", error);
-                }
-            };
-
-            fetchStudyId();
-        }
-    }, [studySerie]);
-
-    useEffect(() => {
-        if (study) {
-            // TODO: поиск инстанса должен быть сразу в серии
-            const fetchInstanceData = async () => {
-                try {
-                    const temporaryInstance = await getInstanceDataList({});
-                    const tempIstanceData = temporaryInstance.filter(
-                        (item) => (item.series = studySerie?.name && item.study === study?.name),
-                    );
-                    setInstances(tempIstanceData);
-                } catch (error) {
-                    console.error("StudySeriesEditPage - ", error);
-                }
-            };
-            fetchInstanceData();
-        }
-    }, [studySerie, study]);
-
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
 
         const obj: Record<string, string> = {};
-
+				
         formData.forEach((value, key) => {
             obj[key] = value as string;
-        });
+					});
 
         if (id) {
             const fetchDataAndUpdateStudySeries = async () => {
                 try {
-                    const updatedObj = await updateStudySeries(
-                        {
-                            ...obj,
-                            study: {
-                                id: studySerie?.study?.id,
-                            },
-                        },
-                        id,
-                    );
+                    const updatedObj = await updateStudySeries({...obj, studyId}, id);
                     setStudySerie(updatedObj);
                     toast.success("Study Series updated!");
                 } catch (error) {
@@ -118,12 +68,7 @@ const StudySeriesEditPage = () => {
         } else {
             const fetchDataAndCreateStudySeries = async () => {
                 try {
-                    await createStudySeries({
-                        ...obj,
-                        study: {
-                            id: studyId,
-                        },
-                    });
+                    await createStudySeries({...obj, studyId});
                     toast.success("Study Series created!");
                 } catch (error) {
                     toast.error("Study Series create - error!");
@@ -145,11 +90,9 @@ const StudySeriesEditPage = () => {
                         Study ID:
                         <input
                             type="text"
-                            name="study"
+                            name="studyId"
                             id="Study"
-                            // TODO: studyID должно браться из studySeries.study
-                            //defaultValue={studyId ? studyId : studySerie?.study?.id}
-                            defaultValue={studyId ? studyId : study?.id}
+                            defaultValue={studyId ? studyId : studySerie?.studyId}
                             disabled
                             style={{ width: "400px" }}
                         />

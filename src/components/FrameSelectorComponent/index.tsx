@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { instanceSelector, setCurrentInstanceNumber } from "../../store/instance";
-import s from "./styles.module.scss";
 import { InstanceData } from "../../_types";
+import s from "./styles.module.scss";
 
 const slideWidth: number = 80;
 

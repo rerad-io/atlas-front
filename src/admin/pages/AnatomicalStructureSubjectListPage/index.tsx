@@ -1,6 +1,6 @@
 import Button from "../../../components/UI/Button";
 import AnatomicalStructureSubjectList from "../../components/AnatomicalStructureSubjectList";
-import s from "./s.module.css";
+import s from "./styles.module.scss";
 
 const AnatomicalStructureSubjectListPage = () => {
     return (

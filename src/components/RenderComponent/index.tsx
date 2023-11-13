@@ -18,17 +18,6 @@ export const RenderComponent = () => {
 
         setFabricCanvas(new fabric.Canvas(canvasEl.current, options));
 
-        // TODO: try to use for add instance
-        //	if(fabricCanvas){
-        //	fabricCanvas.on("mouse:down", (event) => {
-        //		const pointer = fabricCanvas.getPointer(event.e);
-        //		//console.log("🚀 ~ file: index.tsx:24 ~ canvas.on ~ canvas:", canvas)
-        //		const x = pointer.x; // Координата x клика
-        //		const y = pointer.y; // Координата y клика
-        //		console.log(`Mouse click at (${x}, ${y})`);
-        //	});
-        //}
-
         return () => {
             if (fabricCanvas) {
                 fabricCanvas.dispose();

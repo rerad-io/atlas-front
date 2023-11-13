@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import s from "./s.module.css";
+import toast from "react-hot-toast";
+import { createStudy, getStudyId, updateStudy } from "../../../requests/StudyRequests";
 import Button from "../../../components/UI/Button";
 import StudySeriesList from "../../components/StudySeriesList";
-import { createStudy, getStudyId, updateStudy } from "../../../requests/StudyRequests";
-import toast from "react-hot-toast";
+import s from "./styles.module.scss";
 
 const StudyEditPage = () => {
     const navigate = useNavigate();
@@ -76,23 +76,6 @@ const StudyEditPage = () => {
             formRef.current.reset();
         }
     };
-
-    // TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
-    // const readFile = (file: File): Promise<string> => {
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-
-    //         reader.onload = (e) => {
-    //             resolve(e.target.result as string);
-    //         };
-
-    //         reader.onerror = (error) => {
-    //             reject(error);
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     });
-    // };
 
     return (
         <div className={s.page}>

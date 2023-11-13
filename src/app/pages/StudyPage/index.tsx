@@ -5,10 +5,10 @@ import { getStudyId } from "../../../requests/StudyRequests";
 import { instanceSelector, setAnatomicalStructures, setCurrentInstanceNumber, setCurrentSereies, setStudy } from "../../../store/instance";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
-import s from "./styles.module.scss";
 import { RenderComponent } from "../../../components/RenderComponent";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
+import s from "./styles.module.scss";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
@@ -22,17 +22,17 @@ const StudyPage = () => {
                 try {
                     const targetStudy = await getStudyId(studyId);
                     const instanceDataList = await getInstanceDataList({});
-
+										const tempInstanceData = instanceDataList.filter((item) => item.study === targetStudy.name);
                     dispatch(
                         setStudy({
                             ...targetStudy,
                             // TODO: из бека фильтровать по ID
-                            instanceData: instanceDataList.filter((item) => item.study === targetStudy.name),
+                            instanceData: tempInstanceData,
                             //instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
                         }),
                     );
-                    dispatch(setCurrentSereies(1));
-                    dispatch(setCurrentInstanceNumber(0));
+                    dispatch(setCurrentSereies(targetStudy.seriesList[0].number));
+                    dispatch(setCurrentInstanceNumber(tempInstanceData[0].instanceNumber));
 
                     const tempStudiesList = await getAnatomicalStructureList({});
                     dispatch(setAnatomicalStructures(tempStudiesList));

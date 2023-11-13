@@ -3,7 +3,7 @@ import Button from "../../../components/UI/Button";
 import TableComponent from "../../../components/UI/TableComponent";
 import { deleteStudySeries } from "../../../requests/StudySeriesRequests";
 import { Series } from "../../../_types";
-import s from "./s.module.css";
+import s from "./styles.module.scss";
 
 const StudySeriesList = ({ seriesList, studyId }) => {
     const [studySeriesList, setStudySeriesList] = useState<Series[]>([]);

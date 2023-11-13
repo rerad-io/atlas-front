@@ -4,6 +4,9 @@ import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
 import { getInstanceDataList } from "../../requests/instanceDataRequests";
 import { InstanceData } from "../../_types";
+import { useParams } from "react-router-dom";
+import { getStudySeriesId } from "../../requests/StudySeriesRequests";
+import { getStudyId } from "../../requests/StudyRequests";
 
 const createImage = (url: string, width: number, height: number, x: number, y: number) =>
     new Promise<fabric.Image>((resolve) => {
@@ -19,30 +22,36 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
     });
 
 export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }) => {
+	// TODO: получить данные инстанса можно взять из серии вытащив данные по ID
+		const { id } = useParams<{ id: string }>();
     const { currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
-
+  
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(new fabric.Group([]));
     const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
+    console.log("🚀 ~ file: index.tsx:28 ~ CanvasInstance ~ currentFrame:", currentFrame)
 
     useEffect(() => {
         const fetchInstanceData = async () => {
             try {
                 if (currentInstanceData.length) {
-                    setCurrentFrame(currentInstanceData.find((item) => item.instanceNumber === currentInstanceNumber));
+                    setCurrentFrame(currentInstanceData.filter((item) => item.instanceNumber === currentInstanceNumber));
                 } else {
+									// TODO: получить данные инстанса можно взять из серии вытащив данные по ID
                     const instanceList = await getInstanceDataList({});
-                    const targetFrame = instanceList.find((item) => item.instanceNumber === currentInstanceNumber);
+										const tempSerie = await getStudySeriesId(id);
+										const tempStudy = await getStudyId(tempSerie?.studyId);
+                    const targetFrame = instanceList.filter((item) => item.series === tempSerie.name && item.study === tempStudy.name);
                     if (targetFrame) {
                         setCurrentFrame(targetFrame);
                     }
                 }
             } catch (error) {
-                console.error("StudySeriesEditPage - ", error);
+                console.error("CanvasInstance - ", error);
             }
         };
         fetchInstanceData();
-    }, [currentInstanceNumber]);
+    }, [currentInstanceData, currentInstanceNumber]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -51,17 +60,17 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
             pointsLayer.removeWithUpdate(fabricItem);
         });
 
-        currentInstanceData.forEach((item) => {
+					currentFrame.forEach((item) => {
             const point = new fabric.Circle({
-                top: item.y,
-                left: item.x,
+                top: item?.y,
+                left: item?.x,
                 radius: 3,
                 fill: "red",
             });
             fabricObjects.current.push(point);
             pointsLayer.addWithUpdate(point);
         });
-    }, [currentInstanceData]);
+    }, [currentFrame]);
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([]);
@@ -73,11 +82,11 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
         fabricCanvas.add(pointsLayer);
         fabricCanvas.renderAll();
 				
-        createImage(currentFrame?.path, 500, 500, 0, 0).then((img) => {
+        createImage(currentFrame[0]?.path, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();
         });
-    }, [fabricCanvas, currentInstanceData, currentInstanceNumber, currentFrame]);
-
+    }, [fabricCanvas, currentInstanceNumber, currentFrame]);
+  
     return <></>;
 };
