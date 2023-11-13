@@ -46,7 +46,6 @@ const instanceSlice = createSlice({
             state.availableAnatomicalStructures = payload;
         },
         setStudy: (state, { payload }: PayloadAction<Study & { seriesList: Series[]; instanceData: InstanceData[] }>) => {
-         
             state.study = {
                 id: payload.id,
                 externalId: payload.externalId,

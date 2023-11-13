@@ -28,11 +28,11 @@ const StudySeriesEditPage = () => {
                     const targetSerie = await getStudySeriesId(id);
                     setStudySerie(targetSerie);
                     const temporaryInstance = await getInstanceDataList({});
-										// TODO: представление instanceData - раскоментировать когда будет 
-										const temporaryStudy = await getStudyId(targetSerie?.studyId);
+                    // TODO: представление instanceData - раскоментировать когда будет
+                    const temporaryStudy = await getStudyId(targetSerie?.studyId);
                     const tempIstanceData = temporaryInstance.filter(
-											//(item) => (item.seriesId === targetSerie?.id && item.studyItargetSerie?.studyIdd === ),
-											(item) => (item.series === targetSerie?.name && item.study === temporaryStudy.name),
+                        //(item) => (item.seriesId === targetSerie?.id && item.studyItargetSerie?.studyIdd === ),
+                        (item) => item.series === targetSerie?.name && item.study === temporaryStudy.name,
                     );
                     setInstances(tempIstanceData);
                 } catch (error) {
@@ -48,15 +48,15 @@ const StudySeriesEditPage = () => {
         const formData = new FormData(e.currentTarget);
 
         const obj: Record<string, string> = {};
-				
+
         formData.forEach((value, key) => {
             obj[key] = value as string;
-					});
+        });
 
         if (id) {
             const fetchDataAndUpdateStudySeries = async () => {
                 try {
-                    const updatedObj = await updateStudySeries({...obj, studyId}, id);
+                    const updatedObj = await updateStudySeries({ ...obj, studyId }, id);
                     setStudySerie(updatedObj);
                     toast.success("Study Series updated!");
                 } catch (error) {
@@ -68,7 +68,7 @@ const StudySeriesEditPage = () => {
         } else {
             const fetchDataAndCreateStudySeries = async () => {
                 try {
-                    await createStudySeries({...obj, studyId});
+                    await createStudySeries({ ...obj, studyId });
                     toast.success("Study Series created!");
                 } catch (error) {
                     toast.error("Study Series create - error!");

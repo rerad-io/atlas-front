@@ -28,7 +28,7 @@ export const PointsFormCreate = () => {
             }
         };
 
-        fetchData(); 
+        fetchData();
     }, []);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {

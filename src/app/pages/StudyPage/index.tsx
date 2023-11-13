@@ -22,7 +22,7 @@ const StudyPage = () => {
                 try {
                     const targetStudy = await getStudyId(studyId);
                     const instanceDataList = await getInstanceDataList({});
-										const tempInstanceData = instanceDataList.filter((item) => item.study === targetStudy.name);
+                    const tempInstanceData = instanceDataList.filter((item) => item.study === targetStudy.name);
                     dispatch(
                         setStudy({
                             ...targetStudy,
