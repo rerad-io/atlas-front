@@ -51,7 +51,7 @@ const StudyPage = () => {
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
                     <FrameSelectorComponent />
-                    <RenderComponent />
+                    <RenderComponent context="app" />
                     <SeriesControlComponent />
                 </div>
             ) : (

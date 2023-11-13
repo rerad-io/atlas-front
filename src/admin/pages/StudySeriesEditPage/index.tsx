@@ -8,7 +8,6 @@ import { getStudyId } from "../../../requests/StudyRequests";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
-import { PointsFormCreate } from "../../components/PointsFormController";
 import s from "./styles.module.scss";
 
 const StudySeriesEditPage = () => {
@@ -128,8 +127,7 @@ const StudySeriesEditPage = () => {
             {id ? (
                 <>
                     <FrameSelectorComponent instances={instances} />
-                    <RenderComponent />
-                    {id ? <PointsFormCreate /> : null}
+                    <RenderComponent context="admin" seriesId={id} studyId={studySerie?.studyId} instances={instances} />
                 </>
             ) : null}
         </div>

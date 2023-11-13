@@ -21,7 +21,15 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
         });
     });
 
-export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }) => {
+export const CanvasInstance = ({
+    fabricCanvas,
+    newPoint,
+    context,
+}: {
+    fabricCanvas: fabric.Canvas;
+    newPoint?: fabric.Circle;
+    context: string;
+}) => {
     // TODO: получить данные инстанса можно взять из серии вытащив данные по ID
     const { id } = useParams<{ id: string }>();
     const { currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
@@ -32,7 +40,7 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
     useEffect(() => {
         const fetchInstanceData = async () => {
             try {
-                if (currentInstanceData.length) {
+                if (context === "app") {
                     setCurrentFrame(currentInstanceData.filter((item) => item.instanceNumber === currentInstanceNumber));
                 } else {
                     // TODO: получить данные инстанса можно взять из серии вытащив данные по ID
@@ -49,7 +57,7 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
             }
         };
         fetchInstanceData();
-    }, [id, currentInstanceData, currentInstanceNumber]);
+    }, [id, currentInstanceData, currentInstanceNumber, context]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -68,7 +76,13 @@ export const CanvasInstance = ({ fabricCanvas }: { fabricCanvas: fabric.Canvas }
             fabricObjects.current.push(point);
             pointsLayer.addWithUpdate(point);
         });
-    }, [pointsLayer, currentFrame]);
+
+        if (newPoint) {
+            fabricObjects.current.push(newPoint);
+            pointsLayer.addWithUpdate(newPoint);
+            fabricCanvas.renderAll();
+        }
+    }, [pointsLayer, currentFrame, newPoint, fabricCanvas]);
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([]);

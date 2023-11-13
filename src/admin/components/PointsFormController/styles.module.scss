@@ -6,10 +6,16 @@
     flex-direction: column;
     gap: 20px;
     border: 2px solid $white5;
+    min-width: fit-content;
 }
 
+.form label {
+    font-style: 14px;
+    font-weight: 600;
+}
 .form select {
-    max-width: 80%;
+    margin-top: 6px;
+    width: 80%;
     padding: 5px 10px;
 }
 
