@@ -6,6 +6,11 @@ import s from "./styles.module.scss";
 
 const slideWidth: number = 80;
 
+// DONE: InstanceData это информация о точках. Их ненужно сюда добавлять. Сюда следует передать
+//externalId
+//seriesNumber
+//instanceCount, именно в этом поле указывается количество кадров, начиная с одного
+
 type Props = {
     instances?: InstanceData[];
 };
