@@ -34,13 +34,15 @@ export const CanvasInstance = ({
     const { id } = useParams<{ id: string }>();
     const { currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
     const fabricObjects = useRef<fabric.Circle[]>([]);
-    const [pointsLayer] = useState<fabric.Group>(new fabric.Group([], {
-        hasControls: false,
-        hasBorders: false,
-        lockRotation: true,
-        lockScalingX: true,
-        lockScalingY: true,
-    }));
+    const [pointsLayer] = useState<fabric.Group>(
+        new fabric.Group([], {
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+        }),
+    );
     const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
 
     useEffect(() => {

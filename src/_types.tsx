@@ -49,12 +49,12 @@ export type SeriesListModel = {
     instanceCount: number;
     sagitalFrame: string;
     coronalFrame: string;
-}
+};
 
 export type StudyFullModel = Study & {
     seriesList: SeriesListModel[];
     instanceData: InstanceData[];
-}
+};
 
 export type Series = {
     id: string;
