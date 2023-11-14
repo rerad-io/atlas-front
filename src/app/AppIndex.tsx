@@ -10,8 +10,8 @@ const AppIndex = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const tempList = await getStudyList();
-                setStadiesList(tempList);
+                const studiesList = await getStudyList();
+                setStadiesList(studiesList);
             } catch (error) {
                 console.error("Error fetching AppIndex:", error);
             }

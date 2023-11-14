@@ -107,11 +107,13 @@ const instanceSlice = createSlice({
             state.currentInstanceData = [];
         },
         setCurrentSereies: (state, { payload }: PayloadAction<number>) => {
+            console.log("🚀 ~ file: instance.tsx:110 ~ payload:", payload);
             state.currentSeriesNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
             state.currentInstanceData = state.instanceData[key] ?? [];
         },
         setCurrentInstanceNumber: (state, { payload }: PayloadAction<number>) => {
+            console.log("🚀 ~ file: instance.tsx:116 ~ payload:", payload);
             state.currentInstanceNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
             state.currentInstanceData = state.instanceData[key] ?? [];

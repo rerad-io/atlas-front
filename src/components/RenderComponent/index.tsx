@@ -46,7 +46,6 @@ export const RenderComponent = ({ seriesId, studyId, context, instances }: { con
         //};
 
         // TODO: ограничение eslint, требует зависимости
-         
     }, []);
 
     const handleSubmit = (structure: AnatomicalStructure) => {

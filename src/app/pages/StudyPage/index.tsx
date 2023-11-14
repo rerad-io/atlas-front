@@ -31,8 +31,8 @@ const StudyPage = () => {
                             //instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
                         }),
                     );
-                    dispatch(setCurrentSereies(targetStudy.seriesList[0].number));
-                    dispatch(setCurrentInstanceNumber(tempInstanceData[0].instanceNumber));
+                    dispatch(setCurrentSereies(targetStudy.seriesList[0]?.number));
+                    dispatch(setCurrentInstanceNumber(tempInstanceData[0]?.instanceNumber));
 
                     const tempStudiesList = await getAnatomicalStructureList({});
                     dispatch(setAnatomicalStructures(tempStudiesList));

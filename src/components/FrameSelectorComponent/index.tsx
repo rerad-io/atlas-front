@@ -15,6 +15,7 @@ const FrameSelectorComponent = ({ instances }: Props) => {
 
     const { currentInstanceData } = useSelector(instanceSelector);
     const [instancesFrame, setInstancesFrame] = useState<InstanceData[]>([]);
+    console.log("🚀 ~ file: index.tsx:19 ~ FrameSelectorComponent ~ instancesFrame:", instancesFrame);
     const [activeFrame, setActiveFrame] = useState(0);
 
     useEffect(() => {
