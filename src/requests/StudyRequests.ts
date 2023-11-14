@@ -1,5 +1,6 @@
 import axios from "axios";
 import { backendUrl } from "./backendUrl";
+import { StudyFullModel } from "../_types";
 
 export const getStudyList = async () => {
     const result = await axios.get(`${backendUrl}Study`);
@@ -12,7 +13,7 @@ export const getStudyList = async () => {
 };
 
 export const getStudyId = async (id: string) => {
-    const result = await axios.get(`${backendUrl}Study/${id}`);
+    const result = await axios.get<StudyFullModel>(`${backendUrl}Study/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }

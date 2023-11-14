@@ -34,7 +34,13 @@ export const CanvasInstance = ({
     const { id } = useParams<{ id: string }>();
     const { currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
     const fabricObjects = useRef<fabric.Circle[]>([]);
-    const [pointsLayer] = useState<fabric.Group>(new fabric.Group([]));
+    const [pointsLayer] = useState<fabric.Group>(new fabric.Group([], {
+        hasControls: false,
+        hasBorders: false,
+        lockRotation: true,
+        lockScalingX: true,
+        lockScalingY: true,
+    }));
     const [currentFrame, setCurrentFrame] = useState<InstanceData[]>([]);
 
     useEffect(() => {
@@ -85,9 +91,21 @@ export const CanvasInstance = ({
     }, [pointsLayer, currentFrame, newPoint, fabricCanvas]);
 
     useEffect(() => {
-        const layer1Bg = new fabric.Group([]);
+        const layer1Bg = new fabric.Group([], {
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+        });
 
-        const layer2Frame = new fabric.Group([]);
+        const layer2Frame = new fabric.Group([], {
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+        });
 
         fabricCanvas.add(layer1Bg);
         fabricCanvas.add(layer2Frame);

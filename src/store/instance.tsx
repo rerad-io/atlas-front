@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AnatomicalStructure, InstanceData, Series, Study } from "../_types";
+import { AnatomicalStructure, InstanceData, SeriesListModel, Study } from "../_types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 type InstanceKey = string;
@@ -8,7 +8,7 @@ export type InstanceState = {
     // Static data
     study: Study;
     studies: Study[];
-    series: Record<number, Series>;
+    series: Record<number, SeriesListModel>;
 
     // Это у нас база данные точек, где в качестве ключа выступает составной ключ,
     // который состоит из номера серии и номера инстанса, и хранит в себе относящиеся к ключу
@@ -26,7 +26,7 @@ export type InstanceState = {
 };
 
 const initialState: InstanceState = {
-    study: {},
+    study: {} as Study,
     studies: [],
     series: {},
     instanceData: {},
@@ -45,7 +45,7 @@ const instanceSlice = createSlice({
         setAnatomicalStructures: (state, { payload }: PayloadAction<AnatomicalStructure[]>) => {
             state.availableAnatomicalStructures = payload;
         },
-        setStudy: (state, { payload }: PayloadAction<Study & { seriesList: Series[]; instanceData: InstanceData[] }>) => {
+        setStudy: (state, { payload }: PayloadAction<Study & { seriesList: SeriesListModel[]; instanceData: InstanceData[] }>) => {
             state.study = {
                 id: payload.id,
                 externalId: payload.externalId,
@@ -58,7 +58,7 @@ const instanceSlice = createSlice({
                     series[index] = item;
                     return series;
                 },
-                {} as Record<number, Series>,
+                {} as Record<number, SeriesListModel>,
             );
             //			// TODO: бэкэнд должен возвращать seriesNumber в
             //state.instanceData = payload.instanceData.reduce(

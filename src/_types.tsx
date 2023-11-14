@@ -41,6 +41,21 @@ export type Study = {
     previewFrame: string;
 };
 
+export type SeriesListModel = {
+    id: string;
+    number: number;
+    name: string;
+    previewFrame: string;
+    instanceCount: number;
+    sagitalFrame: string;
+    coronalFrame: string;
+}
+
+export type StudyFullModel = Study & {
+    seriesList: SeriesListModel[];
+    instanceData: InstanceData[];
+}
+
 export type Series = {
     id: string;
     studyId: string;
