@@ -41,9 +41,8 @@ export type Study = {
     previewFrame: string;
 };
 
-export type Series = {
+export type SeriesListModel = {
     id: string;
-    study: Study;
     number: number;
     name: string;
     previewFrame: string;
@@ -52,11 +51,35 @@ export type Series = {
     coronalFrame: string;
 };
 
+export type StudyFullModel = Study & {
+    seriesList: SeriesListModel[];
+    instanceData: InstanceData[];
+};
+
+export type Series = {
+    id: string;
+    studyId: string;
+    name: string;
+    number: number;
+    instanceCount: number;
+    previewFrame: string;
+    sagitalFrame: string;
+    coronalFrame: string;
+};
+
 export type InstanceData = {
     id: string;
-    study: Study; // Ссылка на объект Исследование
-    series: Series; // Ссылка на объект Серия исследования
+    study: string;
+    // TODO: Должны получить идентификатор исследования
+    studyId: string;
+    // TODO: Должны получить идентификатор серии
+    series: string;
+    seriesId: string;
+    // TODO: Должны получить порядковый номер серии
+    seriesNumber: number;
     structure: AnatomicalStructure; // Ссылка на объект Анатомическая структура
+    // TODO: Должны получить цвет Темы к которой относится структура
+    structureColor: string;
     instanceNumber: number;
     type: string; // Перечисление (Enum) для типа данных
     x: number;

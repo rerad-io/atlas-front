@@ -1,0 +1,26 @@
+.form {
+    max-width: 60%;
+    margin-top: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 2px solid $white5;
+    min-width: fit-content;
+}
+
+.form label {
+    font-style: 14px;
+    font-weight: 600;
+}
+.form select {
+    margin-top: 6px;
+    width: 80%;
+    padding: 5px 10px;
+}
+
+.buttons {
+    align-self: end;
+    display: flex;
+    gap: 10px;
+}

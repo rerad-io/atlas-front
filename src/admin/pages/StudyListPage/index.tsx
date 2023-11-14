@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import StudyList from "../../components/StudyList";
 import Button from "../../../components/UI/Button";
-import s from "./s.module.css";
+import s from "./styles.module.scss";
 import { getStudyList } from "../../../requests/StudyRequests";
 
 const StudyListPage = () => {

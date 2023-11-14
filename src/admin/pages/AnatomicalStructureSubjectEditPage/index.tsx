@@ -9,7 +9,7 @@ import {
     updateAnatomicalStructureSubject,
 } from "../../../requests/anatomicalStructureSubjectRequests";
 import { AnatomicalStructure, AnatomicalStructureSubjectModel } from "../../../_types";
-import s from "./s.module.scss";
+import s from "./styles.module.scss";
 
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<string>();

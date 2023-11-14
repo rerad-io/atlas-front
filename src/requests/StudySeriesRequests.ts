@@ -22,7 +22,6 @@ export const getStudySeriesId = async (id: string) => {
 };
 
 export const createStudySeries = async (body: Record<string, unknown>) => {
-    console.log("🚀 ~ file: StudySeriesRequests.ts:25 ~ createStudySeries ~ body:", body);
     const result = await axios.post(`${backendUrl}Series/`, body);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;

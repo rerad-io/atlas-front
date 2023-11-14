@@ -1,33 +1,38 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getStudyId } from "../../../requests/StudyRequests";
-import { setAnatomicalStructures, setSeriesList, setStudy } from "../../../store/instance";
-import { Series } from "../../../_types";
-import FrameSelector from "../../../components/FrameSelector";
-import RenderComponent from "../../../components/RenderComponent";
+import { instanceSelector, setAnatomicalStructures, setCurrentInstanceNumber, setCurrentSereies, setStudy } from "../../../store/instance";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
+import { RenderComponent } from "../../../components/RenderComponent";
+import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
+import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
 import s from "./styles.module.scss";
 
 const StudyPage = () => {
     const { id } = useParams<string>();
     const dispatch = useDispatch();
 
-    const { study, series, instanceData } = useSelector(({ instance }) => instance);
-    const [activeSerie, setActiveSerie] = useState<Series>();
-    const [activeInstases, setActiveInstances] = useState();
-    const [currentFrame, setCurrentFrame] = useState();
+    const { study } = useSelector(instanceSelector);
 
     useEffect(() => {
-        if (id) {
+        if (id && id !== study.id) {
             const fetchStudyData = async (studyId: string) => {
                 try {
-                    const tempStudy = await getStudyId(studyId);
-                    dispatch(setStudy(tempStudy));
-
+                    const targetStudy = await getStudyId(studyId);
                     const instanceDataList = await getInstanceDataList({});
-                    dispatch(setSeriesList({ seriesList: tempStudy.seriesList, instanceDataList }));
+                    const tempInstanceData = instanceDataList.filter((item) => item.study === targetStudy.name);
+                    dispatch(
+                        setStudy({
+                            ...targetStudy,
+                            // TODO: из бека фильтровать по ID
+                            instanceData: tempInstanceData,
+                            //instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
+                        }),
+                    );
+                    dispatch(setCurrentSereies(targetStudy.seriesList[0]?.number));
+                    dispatch(setCurrentInstanceNumber(tempInstanceData[0]?.instanceNumber));
 
                     const tempStudiesList = await getAnatomicalStructureList({});
                     dispatch(setAnatomicalStructures(tempStudiesList));
@@ -38,75 +43,22 @@ const StudyPage = () => {
 
             fetchStudyData(id);
         }
-    }, [id, dispatch]);
-
-    useEffect(() => {
-        if (series) {
-            if (series) {
-                setActiveSerie(Object.values(series)[0]);
-            }
-        }
-    }, [series]);
-
-    useEffect(() => {
-        if (activeSerie) {
-            const currentInstance = instanceData[activeSerie.number];
-            if (currentInstance) {
-                setActiveInstances(currentInstance);
-                setCurrentFrame(currentInstance[0]);
-            }
-        }
-    }, [activeSerie, instanceData]);
-
-    const handleClick = (number: string) => {
-        const targetSerie: Series = series[number];
-        setActiveSerie(targetSerie);
-    };
-
-    const handleCurrentFrame = (currentId: string) => {
-        const currentInstance = instanceData[activeSerie.number];
-        setCurrentFrame(currentInstance[currentId]);
-    };
+    }, [id, study.id, dispatch]);
 
     return (
         <div className={s.page}>
-            <section>
-                <div className="container">{study.name ? <h1>Активная серия {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
+            <div className="container">{study.name ? <h1>Исследование: {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
+            {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelector frameList={activeInstases} handleCurrentFrame={handleCurrentFrame} />
-                    <RenderComponent currentFrame={currentFrame} />
+                    <FrameSelectorComponent />
+                    <RenderComponent context="app" />
+                    <SeriesControlComponent />
                 </div>
+            ) : (
                 <div className="container">
-                    <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-                            <div>
-                                <span style={{ display: "block" }}>Sagital</span>
-                                <img
-                                    style={{ width: "60px", height: "60px" }}
-                                    src={activeSerie?.sagitalFrame}
-                                    alt={`Serie ${activeSerie?.name} sagitalFrame`}
-                                />
-                            </div>
-                            <div>
-                                <span style={{ display: "block" }}>Coronal</span>
-                                <img
-                                    style={{ width: "60px", height: "60px" }}
-                                    src={activeSerie?.coronalFrame}
-                                    alt={`Serie ${activeSerie?.name} coronalFrame`}
-                                />
-                            </div>
-                        </div>
-                        <ul style={{ marginTop: "15px", cursor: "pointer", display: "flex", gap: "5px" }}>
-                            {Object.values(series).map((item, index) => (
-                                <li style={{ textAlign: "center", width: "60px" }} key={index} onClick={() => handleClick(item.number)}>
-                                    <span style={{ display: "block" }}>{item.name}</span>
-                                    {`${item.number === activeSerie?.number ? "(active)" : ""}`}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <h2 style={{ marginTop: "30px" }}>Нет схраненных серий исследования...</h2>
                 </div>
-            </section>
+            )}
         </div>
     );
 };

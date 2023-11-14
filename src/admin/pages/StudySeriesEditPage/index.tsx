@@ -2,16 +2,19 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
+import { InstanceData } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import s from "./s.module.css";
+import { getStudyId } from "../../../requests/StudyRequests";
+import { getInstanceDataList } from "../../../requests/instanceDataRequests";
+import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
+import { RenderComponent } from "../../../components/RenderComponent";
+import s from "./styles.module.scss";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const [studySeries, setStudySeries] = useState();
-    // TODO: представление instanceData - раскоментировать когда будет исправлено
-    //const [instances, setInstances] = useState();
-    //const [currentFrame, setCurrentFrame] = useState();
+    const [studySerie, setStudySerie] = useState();
+    const [instances, setInstances] = useState<InstanceData[]>();
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -21,10 +24,16 @@ const StudySeriesEditPage = () => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
-                    const result = await getStudySeriesId(id);
-                    setStudySeries(result);
-                    // TODO: представление instanceData - раскоментировать когда будет исправлено
-                    //setInstances(result.study.instanceDataList);
+                    const targetSerie = await getStudySeriesId(id);
+                    setStudySerie(targetSerie);
+                    const temporaryInstance = await getInstanceDataList({});
+                    // TODO: представление instanceData - раскоментировать когда будет
+                    const temporaryStudy = await getStudyId(targetSerie?.studyId);
+                    const tempIstanceData = temporaryInstance.filter(
+                        //(item) => (item.seriesId === targetSerie?.id && item.studyItargetSerie?.studyIdd === ),
+                        (item) => item.series === targetSerie?.name && item.study === temporaryStudy.name,
+                    );
+                    setInstances(tempIstanceData);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -43,35 +52,11 @@ const StudySeriesEditPage = () => {
             obj[key] = value as string;
         });
 
-        //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
-        // const file_preview = formData.get("PreviewFrame") as File;
-        // const file_sagital = formData.get("SagitalFrame") as File;
-        // const file_coronal = formData.get("CoronalFrame") as File;
-
-        // if (file_preview && file_preview.type.startsWith("image/")) {
-        //     //промис чтения файла
-        //     obj["PreviewFrame"] = Date.now() + "_P" + file_preview.name;
-        //     obj["SagitalFrame"] = Date.now() + "_S" + file_sagital.name;
-        //     obj["CoronalFrame"] = Date.now() + "_C" + file_coronal.name;
-
-        //     // функция сохранения изображение на сервак - раскоментировать вместе с функцией readFile
-        //     // const imgData = await readFile(file);
-        //     // SAVE_IMAGE_FUNCTION(imgData);
-        // }
-
         if (id) {
             const fetchDataAndUpdateStudySeries = async () => {
                 try {
-                    const updatedObj = await updateStudySeries(
-                        {
-                            ...obj,
-                            study: {
-                                id: studySeries?.study?.id,
-                            },
-                        },
-                        id,
-                    );
-                    setStudySeries(updatedObj);
+                    const updatedObj = await updateStudySeries({ ...obj, studyId }, id);
+                    setStudySerie(updatedObj);
                     toast.success("Study Series updated!");
                 } catch (error) {
                     toast.error("Study Series update - error!");
@@ -82,12 +67,7 @@ const StudySeriesEditPage = () => {
         } else {
             const fetchDataAndCreateStudySeries = async () => {
                 try {
-                    await createStudySeries({
-                        ...obj,
-                        study: {
-                            id: studyId,
-                        },
-                    });
+                    await createStudySeries({ ...obj, studyId });
                     toast.success("Study Series created!");
                 } catch (error) {
                     toast.error("Study Series create - error!");
@@ -100,31 +80,6 @@ const StudySeriesEditPage = () => {
         e.target.reset();
     };
 
-    //  TODO: чтение файла - раскоментировать когда будем реализовывать сохранение файла
-    // const readFile = (file: File): Promise<string> => {
-    //     return new Promise((resolve, reject) => {
-    //         const reader = new FileReader();
-
-    //         reader.onload = (e) => {
-    //             resolve(e.target.result as string);
-    //         };
-
-    //         reader.onerror = (error) => {
-    //             reject(error);
-    //         };
-
-    //         reader.readAsDataURL(file);
-    //     });
-    // };
-
-    {
-        /*// TODO: раскоментировать когда будут исправлены инстансы*/
-    }
-    //const handleClick = (id: string) => {
-    //    const newFrame = instances[studySeries?.number];
-    //    setCurrentFrame(newFrame[id]);
-    //};
-
     return (
         <div className={s.page}>
             <div className="container">
@@ -134,36 +89,36 @@ const StudySeriesEditPage = () => {
                         Study ID:
                         <input
                             type="text"
-                            name="study"
+                            name="studyId"
                             id="Study"
-                            defaultValue={studyId ? studyId : studySeries?.study?.id}
+                            defaultValue={studyId ? studyId : studySerie?.studyId}
                             disabled
                             style={{ width: "400px" }}
                         />
                     </label>
                     <label htmlFor="StudySeriesName">
                         Series Name:
-                        <input type="text" id="StudySeriesName" name="name" defaultValue={studySeries?.name} />
+                        <input type="text" id="StudySeriesName" name="name" defaultValue={studySerie?.name} />
                     </label>
                     <label htmlFor="studyNumber">
                         Series Number:
-                        <input type="number" id="studyNumber" name="number" defaultValue={studySeries?.number} />
+                        <input type="number" id="studyNumber" name="number" defaultValue={studySerie?.number} />
                     </label>
                     <label htmlFor="PreviewFrame">
                         Preview Frame:
-                        <input type="text" name="previewFrame" id="PreviewFrame" defaultValue={studySeries?.previewFrame}></input>
+                        <input type="text" name="previewFrame" id="PreviewFrame" defaultValue={studySerie?.previewFrame}></input>
                     </label>
                     <label htmlFor="SagitalFrame">
                         Sagital Frame:
-                        <input type="text" name="sagitalFrame" id="SagitalFrame" defaultValue={studySeries?.sagitalFrame}></input>
+                        <input type="text" name="sagitalFrame" id="SagitalFrame" defaultValue={studySerie?.sagitalFrame}></input>
                     </label>
                     <label htmlFor="CoronalFrame">
                         Coronal Frame:
-                        <input type="text" name="coronalFrame" id="CoronalFrame" defaultValue={studySeries?.coronalFrame}></input>
+                        <input type="text" name="coronalFrame" id="CoronalFrame" defaultValue={studySerie?.coronalFrame}></input>
                     </label>
                     <label htmlFor="instanceCount">
                         Instance Count:
-                        <input type="number" name="instanceCount" id="instanceCount" defaultValue={studySeries?.instanceCount}></input>
+                        <input type="number" name="instanceCount" id="instanceCount" defaultValue={studySerie?.instanceCount}></input>
                     </label>
 
                     <Button>Save</Button>
@@ -171,9 +126,8 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    {/*// TODO: раскоментировать когда будут исправлены инстансы*/}
-                    {/*<FrameSelector frameList={instances[studySeries?.number]} handleClick={handleClick} />*/}
-                    {/*<RenderComponent currentFrame={currentFrame} />*/}
+                    <FrameSelectorComponent instances={instances} />
+                    <RenderComponent context="admin" seriesId={id} studyId={studySerie?.studyId} instances={instances} />
                 </>
             ) : null}
         </div>
