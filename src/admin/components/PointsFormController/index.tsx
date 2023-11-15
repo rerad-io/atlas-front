@@ -57,6 +57,7 @@ export const PointsFormController = ({
                     <label>
                         Существующие точки
                         <select name="points" onChange={handleSelectInstance}>
+                            <option defaultValue="">без значения</option>
                             {instances?.map((el) => (
                                 <option key={el.id} value={el.id}>
                                     {`${el.structure} (${el.x}, ${el.y})`}
@@ -67,6 +68,7 @@ export const PointsFormController = ({
                     <label>
                         Анатомические структуры
                         <select name="structure" onChange={handleSelectStructure}>
+                            <option defaultValue="">без значения</option>
                             {anatomicalStructureList?.map((el, index) => (
                                 <option key={el.id} value={index}>
                                     {el.name}

@@ -7,7 +7,7 @@ import { getAnatomicalStructureList } from "../../../requests/anatomicalStructur
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import { RenderComponent } from "../../../components/RenderComponent";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
-import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
+import { SeriesControlComponent } from "../../components/SeriesControlComponent";
 import s from "./styles.module.scss";
 
 const StudyPage = () => {
@@ -34,8 +34,8 @@ const StudyPage = () => {
                     dispatch(setCurrentSereies(targetStudy.seriesList[0]?.number));
                     dispatch(setCurrentInstanceNumber(tempInstanceData[0]?.instanceNumber));
 
-                    const tempStudiesList = await getAnatomicalStructureList({});
-                    dispatch(setAnatomicalStructures(tempStudiesList));
+                    const anatomicalStructuresList = await getAnatomicalStructureList({});
+                    dispatch(setAnatomicalStructures(anatomicalStructuresList));
                 } catch (error) {
                     console.error("Error fetching StudyPage:", error);
                 }

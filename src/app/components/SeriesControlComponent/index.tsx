@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { instanceSelector, setCurrentSereies } from "../../store/instance";
-import { Series } from "../../_types";
+import { instanceSelector, setCurrentSereies } from "../../../store/instance";
+import { Series } from "../../../_types";
+import { backendUrl_2 } from "../../../requests/backendUrl";
+import s from "./styles.module.scss";
 
 export const SeriesControlComponent = () => {
     const dispatch = useDispatch();
-    const { series, currentSeriesNumber } = useSelector(instanceSelector);
-
+    const { study, series, currentSeriesNumber } = useSelector(instanceSelector);
     const [currentSerie, setCurrentSerie] = useState<Series>({});
 
     useEffect(() => {
@@ -23,20 +24,24 @@ export const SeriesControlComponent = () => {
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
                         <div>
-                            <span style={{ display: "block" }}>Sagital</span>
-                            <img
-                                style={{ width: "60px", height: "60px" }}
-                                src={currentSerie?.sagitalFrame}
-                                alt={`Serie ${currentSerie?.name} sagitalFrame`}
-                            />
+                            <span style={{ display: "block", textAlign: "center" }}>Sagital</span>
+                            <div className={s.preview}>
+                                <img
+                                    style={{ width: "60px", height: "60px" }}
+                                    src={`${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`}
+                                    alt={`sagitalFrame`}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <span style={{ display: "block" }}>Coronal</span>
-                            <img
-                                style={{ width: "60px", height: "60px" }}
-                                src={currentSerie?.coronalFrame}
-                                alt={`Serie ${currentSerie?.name} coronalFrame`}
-                            />
+                            <span style={{ display: "block", textAlign: "center" }}>Coronal</span>
+                            <div className={s.preview}>
+                                <img
+                                    style={{ width: "60px", height: "60px" }}
+                                    src={`${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`}
+                                    alt={`coronalFrame`}
+                                />
+                            </div>
                         </div>
                     </div>
                     <ul style={{ marginTop: "15px", cursor: "pointer", display: "flex", gap: "5px" }}>

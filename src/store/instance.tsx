@@ -73,6 +73,7 @@ const instanceSlice = createSlice({
             //    },
             //    {} as Record<InstanceKey, InstanceData[]>,
             //);
+            let tempObj: Record<number, InstanceData[]> = {};
             let accum: Record<number, InstanceData[]> = {};
 
             payload.seriesList.forEach((item) => {
@@ -89,9 +90,10 @@ const instanceSlice = createSlice({
                     },
                     {} as Record<InstanceKey, InstanceData[]>,
                 );
+                tempObj = { ...tempObj, ...accum };
             });
 
-            state.instanceData = accum;
+            state.instanceData = tempObj;
 
             // Пример структуры
             // state.instanceData = {
@@ -124,19 +126,3 @@ export const { setStudy, setAnatomicalStructures, setCurrentSereies, setCurrentI
 export default instanceSlice.reducer;
 
 export const instanceSelector = (state: { instance: InstanceState }) => state.instance;
-
-// TODO: этот код пока оставить для проверки создания инстансов
-//шаблон для ссылки на кадр: /api/file/content/9f251dd9-e9b0-4a55-82a1-dbbd888e461a/dicom/{studyNumber}/{seriesNumber}/{instanceNumber}.png
-//обращаться нужно будет до api.dev.d.medcol.io
-//правки свои я еще не залил, так что адрес пока работать не будет
-
-//for(let index =1 ; index <= instanceCount; index ++){
-
-//	const path = `/dicom-studies/${externalId}/series/${seriesNumber}/instances/${index}.png`;
-
-//	const instanceDatas = data.filter((item)=> item.seriesNumber === seriesNumber && item.instance === index)
-//}
-
-//filteredInstances.forEach(instance => {
-//	instance.path = `/dicom-studies/${instance.externalId}/series/${instance.seriesNumber}/instances/${instance.instanceNumber}.png`;
-//});

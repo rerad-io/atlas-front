@@ -48,17 +48,18 @@ export const CanvasInstance = ({
         }),
     );
     const [currentFrame, setCurrentFrame] = useState<string>("");
-    const [currentInstanseData, setCurrentInstanseData] = useState<InstanceData[]>([]);
+    const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
 
     useEffect(() => {
         const fetchInstanceData = async () => {
             try {
                 if (context === "app") {
-                    setCurrentInstanseData(currentInstanceData.filter((item) => item.instanceNumber === currentInstanceNumber));
+                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
                     // TODO: номер серии нужно брать из текущего инстанс
                     setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${Object.values(series)[0]
-                            ?.number}/${currentInstanceNumber}.jpg`,
+                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${Object.values(series)[0]?.number}/${
+                            currentInstanceNumber || 1
+                        }.jpg`,
                     );
                 } else {
                     // TODO: получить данные инстанса можно взять из серии вытащив данные по ID
@@ -76,7 +77,9 @@ export const CanvasInstance = ({
                         setCurrentInstanseData(targetIstanceData);
                     }
                     setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${tempSerie.number}/${activeFrameNumber}.jpg`,
+                        //`${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${tempSerie.number}/${activeFrameNumber}.jpg`,
+                        // TODO: перезатереть
+                        `${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${1}/${activeFrameNumber}.jpg`,
                     );
                 }
             } catch (error) {
@@ -93,7 +96,7 @@ export const CanvasInstance = ({
             pointsLayer.removeWithUpdate(fabricItem);
         });
 
-        currentInstanseData.forEach((item) => {
+        currentData.forEach((item) => {
             const point = new fabric.Circle({
                 top: item?.y,
                 left: item?.x,
@@ -109,7 +112,7 @@ export const CanvasInstance = ({
             pointsLayer.addWithUpdate(newPoint);
             fabricCanvas.renderAll();
         }
-    }, [pointsLayer, currentInstanseData, newPoint, fabricCanvas]);
+    }, [pointsLayer, currentData, newPoint, fabricCanvas]);
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {

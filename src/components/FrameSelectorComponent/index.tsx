@@ -46,8 +46,8 @@ const FrameSelectorComponent = ({ studySerie, handleCurrentFrame, activeFrameNum
         const framesList: string[] = [];
         for (let i = 1; i <= currentSerie?.instanceCount; i++) {
             // TODO: при исправлении инстанса раскоментировать/и удалить то что используется
-            //framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${series.number}/${i}.jpg`)
-            framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${currentSerie.number}/${i}.jpg`);
+            //framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${currentSerie.number}/${i}.jpg`);
+            framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${1}/${i}.jpg`);
         }
         setInstancesFrame(framesList);
 
