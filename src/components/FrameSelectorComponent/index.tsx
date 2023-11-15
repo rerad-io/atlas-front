@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { instanceSelector, setCurrentInstanceNumber } from "../../store/instance";
+import { useSelector } from "react-redux";
+import { instanceSelector } from "../../store/instance";
 import { backendUrl_2 } from "../../requests/backendUrl";
 import { SeriesListModel } from "../../_types";
 import { getStudyId } from "../../requests/StudyRequests";
@@ -8,12 +8,16 @@ import s from "./styles.module.scss";
 
 const slideWidth: number = 80;
 
-const FrameSelectorComponent = ({ studySerie }: { studySerie: SeriesListModel }) => {
-    const dispatch = useDispatch();
+type Props = {
+    studySerie: SeriesListModel;
+    activeFrameNumber: number;
+    handleCurrentFrame: (index: number) => void;
+};
 
-    const { study, series, currentSeriesNumber } = useSelector(instanceSelector);
+const FrameSelectorComponent = ({ studySerie, handleCurrentFrame, activeFrameNumber }: Props) => {
+    const { study, series, currentSeriesNumber, currentInstanceNumber } = useSelector(instanceSelector);
     const [instancesFrame, setInstancesFrame] = useState<string[]>([]);
-    const [activeFrame, setActiveFrame] = useState<number>(0);
+    const [activeFrame, setActiveFrame] = useState<number>(1);
     const [currentSerie, setCurrentSerie] = useState<SeriesListModel>({} as SeriesListModel);
     const [currentExternalId, setCurrentExternalId] = useState<string>("");
 
@@ -22,6 +26,7 @@ const FrameSelectorComponent = ({ studySerie }: { studySerie: SeriesListModel })
             const serieOject: SeriesListModel | undefined = Object.values(series)?.find((serie) => serie.number === currentSeriesNumber);
             if (serieOject) setCurrentSerie(serieOject);
             if (study) setCurrentExternalId(study.externalId);
+            setActiveFrame(currentInstanceNumber);
         } else {
             const fetchStudyById = async () => {
                 try {
@@ -33,28 +38,24 @@ const FrameSelectorComponent = ({ studySerie }: { studySerie: SeriesListModel })
             };
             fetchStudyById();
             setCurrentSerie(studySerie);
+            setActiveFrame(activeFrameNumber);
         }
-    }, [study, series, studySerie, currentSeriesNumber]);
+    }, [study, series, studySerie, currentSeriesNumber, currentInstanceNumber, activeFrameNumber]);
+
     useEffect(() => {
         const framesList: string[] = [];
         for (let i = 1; i <= currentSerie?.instanceCount; i++) {
             // TODO: при исправлении инстанса раскоментировать/и удалить то что используется
-            //framesList.push(`${backendUrl_2}api/file/content/atlas/${currentStudy.externalId}/dicom/1/${series.number}/${i}.jpg`)
+            //framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${series.number}/${i}.jpg`)
             framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${currentSerie.number}/${i}.jpg`);
         }
         setInstancesFrame(framesList);
-        setActiveFrame(0);
 
         return () => {
             setInstancesFrame([]);
-            setActiveFrame(0);
+            setActiveFrame(1);
         };
     }, [currentSerie, currentExternalId]);
-
-    const handleCurrentFrame = (index: number, instanceNumber: number) => {
-        setActiveFrame(index);
-        dispatch(setCurrentInstanceNumber(instanceNumber));
-    };
 
     return (
         <section>
@@ -75,16 +76,16 @@ const FrameSelectorComponent = ({ studySerie }: { studySerie: SeriesListModel })
                         {instancesFrame?.map((slide, index) => (
                             <li
                                 key={index}
-                                className={`${s.slide} ${s[activeFrame === index ? "active" : ""] || ""}`}
+                                className={`${s.slide} ${s[activeFrame === index + 1 ? "active" : ""] || ""}`}
                                 style={{
                                     width: `${slideWidth}px`,
                                     height: `${slideWidth}px`,
                                     color: "white",
                                     backgroundColor: "black",
                                 }}
-                                onClick={() => handleCurrentFrame(index, slide.instanceNumber)}
+                                onClick={() => handleCurrentFrame(index + 1)}
                             >
-                                {<img src={slide} alt={`${slide.instanceNumber}`} className={s.slide_img} />}
+                                {<img src={slide} alt="#foto" className={s.slide_img} />}
                             </li>
                         ))}
                     </ul>

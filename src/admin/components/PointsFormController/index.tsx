@@ -5,9 +5,15 @@ import Button from "../../../components/UI/Button";
 import { deleteInstanceData } from "../../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 
-export const PointsFormController = ({ handleSubmit, instances }: { handleSubmit: () => void; instances: InstanceData[] }) => {
-    const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>();
-    const [selectedInstanceId, setSelectedInstanceId] = useState<AnatomicalStructure>();
+export const PointsFormController = ({
+    handleSubmit,
+    instances,
+}: {
+    handleSubmit: (anatomicalStructure: AnatomicalStructure) => void;
+    instances: InstanceData[];
+}) => {
+    const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+    const [selectedInstanceId, setSelectedInstanceId] = useState<string>();
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
 
     useEffect(() => {
@@ -29,7 +35,7 @@ export const PointsFormController = ({ handleSubmit, instances }: { handleSubmit
     };
     const handleSelectStructure = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedIndex = +event.currentTarget.value;
-        setSelectedStructure(anatomicalStructureList[selectedIndex]);
+        if (selectedIndex) setSelectedStructure(anatomicalStructureList[selectedIndex]);
     };
 
     const handleRemove = () => {
@@ -40,7 +46,7 @@ export const PointsFormController = ({ handleSubmit, instances }: { handleSubmit
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        handleSubmit(selectedStructure);
+        if (selectedStructure) handleSubmit(selectedStructure);
     };
 
     return (

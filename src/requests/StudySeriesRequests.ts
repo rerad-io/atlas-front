@@ -1,5 +1,6 @@
 import axios from "axios";
 import { backendUrl } from "./backendUrl";
+import { SeriesListModel } from "../_types";
 
 export const getStudySeriesList = async () => {
     const result = await axios.get(`${backendUrl}Series`);
@@ -12,7 +13,7 @@ export const getStudySeriesList = async () => {
 };
 
 export const getStudySeriesId = async (id: string) => {
-    const result = await axios.get(`${backendUrl}Series/${id}`);
+    const result = await axios.get<SeriesListModel>(`${backendUrl}Series/${id}`);
     if (result.status >= 200 && result.status <= 300) {
         return result.data;
     }

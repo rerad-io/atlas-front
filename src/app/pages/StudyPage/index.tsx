@@ -45,12 +45,16 @@ const StudyPage = () => {
         }
     }, [id, study.id, dispatch]);
 
+    const handleCurrentFrame = (index: number) => {
+        dispatch(setCurrentInstanceNumber(index));
+    };
+
     return (
         <div className={s.page}>
             <div className="container">{study.name ? <h1>Исследование: {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelectorComponent />
+                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} />
                     <RenderComponent context="app" />
                     <SeriesControlComponent />
                 </div>

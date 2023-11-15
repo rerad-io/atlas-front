@@ -6,7 +6,16 @@ import { PointsFormController } from "../../admin/components/PointsFormControlle
 import { createInstanceData } from "../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 
-export const RenderComponent = ({ seriesId, studyId, context, instances }: { context: string; instances: InstanceData[] }) => {
+export const RenderComponent = ({
+    seriesId,
+    studyId,
+    context,
+    instances,
+    activeFrameNumber,
+}: {
+    context: string;
+    instances: InstanceData[];
+}) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -24,14 +33,14 @@ export const RenderComponent = ({ seriesId, studyId, context, instances }: { con
 
         canvas?.on("mouse:down", (event) => {
             const pointer = canvas.getPointer(event.e);
-            console.log("🚀 ~ file: index.tsx:28 ~ canvas?.on ~ pointer:", pointer);
+            //console.log("🚀 ~ file: index.tsx:28 ~ canvas?.on ~ pointer:", pointer);
             const point = new fabric.Circle({
                 top: pointer.y,
                 left: pointer.x,
                 radius: 3,
                 fill: "green",
             });
-            console.log(`Mouse click at (${point.top}, ${point.left})`);
+            //console.log(`Mouse click at (${point.top}, ${point.left})`);
             setNewPoint(point);
         });
 
@@ -63,7 +72,6 @@ export const RenderComponent = ({ seriesId, studyId, context, instances }: { con
             path: instances[0].path,
         };
         createInstanceData(newInstance);
-        console.log("🚀 ~ file: index.tsx:65 ~ handleSubmit ~ newInstance:", newInstance);
     };
 
     return (
@@ -73,7 +81,12 @@ export const RenderComponent = ({ seriesId, studyId, context, instances }: { con
                     <canvas ref={canvasEl} />
                     {fabricCanvas &&
                         (context !== "app" ? (
-                            <CanvasInstance fabricCanvas={fabricCanvas} newPoint={newPoint} context={context} />
+                            <CanvasInstance
+                                fabricCanvas={fabricCanvas}
+                                newPoint={newPoint}
+                                context={context}
+                                activeFrameNumber={activeFrameNumber}
+                            />
                         ) : (
                             <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
                         ))}

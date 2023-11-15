@@ -23,9 +23,6 @@ export const pathList = [
     { 15: "https://www.lumen.luc.edu/lumen/meded/radio/curriculum/Kumar/skull_xray_pa.jpg" },
 ];
 
-// TODO: sagitalFrame, coronalFrame и previewFrame это одни и те же картинки
-//framesList.push(`${backendUrl_2}api/file/content/atlas/${study.externalId}/${Object.values(series)[0].previewFrame}`)
-
 export const galleryList = [
     {
         id: "1",
