@@ -126,7 +126,7 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    <FrameSelectorComponent instances={instances} />
+                    <FrameSelectorComponent studySerie={studySerie} />
                     <RenderComponent context="admin" seriesId={id} studyId={studySerie?.studyId} instances={instances} />
                 </>
             ) : null}
