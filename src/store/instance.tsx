@@ -7,7 +7,6 @@ type InstanceKey = string;
 export type InstanceState = {
     // Static data
     study: Study;
-    studies: Study[];
     series: Record<number, SeriesListModel>;
 
     // Это у нас база данные точек, где в качестве ключа выступает составной ключ,
@@ -27,7 +26,6 @@ export type InstanceState = {
 
 const initialState: InstanceState = {
     study: {} as Study,
-    studies: [],
     series: {},
     instanceData: {},
     availableAnatomicalStructures: [],
@@ -60,55 +58,23 @@ const instanceSlice = createSlice({
                 },
                 {} as Record<number, SeriesListModel>,
             );
-            //			// TODO: бэкэнд должен возвращать seriesNumber в
-            //state.instanceData = payload.instanceData.reduce(
-            //    (instanceData, item) => {
-            //        //const key = instanceKey(item.seriesNumber, item.instanceNumber);
-            //        const key = instanceKey(item.seriesNumber, item.instanceNumber);
-            //				if(!instanceData[key]){
-            //					instanceData[key] = [];
-            //				}
-            //				instanceData[key].push(item);
-            //        return instanceData;
-            //    },
-            //    {} as Record<InstanceKey, InstanceData[]>,
-            //);
-            let tempObj: Record<number, InstanceData[]> = {};
-            let accum: Record<number, InstanceData[]> = {};
 
-            payload.seriesList.forEach((item) => {
-                const seriesKey = item.number;
-
-                accum = payload.instanceData.reduce(
-                    (instanceData, item) => {
-                        const key = instanceKey(seriesKey, item.instanceNumber);
-                        if (!instanceData[key]) {
-                            instanceData[key] = [];
-                        }
-                        instanceData[key].push(item);
-                        return instanceData;
-                    },
-                    {} as Record<InstanceKey, InstanceData[]>,
-                );
-                tempObj = { ...tempObj, ...accum };
-            });
-
-            state.instanceData = tempObj;
-
-            // Пример структуры
-            // state.instanceData = {
-            //     "1-1": [
-            //         {x:1, y: 1, ...},
-            //         {x:100, y: 100, ...}
-            //     ],
-            //     "1-2": [
-            //         {x:1, y: 1, ...},
-            //         {x:97, y: 96, ...}]
-            // }
+            state.instanceData = payload.instanceData.reduce(
+                (instanceData, item) => {
+                    const key = instanceKey(item.seriesNumber, item.instanceNumber);
+            				if(!instanceData[key]){
+            					instanceData[key] = [];
+            				}
+            				instanceData[key].push(item);
+                    return instanceData;
+                },
+                {} as Record<InstanceKey, InstanceData[]>,
+            );
 
             state.currentInstanceData = [];
         },
         setCurrentSereies: (state, { payload }: PayloadAction<number>) => {
+
             state.currentSeriesNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
             state.currentInstanceData = state.instanceData[key] ?? [];

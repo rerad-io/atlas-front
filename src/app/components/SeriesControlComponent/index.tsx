@@ -1,21 +1,27 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { instanceSelector, setCurrentSereies } from "../../../store/instance";
+import { instanceSelector, setCurrentInstanceNumber, setCurrentSereies } from "../../../store/instance";
 import { Series } from "../../../_types";
 import { backendUrl_2 } from "../../../requests/backendUrl";
 import s from "./styles.module.scss";
 
 export const SeriesControlComponent = () => {
     const dispatch = useDispatch();
-    const { study, series, currentSeriesNumber } = useSelector(instanceSelector);
+    const { study, series, currentSeriesNumber, currentInstanceData } = useSelector(instanceSelector);
     const [currentSerie, setCurrentSerie] = useState<Series>({});
 
+		const sagital = currentInstanceData?.length ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`: "" ;
+		
+		const coronal = currentInstanceData?.length ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`: "" ;
+		
     useEffect(() => {
         setCurrentSerie(Object.values(series).find((item) => item.number === currentSeriesNumber));
     }, [series, currentSeriesNumber]);
 
     const changeSerie = (number: number) => {
         dispatch(setCurrentSereies(number));
+        dispatch(setCurrentInstanceNumber(1));
+
     };
 
     return (
@@ -28,7 +34,7 @@ export const SeriesControlComponent = () => {
                             <div className={s.preview}>
                                 <img
                                     style={{ width: "60px", height: "60px" }}
-                                    src={`${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`}
+                                    src={sagital}
                                     alt={`sagitalFrame`}
                                 />
                             </div>
@@ -38,7 +44,7 @@ export const SeriesControlComponent = () => {
                             <div className={s.preview}>
                                 <img
                                     style={{ width: "60px", height: "60px" }}
-                                    src={`${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`}
+                                    src={coronal}
                                     alt={`coronalFrame`}
                                 />
                             </div>

@@ -2,10 +2,7 @@ import { fabric } from "fabric";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
-import { getInstanceDataList } from "../../requests/instanceDataRequests";
 import { InstanceData } from "../../_types";
-import { useParams } from "react-router-dom";
-import { getStudySeriesId } from "../../requests/StudySeriesRequests";
 import { getStudyId } from "../../requests/StudyRequests";
 import { backendUrl_2 } from "../../requests/backendUrl";
 
@@ -26,68 +23,66 @@ export const CanvasInstance = ({
     fabricCanvas,
     newPoint,
     context,
+		instances,
     activeFrameNumber,
 }: {
     fabricCanvas: fabric.Canvas;
     newPoint?: fabric.Circle;
     context: string;
     activeFrameNumber: number;
+		instances: InstanceData[];
 }) => {
-    // TODO: получить данные инстанса можно взять из серии вытащив данные по ID
-    const { id } = useParams<{ id: string }>();
-    const { study, series, currentInstanceData, currentInstanceNumber } = useSelector(instanceSelector);
+    const { study, series, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
+		
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(
-        new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-        }),
-    );
-    const [currentFrame, setCurrentFrame] = useState<string>("");
-    const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
+			new fabric.Group([], {
+				hasControls: false,
+				hasBorders: false,
+				lockRotation: true,
+				lockScalingX: true,
+				lockScalingY: true,
+			}),
+			);
+			const [currentFrame, setCurrentFrame] = useState<string>("");
+			const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
+			
+			useEffect(() => {
+				const fetchInstanceData = async () => {
+					try {
+						if (context === "app") {
+							if(currentInstanceData.length){
 
-    useEffect(() => {
-        const fetchInstanceData = async () => {
-            try {
-                if (context === "app") {
-                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-                    // TODO: номер серии нужно брать из текущего инстанс
-                    setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${Object.values(series)[0]?.number}/${
-                            currentInstanceNumber || 1
-                        }.jpg`,
-                    );
+								setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+								setCurrentFrame(
+									`${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
+										currentInstanceNumber || 1
+									}.jpg`,
+									);
+								} else {
+									setCurrentFrame("https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg");
+									setCurrentInstanseData([]);
+								}
                 } else {
-                    // TODO: получить данные инстанса можно взять из серии вытащив данные по ID
-                    const instanceList = await getInstanceDataList({});
-                    const tempSerie = await getStudySeriesId(id);
-                    // TODO: study получить из серии
-                    const temporaryStudy = await getStudyId(tempSerie?.studyId);
-                    const targetIstanceData = instanceList.filter(
-                        (item) =>
-                            item.series === tempSerie.name &&
-                            item.study === temporaryStudy.name &&
-                            item.instanceNumber === activeFrameNumber,
-                    );
-                    if (targetIstanceData) {
-                        setCurrentInstanseData(targetIstanceData);
-                    }
-                    setCurrentFrame(
-                        //`${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${tempSerie.number}/${activeFrameNumber}.jpg`,
-                        // TODO: перезатереть
-                        `${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${1}/${activeFrameNumber}.jpg`,
-                    );
+                    const targetIstanceData = instances?.filter(
+											(item) => item.instanceNumber === activeFrameNumber,
+											);
+											if (targetIstanceData?.length) {
+											const temporaryStudy = await getStudyId(targetIstanceData[0]?.studyId);
+											setCurrentInstanseData(targetIstanceData);
+											setCurrentFrame(
+												`${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${targetIstanceData[0]?.seriesNumber
+												}/${activeFrameNumber}.jpg`,
+												);
+										}
                 }
             } catch (error) {
                 console.error("CanvasInstance - ", error);
             }
         };
         fetchInstanceData();
-    }, [id, currentInstanceData, currentInstanceNumber, context, series, activeFrameNumber, study.externalId]);
+    }, [instances, currentSeriesNumber, activeFrameNumber, context, currentInstanceData, currentInstanceNumber, series, study.externalId]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -96,7 +91,7 @@ export const CanvasInstance = ({
             pointsLayer.removeWithUpdate(fabricItem);
         });
 
-        currentData.forEach((item) => {
+        currentData?.forEach((item) => {
             const point = new fabric.Circle({
                 top: item?.y,
                 left: item?.x,
@@ -107,12 +102,23 @@ export const CanvasInstance = ({
             pointsLayer.addWithUpdate(point);
         });
 
+				// TODO: нужно ли очищать ?
+        //if (newPoint) {
+        //    fabricObjects.current.push(newPoint);
+        //    pointsLayer.addWithUpdate(newPoint);
+        //    fabricCanvas.renderAll();
+        //}
+    }, [pointsLayer, currentData]);
+
+    useEffect(() => {
         if (newPoint) {
             fabricObjects.current.push(newPoint);
             pointsLayer.addWithUpdate(newPoint);
             fabricCanvas.renderAll();
         }
-    }, [pointsLayer, currentData, newPoint, fabricCanvas]);
+    }, [pointsLayer, newPoint, fabricCanvas]);
+
+
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {
@@ -140,7 +146,7 @@ export const CanvasInstance = ({
             layer2Frame.addWithUpdate(img);
             fabricCanvas.renderAll();
         });
-    }, [pointsLayer, fabricCanvas, currentInstanceNumber, currentFrame]);
+    }, [pointsLayer, fabricCanvas, currentFrame]);
 
     return <></>;
 };

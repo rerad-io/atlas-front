@@ -8,14 +8,13 @@ import { createInstanceData } from "../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 
 export const RenderComponent = ({
-    seriesId,
-    studyId,
     context,
     instances,
     activeFrameNumber,
 }: {
     context: string;
     instances: InstanceData[];
+		activeFrameNumber:number
 }) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
@@ -37,6 +36,7 @@ export const RenderComponent = ({
 
         canvas?.on("mouse:down", (event) => {
             const pointer = canvas.getPointer(event.e);
+						// TODO: логи для проверки отрисовки точек
             //console.log("🚀 ~ file: index.tsx:28 ~ canvas?.on ~ pointer:", pointer);
             const point = new fabric.Circle({
                 top: pointer.y,
@@ -64,11 +64,8 @@ export const RenderComponent = ({
     const handleSubmit = async (structure: AnatomicalStructure) => {
         try {
             const newInstance = {
-                // TODO: данные study и series брать прямо из instance
-                //study: instances[0].studyId,
-                //series: instances[0].seriesId,
-                study: studyId,
-                series: seriesId,
+                study: instances[0]?.studyId,
+                series: instances[0]?.seriesId,
                 structure: structure.id,
                 instanceNumber: instances[0]?.instanceNumber,
                 type: "Point",
@@ -101,6 +98,7 @@ export const RenderComponent = ({
                                 newPoint={newPoint}
                                 context={context}
                                 activeFrameNumber={activeFrameNumber}
+																instances={instances}
                             />
                         ) : (
                             <CanvasInstance fabricCanvas={fabricCanvas} context={context} />

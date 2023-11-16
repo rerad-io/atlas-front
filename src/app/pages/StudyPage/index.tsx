@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { getStudyId } from "../../../requests/StudyRequests";
 import { instanceSelector, setAnatomicalStructures, setCurrentInstanceNumber, setCurrentSereies, setStudy } from "../../../store/instance";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
-import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import { RenderComponent } from "../../../components/RenderComponent";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { SeriesControlComponent } from "../../components/SeriesControlComponent";
@@ -21,18 +20,14 @@ const StudyPage = () => {
             const fetchStudyData = async (studyId: string) => {
                 try {
                     const targetStudy = await getStudyId(studyId);
-                    const instanceDataList = await getInstanceDataList({});
-                    const tempInstanceData = instanceDataList.filter((item) => item.study === targetStudy.name);
                     dispatch(
                         setStudy({
                             ...targetStudy,
-                            // TODO: из бека фильтровать по ID
-                            instanceData: tempInstanceData,
-                            //instanceData: instanceDataList.filter((item) => item.studyId === targetStudy.id),
+                            instanceData: targetStudy.instanceDataList,
                         }),
                     );
                     dispatch(setCurrentSereies(targetStudy.seriesList[0]?.number));
-                    dispatch(setCurrentInstanceNumber(tempInstanceData[0]?.instanceNumber));
+                    dispatch(setCurrentInstanceNumber(targetStudy.instanceDataList[0]?.instanceNumber));
 
                     const anatomicalStructuresList = await getAnatomicalStructureList({});
                     dispatch(setAnatomicalStructures(anatomicalStructuresList));
@@ -54,7 +49,7 @@ const StudyPage = () => {
             <div className="container">{study.name ? <h1> {`${study.name}`}</h1> : <h2>Loading...</h2>}</div>
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} />
+                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app"/>
                     <RenderComponent context="app" />
                     <SeriesControlComponent />
                 </div>
