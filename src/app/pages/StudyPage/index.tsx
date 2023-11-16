@@ -51,7 +51,7 @@ const StudyPage = () => {
 
     return (
         <div className={s.page}>
-            <div className="container">{study.name ? <h1>Исследование: {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
+            <div className="container">{study.name ? <h1> {`${study.name}`}</h1> : <h2>Loading...</h2>}</div>
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
                     <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} />

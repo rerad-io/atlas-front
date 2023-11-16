@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
+import toast, { Toaster } from "react-hot-toast";
 import { CanvasInstance } from "../CanvasInstance";
 import { AnatomicalStructure, InstanceData } from "../../_types";
 import { PointsFormController } from "../../admin/components/PointsFormController";
@@ -20,6 +21,9 @@ export const RenderComponent = ({
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
     const [newPoint, setNewPoint] = useState<fabric.Circle>();
+
+    const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
+    const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     useEffect(() => {
         const options = {
@@ -57,26 +61,37 @@ export const RenderComponent = ({
         // TODO: ограничение eslint, требует зависимости
     }, []);
 
-    const handleSubmit = (structure: AnatomicalStructure) => {
-        const newInstance = {
-            // TODO: данные study и series брать прямо из instance
-            //study: instances[0].studyId,
-            //series: instances[0].seriesId,
-            study: studyId,
-            series: seriesId,
-            structure: structure.id,
-            instanceNumber: instances[0].instanceNumber,
-            type: "Point",
-            x: newPoint?.left,
-            y: newPoint?.top,
-            path: instances[0].path,
-        };
-        createInstanceData(newInstance);
+    const handleSubmit = async (structure: AnatomicalStructure) => {
+        try {
+            const newInstance = {
+                // TODO: данные study и series брать прямо из instance
+                //study: instances[0].studyId,
+                //series: instances[0].seriesId,
+                study: studyId,
+                series: seriesId,
+                structure: structure.id,
+                instanceNumber: instances[0]?.instanceNumber,
+                type: "Point",
+                x: newPoint?.left,
+                y: newPoint?.top,
+                path: "path",
+            };
+            const result = await createInstanceData(newInstance);
+            if (result.id) {
+                notifySuccess("новая структура отмечена!");
+            } else {
+                notifyError("ошибка фиксации структуры!");
+            }
+        } catch (error) {
+            notifyError("ошибка фиксации структуры!");
+            console.error("Error fetching RenderComponent:", error);
+        }
     };
 
     return (
         <section className={s.frame_info}>
             <div className="container">
+                <Toaster />
                 <div className={s.current_frame}>
                     <canvas ref={canvasEl} />
                     {fabricCanvas &&

@@ -4,9 +4,8 @@ import { instanceSelector } from "../../store/instance";
 import { backendUrl_2 } from "../../requests/backendUrl";
 import { SeriesListModel } from "../../_types";
 import { getStudyId } from "../../requests/StudyRequests";
+import { Slider } from "../Slider";
 import s from "./styles.module.scss";
-
-const slideWidth: number = 80;
 
 type Props = {
     studySerie: SeriesListModel;
@@ -60,35 +59,10 @@ const FrameSelectorComponent = ({ studySerie, handleCurrentFrame, activeFrameNum
     return (
         <section>
             <div className="container">
-                <div
-                    className={s.slider}
-                    style={{
-                        maxWidth: `calc(${currentSerie.instanceCount}*${slideWidth}px)`,
-                        minWidth: "500px",
-                    }}
-                >
-                    <ul
-                        className={s.slider_wrapper}
-                        style={{
-                            height: `${slideWidth}px`,
-                        }}
-                    >
-                        {instancesFrame?.map((slide, index) => (
-                            <li
-                                key={index}
-                                className={`${s.slide} ${s[activeFrame === index + 1 ? "active" : ""] || ""}`}
-                                style={{
-                                    width: `${slideWidth}px`,
-                                    height: `${slideWidth}px`,
-                                    color: "white",
-                                    backgroundColor: "black",
-                                }}
-                                onClick={() => handleCurrentFrame(index + 1)}
-                            >
-                                {<img src={slide} alt="#foto" className={s.slide_img} />}
-                            </li>
-                        ))}
-                    </ul>
+                <Slider instancesFrame={instancesFrame} activeFrame={activeFrame} handleCurrentFrame={handleCurrentFrame} />
+                <div className={s.pagination}>
+                    <span>{activeFrame}</span>
+                    <span>{` / ${instancesFrame.length}`}</span>
                 </div>
             </div>
         </section>

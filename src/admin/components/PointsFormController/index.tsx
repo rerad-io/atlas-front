@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AnatomicalStructure, InstanceData } from "../../../_types";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import Button from "../../../components/UI/Button";
+import toast, { Toaster } from "react-hot-toast";
 import { deleteInstanceData } from "../../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 
@@ -15,6 +16,9 @@ export const PointsFormController = ({
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
     const [selectedInstanceId, setSelectedInstanceId] = useState<string>();
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
+
+    const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
+    const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,9 +42,22 @@ export const PointsFormController = ({
         if (selectedIndex) setSelectedStructure(anatomicalStructureList[selectedIndex]);
     };
 
-    const handleRemove = () => {
+    const handleRemove = async () => {
         if (selectedInstanceId) {
-            deleteInstanceData(selectedInstanceId);
+            const isAlert = confirm("уверены что хотите удалить структуру из исследования?");
+            if (isAlert) {
+                try {
+                    const result = await deleteInstanceData(selectedInstanceId);
+                    if (result === 204) {
+                        notifySuccess("структура удалена из инстанса!");
+                    } else {
+                        notifyError("ошибка удаления структуры!");
+                    }
+                } catch (error) {
+                    notifyError("ошибка удаления структуры!");
+                    console.error("Error fetching PointsFormController:", error);
+                }
+            }
         }
     };
 
@@ -52,12 +69,13 @@ export const PointsFormController = ({
     return (
         <section>
             <div className="container">
+                <Toaster />
                 <form className={s.form} onSubmit={submit}>
                     <h3>Форма редактирования / добавления точек </h3>
                     <label>
                         Существующие точки
                         <select name="points" onChange={handleSelectInstance}>
-                            <option defaultValue="">без значения</option>
+                            <option value="">без значения</option>
                             {instances?.map((el) => (
                                 <option key={el.id} value={el.id}>
                                     {`${el.structure} (${el.x}, ${el.y})`}
@@ -67,8 +85,8 @@ export const PointsFormController = ({
                     </label>
                     <label>
                         Анатомические структуры
-                        <select name="structure" onChange={handleSelectStructure}>
-                            <option defaultValue="">без значения</option>
+                        <select name="structure" onChange={handleSelectStructure} required>
+                            <option value="">без значения</option>
                             {anatomicalStructureList?.map((el, index) => (
                                 <option key={el.id} value={index}>
                                     {el.name}
