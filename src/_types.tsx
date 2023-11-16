@@ -45,6 +45,7 @@ export type SeriesListModel = {
     id: string;
     number: number;
     name: string;
+    studyId: string;
     previewFrame: string;
     instanceCount: number;
     sagitalFrame: string;

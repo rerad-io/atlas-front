@@ -2,7 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
-import { InstanceData } from "../../../_types";
+import { InstanceData, Series } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import { getStudyId } from "../../../requests/StudyRequests";
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
@@ -13,8 +13,9 @@ import s from "./styles.module.scss";
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const [studySerie, setStudySerie] = useState();
+    const [studySerie, setStudySerie] = useState<Series>();
     const [instances, setInstances] = useState<InstanceData[]>();
+    const [activeFrameNumber, setActiveFrameNumber] = useState<number>(1);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -80,6 +81,10 @@ const StudySeriesEditPage = () => {
         e.target.reset();
     };
 
+    const handleCurrentFrame = (index: number) => {
+        setActiveFrameNumber(index);
+    };
+
     return (
         <div className={s.page}>
             <div className="container">
@@ -126,8 +131,18 @@ const StudySeriesEditPage = () => {
             </div>
             {id ? (
                 <>
-                    <FrameSelectorComponent instances={instances} />
-                    <RenderComponent context="admin" seriesId={id} studyId={studySerie?.studyId} instances={instances} />
+                    <FrameSelectorComponent
+                        studySerie={studySerie}
+                        handleCurrentFrame={handleCurrentFrame}
+                        activeFrameNumber={activeFrameNumber}
+                    />
+                    <RenderComponent
+                        context="admin"
+                        seriesId={id}
+                        studyId={studySerie?.studyId}
+                        instances={instances}
+                        activeFrameNumber={activeFrameNumber}
+                    />
                 </>
             ) : null}
         </div>

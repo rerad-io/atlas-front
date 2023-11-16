@@ -7,7 +7,7 @@ import { getAnatomicalStructureList } from "../../../requests/anatomicalStructur
 import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import { RenderComponent } from "../../../components/RenderComponent";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
-import { SeriesControlComponent } from "../../../components/SeriesControlComponent";
+import { SeriesControlComponent } from "../../components/SeriesControlComponent";
 import s from "./styles.module.scss";
 
 const StudyPage = () => {
@@ -34,8 +34,8 @@ const StudyPage = () => {
                     dispatch(setCurrentSereies(targetStudy.seriesList[0]?.number));
                     dispatch(setCurrentInstanceNumber(tempInstanceData[0]?.instanceNumber));
 
-                    const tempStudiesList = await getAnatomicalStructureList({});
-                    dispatch(setAnatomicalStructures(tempStudiesList));
+                    const anatomicalStructuresList = await getAnatomicalStructureList({});
+                    dispatch(setAnatomicalStructures(anatomicalStructuresList));
                 } catch (error) {
                     console.error("Error fetching StudyPage:", error);
                 }
@@ -45,12 +45,16 @@ const StudyPage = () => {
         }
     }, [id, study.id, dispatch]);
 
+    const handleCurrentFrame = (index: number) => {
+        dispatch(setCurrentInstanceNumber(index));
+    };
+
     return (
         <div className={s.page}>
-            <div className="container">{study.name ? <h1>Исследование: {`"${study.name}"`}</h1> : <h2>Loading...</h2>}</div>
+            <div className="container">{study.name ? <h1> {`${study.name}`}</h1> : <h2>Loading...</h2>}</div>
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelectorComponent />
+                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} />
                     <RenderComponent context="app" />
                     <SeriesControlComponent />
                 </div>
