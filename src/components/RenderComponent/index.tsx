@@ -61,7 +61,7 @@ export const RenderComponent = ({
     }, []);
 
     const handleSubmit = async (structure: AnatomicalStructure) => {
-        console.log("newPoint: ", newPoint);
+        //console.log("newPoint: ", newPoint);
         try {
             const newInstance = {
                 studyId: serie.studyId,

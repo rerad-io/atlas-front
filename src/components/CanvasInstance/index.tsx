@@ -114,6 +114,7 @@ export const CanvasInstance = ({
                 lockScalingY: true,
                 lockMovementX: true,
                 lockMovementY: true,
+								
             });
 
             fabricObjects.current.push(point);
@@ -123,6 +124,10 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         if (newPoint) {
+					console.log(fabricObjects)
+					//fabricObjects.current.pop();
+					//fabricCanvas.renderAll();
+
             fabricObjects.current.push(newPoint);
             pointsLayer.addWithUpdate(newPoint);
             fabricCanvas.renderAll();
@@ -131,13 +136,13 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
+            //hasControls: false,
+            //hasBorders: false,
+            //lockRotation: true,
+            //lockScalingX: true,
+            //lockScalingY: true,
+            //lockMovementX: true,
+            //lockMovementY: true,
         });
 
         const layer2Frame = new fabric.Group([], {
@@ -148,6 +153,7 @@ export const CanvasInstance = ({
             lockScalingY: true,
             lockMovementX: true,
             lockMovementY: true,
+            lockScalingFlip:true,		
         });
 
         fabricCanvas.add(layer1Bg);
