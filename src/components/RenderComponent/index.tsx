@@ -23,7 +23,7 @@ export const RenderComponent = ({
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
-    const [newPoint, setNewPoint] = useState<fabric.Circle>();
+    //const [newPoint, setNewPoint] = useState<fabric.Circle>();
     const [pointCoordinates, setPointCoordinates] = useState();
 
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
@@ -39,23 +39,29 @@ export const RenderComponent = ({
 
         const canvas = new fabric.Canvas(canvasEl.current, options);
 
-        canvas?.on("mouse:down", (event) => {
-            const pointer = canvas.getPointer(event.e);
-            const point = new fabric.Circle({
-                left: pointer.x,
-                top: pointer.y,
-                originX: "center",
-                originY: "center",
-                radius: 3,
-                fill: "green",
-            });
-            setPointCoordinates({
-                x: point.left,
-                y: point.top,
-            });
-            //console.log(`Mouse click at (${point.left}, ${point.top})`);
-            setNewPoint(point);
-        });
+        // TODO: задача RenderComponent заключается в рендеринге канвас и предоставить API() к нему
+        // TODO:  зона ответсвенности  CanvasInstance - принятие решения по событию клика:
+        // добавить новую точку или переместить ее.
+        //canvas?.on("mouse:down", (event) => {
+        //const pointer = canvas.getPointer(event.e);
+        //console.log("🚀 ~ file: index.tsx:47 ~ canvas?.on ~ pointer:", pointer)
+        // TODO: передать и pointer событие в CanvasInstance
+        //const point = new fabric.Circle({
+        //    left: pointer.x,
+        //    top: pointer.y,
+        //    originX: "center",
+        //    originY: "center",
+        //    radius: 3,
+        //    fill: "green",
+        //});
+        //setPointCoordinates({
+        //    x: point.left,
+        //    y: point.top,
+        //});
+        //console.log(`Mouse click at (${point.left}, ${point.top})`);
+        //setNewPoint(point);
+
+        //});
 
         setFabricCanvas(canvas);
     }, []);
@@ -95,7 +101,7 @@ export const RenderComponent = ({
                         (context !== "app" ? (
                             <CanvasInstance
                                 fabricCanvas={fabricCanvas}
-                                newPoint={newPoint}
+                                //newPoint={newPoint}
                                 context={context}
                                 externalId={externalId}
                                 activeFrameNumber={activeFrameNumber}

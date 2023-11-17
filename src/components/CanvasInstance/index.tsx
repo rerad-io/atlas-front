@@ -20,14 +20,14 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
 
 export const CanvasInstance = ({
     fabricCanvas,
-    newPoint,
+    //newPoint,
     context,
     instances,
     externalId,
     activeFrameNumber,
 }: {
     fabricCanvas: fabric.Canvas;
-    newPoint?: fabric.Circle;
+    //newPoint?: fabric.Circle;
     context: string;
     externalId: string;
     activeFrameNumber: number;
@@ -36,7 +36,7 @@ export const CanvasInstance = ({
     const { study, series, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
-    const [pointsLayer] = useState<fabric.Group>(
+    const pointsLayer = useRef<fabric.Group>(
         new fabric.Group([], {
             hasControls: false,
             hasBorders: false,
@@ -47,6 +47,10 @@ export const CanvasInstance = ({
             lockMovementY: true,
         }),
     );
+    const [newPoint, setNewPoint] = useState<fabric.Circle>();
+    // https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback
+    const newPointRef = useRef(newPoint);
+    newPointRef.current = newPoint;
     const [currentFrame, setCurrentFrame] = useState<string>("");
     const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
 
@@ -95,10 +99,59 @@ export const CanvasInstance = ({
     ]);
 
     useEffect(() => {
+        console.log("Point create", fabricCanvas);
+        // TODO: задача RenderComponent заключается в рендеринге канвас и предоставить API() к нему
+        // TODO:  зона ответсвенности  CanvasInstance - принятие решения по событию клика:
+        // добавить новую точку или переместить ее.
+        const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
+            console.log("🚀 ~ file: index.tsx:107 ~ fabricCanvas?.on ~ event:", event);
+
+            const pointer = fabricCanvas.getPointer(event.e);
+            console.log(`Mouse click at (${pointer.x}, ${pointer.y})`);
+            if (newPointRef.current) {
+                // TODO: перенести точку
+                newPointRef.current.left = pointer.x;
+                newPointRef.current.top = pointer.y;
+            } else {
+                const point = new fabric.Circle({
+                    left: pointer.x,
+                    top: pointer.y,
+                    originX: "center",
+                    originY: "center",
+                    radius: 3,
+                    fill: "green",
+                });
+
+                //setPointCoordinates({
+                //    x: point.left,
+                //    y: point.top,
+                //});
+                fabricObjects.current.push(point);
+                pointsLayer.current.addWithUpdate(point);
+                setNewPoint(point);
+            }
+
+            fabricCanvas.renderAll();
+        };
+
+        try {
+					fabricCanvas?.on("mouse:down", onMouseDown);
+
+				} catch (error) {
+					console.log("Ошибка мыши", error)
+				}
+				console.log("Проверка мыши прошла ")
+
+        return () => {
+            fabricCanvas?.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+        };
+    }, [fabricCanvas]);
+
+    useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
 
         fabricObjects.current.forEach((fabricItem) => {
-            pointsLayer.removeWithUpdate(fabricItem);
+            pointsLayer.current.removeWithUpdate(fabricItem);
         });
 
         currentData?.forEach((item) => {
@@ -117,19 +170,20 @@ export const CanvasInstance = ({
             });
 
             fabricObjects.current.push(point);
-            pointsLayer.addWithUpdate(point);
+            pointsLayer.current.addWithUpdate(point);
             //  1-слой для картинок, 1000- слой для точек
             fabricCanvas.moveTo(point, 1000);
         });
-    }, [pointsLayer, currentData, fabricCanvas]);
+    }, [currentData, fabricCanvas]);
 
-    useEffect(() => {
-        if (newPoint) {
-            fabricObjects.current.push(newPoint);
-            pointsLayer.addWithUpdate(newPoint);
-            fabricCanvas.renderAll();
-        }
-    }, [pointsLayer, newPoint, fabricCanvas]);
+    //useEffect(() => {
+    //    if (newPoint) {
+    //        //fabricObjects.current.pop();
+    //        fabricObjects.current.push(newPoint);
+    //        pointsLayer.addWithUpdate(newPoint);
+    //        fabricCanvas.renderAll();
+    //    }
+    //}, [pointsLayer, newPoint, fabricCanvas]);
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {});
@@ -147,7 +201,7 @@ export const CanvasInstance = ({
 
         fabricCanvas.add(layer1Bg);
         fabricCanvas.add(layer2Frame);
-        fabricCanvas.add(pointsLayer);
+        fabricCanvas.add(pointsLayer.current);
         fabricCanvas.renderAll();
 
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
@@ -156,7 +210,7 @@ export const CanvasInstance = ({
             fabricCanvas.moveTo(img, 1);
             fabricCanvas.renderAll();
         });
-    }, [pointsLayer, fabricCanvas, currentFrame]);
+    }, [fabricCanvas, currentFrame]);
 
     return <></>;
 };
