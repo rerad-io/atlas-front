@@ -5,8 +5,8 @@ import Button from "../../../components/UI/Button";
 import { InstanceData, Series } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
-import { RenderComponent } from "../../../components/RenderComponent";
 import s from "./styles.module.scss";
+import { PointsFormController } from "../../components/PointsFormController";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -127,13 +127,11 @@ const StudySeriesEditPage = () => {
                         handleCurrentFrame={handleCurrentFrame}
                         activeFrameNumber={activeFrameNumber}
                     />
-                    <RenderComponent
-                        context="admin"
+                    <PointsFormController
                         externalId={studySerie?.studyExternalId}
-                        serie={studySerie}
-                        instances={instances}
-                        activeFrameNumber={activeFrameNumber}
-                    />
+                        serie={studySerie!}
+                        instances={instances!}
+                        activeFrameNumber={activeFrameNumber} />
                 </>
             ) : null}
         </div>

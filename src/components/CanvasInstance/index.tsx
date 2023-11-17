@@ -47,22 +47,18 @@ export const CanvasInstance = ({
             lockMovementY: true,
         }),
     );
-    const [newPoint, setNewPoint] = useState<fabric.Circle>();
-    // https://stackoverflow.com/questions/57847594/react-hooks-accessing-up-to-date-state-from-within-a-callback
-    const newPointRef = useRef(newPoint);
-    newPointRef.current = newPoint;
+
     const [currentFrame, setCurrentFrame] = useState<string>("");
     const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
 
     useEffect(() => {
-        const fetchInstanceData = async () => {
+        const fetchInstanceData = () => {
             try {
                 if (context === "app") {
                     if (currentInstanceData.length) {
                         setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
                         setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-                                currentInstanceNumber || 1
+                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${currentInstanceNumber || 1
                             }.jpg`,
                         );
                     } else {
@@ -97,55 +93,6 @@ export const CanvasInstance = ({
         externalId,
         study.externalId,
     ]);
-
-    useEffect(() => {
-        console.log("Point create", fabricCanvas);
-        // TODO: задача RenderComponent заключается в рендеринге канвас и предоставить API() к нему
-        // TODO:  зона ответсвенности  CanvasInstance - принятие решения по событию клика:
-        // добавить новую точку или переместить ее.
-        const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
-            console.log("🚀 ~ file: index.tsx:107 ~ fabricCanvas?.on ~ event:", event);
-
-            const pointer = fabricCanvas.getPointer(event.e);
-            console.log(`Mouse click at (${pointer.x}, ${pointer.y})`);
-            if (newPointRef.current) {
-                // TODO: перенести точку
-                newPointRef.current.left = pointer.x;
-                newPointRef.current.top = pointer.y;
-            } else {
-                const point = new fabric.Circle({
-                    left: pointer.x,
-                    top: pointer.y,
-                    originX: "center",
-                    originY: "center",
-                    radius: 3,
-                    fill: "green",
-                });
-
-                //setPointCoordinates({
-                //    x: point.left,
-                //    y: point.top,
-                //});
-                fabricObjects.current.push(point);
-                pointsLayer.current.addWithUpdate(point);
-                setNewPoint(point);
-            }
-
-            fabricCanvas.renderAll();
-        };
-
-        try {
-					fabricCanvas?.on("mouse:down", onMouseDown);
-
-				} catch (error) {
-					console.log("Ошибка мыши", error)
-				}
-				console.log("Проверка мыши прошла ")
-
-        return () => {
-            fabricCanvas?.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
-        };
-    }, [fabricCanvas]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
