@@ -24,8 +24,8 @@ const StudySeriesEditPage = () => {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
                     const targetSerie = await getStudySeriesId(id);
-											setStudySerie(targetSerie);
-											setInstances(targetSerie.instanceDataList);
+                    setStudySerie(targetSerie);
+                    setInstances(targetSerie.instanceDataList);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -120,7 +120,7 @@ const StudySeriesEditPage = () => {
                     <Button>Save</Button>
                 </form>
             </div>
-            {id && instances?.length ? (
+            {id ? (
                 <>
                     <FrameSelectorComponent
                         studySerie={studySerie}
@@ -129,6 +129,8 @@ const StudySeriesEditPage = () => {
                     />
                     <RenderComponent
                         context="admin"
+                        externalId={studySerie?.studyExternalId}
+                        serie={studySerie}
                         instances={instances}
                         activeFrameNumber={activeFrameNumber}
                     />

@@ -11,7 +11,7 @@ type Props = {
     studySerie: SeriesListModel;
     activeFrameNumber: number;
     handleCurrentFrame: (index: number) => void;
-		context:string;
+    context: string;
 };
 
 const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activeFrameNumber }: Props) => {
@@ -22,29 +22,31 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
     const [currentExternalId, setCurrentExternalId] = useState<string>("");
 
     useEffect(() => {
-        if (context ==="app") {
-					if(currentInstanceData.length){
-						const serieOject: SeriesListModel | undefined = Object.values(series)?.find((serie) => serie.number === currentSeriesNumber);
-            if (serieOject) setCurrentSerie(serieOject);
-            if (study) setCurrentExternalId(study.externalId);
-            setActiveFrame(currentInstanceNumber);
-					} else {
-						setCurrentExternalId('');
-					}
+        if (context === "app") {
+            if (currentInstanceData.length) {
+                const serieOject: SeriesListModel | undefined = Object.values(series)?.find(
+                    (serie) => serie.number === currentSeriesNumber,
+                );
+                if (serieOject) setCurrentSerie(serieOject);
+                if (study) setCurrentExternalId(study.externalId);
+                setActiveFrame(currentInstanceNumber);
+            } else {
+                setCurrentExternalId("");
+            }
         } else {
             const fetchStudyById = async () => {
                 try {
                     const targetStudy = await getStudyId(studySerie?.studyId);
                     setCurrentExternalId(targetStudy.externalId);
                 } catch (error) {
-                    console.error("StudySeriesEditPage - ", error);
+                    console.error("StudySeriesEditPage: ", error);
                 }
             };
             fetchStudyById();
             setCurrentSerie(studySerie);
             setActiveFrame(activeFrameNumber);
         }
-    }, [study, series, studySerie, currentSeriesNumber, currentInstanceNumber, activeFrameNumber]);
+    }, [study, series, studySerie, currentSeriesNumber, context, currentInstanceData.length, currentInstanceNumber, activeFrameNumber]);
 
     useEffect(() => {
         const framesList: string[] = [];

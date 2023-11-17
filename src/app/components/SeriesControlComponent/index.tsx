@@ -10,10 +10,14 @@ export const SeriesControlComponent = () => {
     const { study, series, currentSeriesNumber, currentInstanceData } = useSelector(instanceSelector);
     const [currentSerie, setCurrentSerie] = useState<Series>({});
 
-		const sagital = currentInstanceData?.length ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`: "" ;
-		
-		const coronal = currentInstanceData?.length ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`: "" ;
-		
+    const sagital = currentInstanceData?.length
+        ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`
+        : "";
+
+    const coronal = currentInstanceData?.length
+        ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`
+        : "";
+
     useEffect(() => {
         setCurrentSerie(Object.values(series).find((item) => item.number === currentSeriesNumber));
     }, [series, currentSeriesNumber]);
@@ -21,7 +25,6 @@ export const SeriesControlComponent = () => {
     const changeSerie = (number: number) => {
         dispatch(setCurrentSereies(number));
         dispatch(setCurrentInstanceNumber(1));
-
     };
 
     return (
@@ -32,21 +35,13 @@ export const SeriesControlComponent = () => {
                         <div>
                             <span style={{ display: "block", textAlign: "center" }}>Sagital</span>
                             <div className={s.preview}>
-                                <img
-                                    style={{ width: "60px", height: "60px" }}
-                                    src={sagital}
-                                    alt={`sagitalFrame`}
-                                />
+                                <img style={{ width: "60px", height: "60px" }} src={sagital} alt={`sagitalFrame`} />
                             </div>
                         </div>
                         <div>
                             <span style={{ display: "block", textAlign: "center" }}>Coronal</span>
                             <div className={s.preview}>
-                                <img
-                                    style={{ width: "60px", height: "60px" }}
-                                    src={coronal}
-                                    alt={`coronalFrame`}
-                                />
+                                <img style={{ width: "60px", height: "60px" }} src={coronal} alt={`coronalFrame`} />
                             </div>
                         </div>
                     </div>

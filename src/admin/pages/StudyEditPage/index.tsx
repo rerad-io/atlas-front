@@ -11,16 +11,15 @@ const StudyEditPage = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const formRef = useRef<HTMLFormElement | null>(null);
-		
+
     const [study, setStudy] = useState<Study>();
     const [createAnother, setCreateAnother] = useState(false);
-		const [values, setValues] = useState<any>({
-			externalId: "",
-			name: "",
-			description: "",
-			previewFrame: "",
-		});
-	
+    const [values, setValues] = useState({
+        externalId: "",
+        name: "",
+        description: "",
+        previewFrame: "",
+    });
 
     useEffect(() => {
         if (id) {
@@ -38,7 +37,7 @@ const StudyEditPage = () => {
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-	
+
         if (id) {
             const fetchDataAndUpdateStudy = async () => {
                 try {
@@ -77,17 +76,16 @@ const StudyEditPage = () => {
         }
     };
 
-		const handleChange = (e: React.FormEvent<HTMLInputElement| HTMLTextAreaElement>) => {
-			setValues({ ...values, [e.target.name]: e.target.value });
-		};
-	
+    const handleChange = (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    };
 
     return (
         <div className={s.page}>
             <h1 className="title">{id ? `Редактирование` : `Создание`} Исследования</h1>
             <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                 {
-                    <label >
+                    <label>
                         External Id:
                         <input
                             required
@@ -96,37 +94,24 @@ const StudyEditPage = () => {
                             value={values[oninput?.name]}
                             placeholder={study ? study.externalId : ""}
                             style={{ width: "300px" }}
-														onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </label>
                 }
-                <label >
+                <label>
                     Study Name:
-                    <input 
-										required 
-										type="text" 
-										name="name"  
-										defaultValue={study?.name}
-										onChange={handleChange} />
+                    <input required type="text" name="name" defaultValue={study?.name} onChange={handleChange} />
                 </label>
-                <label >
+                <label>
                     Study Description:
-                    <textarea  
-										name="description" 
-										rows={4} cols={50} 
-										defaultValue={study?.description}
-										onChange={handleChange}/>
+                    <textarea name="description" rows={4} cols={50} defaultValue={study?.description} onChange={handleChange} />
                 </label>
-                <label >
+                <label>
                     Preview Frame:
-                    <input 
-										type="text" 
-										name="previewFrame"  
-										defaultValue={study?.previewFrame}
-										onChange={handleChange} />
+                    <input type="text" name="previewFrame" defaultValue={study?.previewFrame} onChange={handleChange} />
                 </label>
                 {typeof id === "undefined" ? (
-                    <label >
+                    <label>
                         Create Another:
                         <input
                             type="checkbox"

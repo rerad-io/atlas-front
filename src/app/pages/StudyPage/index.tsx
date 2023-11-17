@@ -49,7 +49,7 @@ const StudyPage = () => {
             <div className="container">{study.name ? <h1> {`${study.name}`}</h1> : <h2>Loading...</h2>}</div>
             {Object.keys(study).length ? (
                 <div style={{ marginTop: "30px" }}>
-                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app"/>
+                    <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app" />
                     <RenderComponent context="app" />
                     <SeriesControlComponent />
                 </div>

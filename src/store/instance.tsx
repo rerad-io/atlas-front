@@ -62,10 +62,10 @@ const instanceSlice = createSlice({
             state.instanceData = payload.instanceData.reduce(
                 (instanceData, item) => {
                     const key = instanceKey(item.seriesNumber, item.instanceNumber);
-            				if(!instanceData[key]){
-            					instanceData[key] = [];
-            				}
-            				instanceData[key].push(item);
+                    if (!instanceData[key]) {
+                        instanceData[key] = [];
+                    }
+                    instanceData[key].push(item);
                     return instanceData;
                 },
                 {} as Record<InstanceKey, InstanceData[]>,
@@ -74,7 +74,6 @@ const instanceSlice = createSlice({
             state.currentInstanceData = [];
         },
         setCurrentSereies: (state, { payload }: PayloadAction<number>) => {
-
             state.currentSeriesNumber = payload;
             const key = instanceKey(state.currentSeriesNumber, state.currentInstanceNumber);
             state.currentInstanceData = state.instanceData[key] ?? [];

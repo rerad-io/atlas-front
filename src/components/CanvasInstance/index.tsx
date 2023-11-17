@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
 import { InstanceData } from "../../_types";
-import { getStudyId } from "../../requests/StudyRequests";
 import { backendUrl_2 } from "../../requests/backendUrl";
 
 const createImage = (url: string, width: number, height: number, x: number, y: number) =>
@@ -23,66 +22,73 @@ export const CanvasInstance = ({
     fabricCanvas,
     newPoint,
     context,
-		instances,
+    instances,
+    externalId,
     activeFrameNumber,
 }: {
     fabricCanvas: fabric.Canvas;
     newPoint?: fabric.Circle;
     context: string;
+    externalId: string;
     activeFrameNumber: number;
-		instances: InstanceData[];
+    instances: InstanceData[];
 }) => {
     const { study, series, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
-		
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const [pointsLayer] = useState<fabric.Group>(
-			new fabric.Group([], {
-				hasControls: false,
-				hasBorders: false,
-				lockRotation: true,
-				lockScalingX: true,
-				lockScalingY: true,
-			}),
-			);
-			const [currentFrame, setCurrentFrame] = useState<string>("");
-			const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
-			
-			useEffect(() => {
-				const fetchInstanceData = async () => {
-					try {
-						if (context === "app") {
-							if(currentInstanceData.length){
+        new fabric.Group([], {
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+        }),
+    );
+    const [currentFrame, setCurrentFrame] = useState<string>("");
+    const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
 
-								setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-								setCurrentFrame(
-									`${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-										currentInstanceNumber || 1
-									}.jpg`,
-									);
-								} else {
-									setCurrentFrame("https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg");
-									setCurrentInstanseData([]);
-								}
+    useEffect(() => {
+        const fetchInstanceData = async () => {
+            try {
+                if (context === "app") {
+                    if (currentInstanceData.length) {
+                        setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+                        setCurrentFrame(
+                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
+                                currentInstanceNumber || 1
+                            }.jpg`,
+                        );
+                    } else {
+                        setCurrentFrame("https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg");
+                        setCurrentInstanseData([]);
+                    }
                 } else {
-                    const targetIstanceData = instances?.filter(
-											(item) => item.instanceNumber === activeFrameNumber,
-											);
-											if (targetIstanceData?.length) {
-											const temporaryStudy = await getStudyId(targetIstanceData[0]?.studyId);
-											setCurrentInstanseData(targetIstanceData);
-											setCurrentFrame(
-												`${backendUrl_2}api/file/content/atlas/${temporaryStudy.externalId}/dicom/1/${targetIstanceData[0]?.seriesNumber
-												}/${activeFrameNumber}.jpg`,
-												);
-										}
+                    const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
+
+                    setCurrentInstanseData(targetIstanceData);
+                    setCurrentFrame(
+                        `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${
+                            targetIstanceData[0]?.seriesNumber || 1
+                        }/${activeFrameNumber}.jpg`,
+                    );
                 }
             } catch (error) {
                 console.error("CanvasInstance - ", error);
             }
         };
         fetchInstanceData();
-    }, [instances, currentSeriesNumber, activeFrameNumber, context, currentInstanceData, currentInstanceNumber, series, study.externalId]);
+    }, [
+        instances,
+        currentSeriesNumber,
+        activeFrameNumber,
+        context,
+        currentInstanceData,
+        currentInstanceNumber,
+        series,
+        externalId,
+        study.externalId,
+    ]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -101,13 +107,6 @@ export const CanvasInstance = ({
             fabricObjects.current.push(point);
             pointsLayer.addWithUpdate(point);
         });
-
-				// TODO: нужно ли очищать ?
-        //if (newPoint) {
-        //    fabricObjects.current.push(newPoint);
-        //    pointsLayer.addWithUpdate(newPoint);
-        //    fabricCanvas.renderAll();
-        //}
     }, [pointsLayer, currentData]);
 
     useEffect(() => {
@@ -117,8 +116,6 @@ export const CanvasInstance = ({
             fabricCanvas.renderAll();
         }
     }, [pointsLayer, newPoint, fabricCanvas]);
-
-
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {
