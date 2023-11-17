@@ -106,6 +106,7 @@ export const CanvasInstance = ({
                 radius: 3,
                 fill: "red",
             });
+
             fabricObjects.current.push(point);
             pointsLayer.addWithUpdate(point);
         });

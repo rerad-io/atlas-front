@@ -35,6 +35,11 @@ export const RenderComponent = ({
             height: 500,
             backgroundColor: "whitesmoke",
             fireMiddleClick: true,
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
         };
 
         const canvas = new fabric.Canvas(canvasEl.current, options);
