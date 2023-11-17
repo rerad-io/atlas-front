@@ -118,15 +118,13 @@ export const CanvasInstance = ({
 
             fabricObjects.current.push(point);
             pointsLayer.addWithUpdate(point);
+            //  1-слой для картинок, 1000- слой для точек
+            fabricCanvas.moveTo(point, 1000);
         });
-    }, [pointsLayer, currentData]);
+    }, [pointsLayer, currentData, fabricCanvas]);
 
     useEffect(() => {
         if (newPoint) {
-            console.log(fabricObjects);
-            //fabricObjects.current.pop();
-            //fabricCanvas.renderAll();
-
             fabricObjects.current.push(newPoint);
             pointsLayer.addWithUpdate(newPoint);
             fabricCanvas.renderAll();
@@ -134,15 +132,7 @@ export const CanvasInstance = ({
     }, [pointsLayer, newPoint, fabricCanvas]);
 
     useEffect(() => {
-        const layer1Bg = new fabric.Group([], {
-            //hasControls: false,
-            //hasBorders: false,
-            //lockRotation: true,
-            //lockScalingX: true,
-            //lockScalingY: true,
-            //lockMovementX: true,
-            //lockMovementY: true,
-        });
+        const layer1Bg = new fabric.Group([], {});
 
         const layer2Frame = new fabric.Group([], {
             hasControls: false,
@@ -162,6 +152,8 @@ export const CanvasInstance = ({
 
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
+            //  1-слой для картинок, 1000- слой для точек
+            fabricCanvas.moveTo(img, 1);
             fabricCanvas.renderAll();
         });
     }, [pointsLayer, fabricCanvas, currentFrame]);
