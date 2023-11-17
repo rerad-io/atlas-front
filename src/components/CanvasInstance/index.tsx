@@ -43,6 +43,8 @@ export const CanvasInstance = ({
             lockRotation: true,
             lockScalingX: true,
             lockScalingY: true,
+            lockMovementX: true,
+            lockMovementY: true,
         }),
     );
     const [currentFrame, setCurrentFrame] = useState<string>("");
@@ -105,6 +107,13 @@ export const CanvasInstance = ({
                 left: item?.x,
                 radius: 3,
                 fill: "red",
+                hasControls: false,
+                hasBorders: false,
+                lockRotation: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                lockMovementX: true,
+                lockMovementY: true,
             });
 
             fabricObjects.current.push(point);
@@ -127,6 +136,8 @@ export const CanvasInstance = ({
             lockRotation: true,
             lockScalingX: true,
             lockScalingY: true,
+            lockMovementX: true,
+            lockMovementY: true,
         });
 
         const layer2Frame = new fabric.Group([], {
@@ -135,6 +146,8 @@ export const CanvasInstance = ({
             lockRotation: true,
             lockScalingX: true,
             lockScalingY: true,
+            lockMovementX: true,
+            lockMovementY: true,
         });
 
         fabricCanvas.add(layer1Bg);

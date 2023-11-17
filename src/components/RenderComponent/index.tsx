@@ -35,11 +35,6 @@ export const RenderComponent = ({
             height: 500,
             backgroundColor: "whitesmoke",
             fireMiddleClick: true,
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
         };
 
         const canvas = new fabric.Canvas(canvasEl.current, options);
@@ -54,11 +49,11 @@ export const RenderComponent = ({
                 radius: 3,
                 fill: "green",
             });
-            console.log(`Mouse click at (${point.left}, ${point.top})`);
             setPointCoordinates({
                 x: point.left,
                 y: point.top,
             });
+            //console.log(`Mouse click at (${point.left}, ${point.top})`);
             setNewPoint(point);
         });
 
