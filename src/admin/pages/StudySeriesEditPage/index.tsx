@@ -131,7 +131,8 @@ const StudySeriesEditPage = () => {
                         externalId={studySerie?.studyExternalId}
                         serie={studySerie!}
                         instances={instances!}
-                        activeFrameNumber={activeFrameNumber} />
+                        activeFrameNumber={activeFrameNumber}
+                    />
                 </>
             ) : null}
         </div>

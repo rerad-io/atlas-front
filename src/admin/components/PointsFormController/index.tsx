@@ -13,14 +13,9 @@ type PointsFormControllerProps = {
     externalId: string;
     serie: Series;
     activeFrameNumber: number;
-}
+};
 
-export const PointsFormController = ({
-    instances,
-    externalId,
-    serie,
-    activeFrameNumber
-}: PointsFormControllerProps) => {
+export const PointsFormController = ({ instances, externalId, serie, activeFrameNumber }: PointsFormControllerProps) => {
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
     const [selectedInstanceId, setSelectedInstanceId] = useState<string>();
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
@@ -104,7 +99,7 @@ export const PointsFormController = ({
     };
 
     const onCanvasClick = (point: Point, sender: fabric.Canvas) => {
-        console.log("PointsFormController.onCanvasClick")
+        console.log("PointsFormController.onCanvasClick");
 
         if (newPointRef.current) {
             newPointRef.current.left = point.x;
@@ -124,7 +119,7 @@ export const PointsFormController = ({
         sender.moveTo(newPointRef.current, 1000);
 
         sender.renderAll();
-    }
+    };
 
     return (
         <>
@@ -170,6 +165,7 @@ export const PointsFormController = ({
                         </div>
                     </form>
                 </div>
-            </section></>
+            </section>
+        </>
     );
 };

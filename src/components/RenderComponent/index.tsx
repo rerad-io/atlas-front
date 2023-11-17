@@ -7,7 +7,7 @@ import s from "./styles.module.scss";
 export type Point = {
     x: number;
     y: number;
-}
+};
 
 type RenderComponentProps = {
     context: string;
@@ -15,15 +15,9 @@ type RenderComponentProps = {
     instances: InstanceData[];
     activeFrameNumber: number;
     onClick?: (point: Point, sender: fabric.Canvas) => void;
-}
+};
 
-export const RenderComponent = ({
-    context,
-    instances,
-    externalId,
-    activeFrameNumber,
-    onClick
-}: RenderComponentProps) => {
+export const RenderComponent = ({ context, instances, externalId, activeFrameNumber, onClick }: RenderComponentProps) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -50,8 +44,7 @@ export const RenderComponent = ({
         return () => {
             canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
         };
-
-    }, []);
+    }, [onClick]);
 
     return (
         <section className={s.frame_info}>

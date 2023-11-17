@@ -58,7 +58,8 @@ export const CanvasInstance = ({
                     if (currentInstanceData.length) {
                         setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
                         setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${currentInstanceNumber || 1
+                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
+                                currentInstanceNumber || 1
                             }.jpg`,
                         );
                     } else {
@@ -154,7 +155,7 @@ export const CanvasInstance = ({
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(img, 1);
+            fabricCanvas.moveTo(img, 10);
             fabricCanvas.renderAll();
         });
     }, [fabricCanvas, currentFrame]);
