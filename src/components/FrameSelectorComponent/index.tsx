@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
 import { backendUrl_2 } from "../../requests/backendUrl";
 import { SeriesListModel } from "../../_types";
-import { getStudyId } from "../../requests/StudyRequests";
 import { Slider } from "../Slider";
 import s from "./styles.module.scss";
 
@@ -34,15 +33,7 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
                 setCurrentExternalId("");
             }
         } else {
-            const fetchStudyById = async () => {
-                try {
-                    const targetStudy = await getStudyId(studySerie?.studyId);
-                    setCurrentExternalId(targetStudy.externalId);
-                } catch (error) {
-                    console.error("StudySeriesEditPage: ", error);
-                }
-            };
-            fetchStudyById();
+            setCurrentExternalId(studySerie?.studyExternalId);
             setCurrentSerie(studySerie);
             setActiveFrame(activeFrameNumber);
         }

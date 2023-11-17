@@ -67,11 +67,13 @@ export const CanvasInstance = ({
                     const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
 
                     setCurrentInstanseData(targetIstanceData);
-                    setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${
-                            targetIstanceData[0]?.seriesNumber || 1
-                        }/${activeFrameNumber}.jpg`,
-                    );
+                    if (targetIstanceData?.length) {
+                        setCurrentFrame(
+                            `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${targetIstanceData[0].seriesNumber}/${activeFrameNumber}.jpg`,
+                        );
+                    } else {
+                        setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${1}/${activeFrameNumber}.jpg`);
+                    }
                 }
             } catch (error) {
                 console.error("CanvasInstance - ", error);
