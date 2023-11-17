@@ -114,7 +114,6 @@ export const CanvasInstance = ({
                 lockScalingY: true,
                 lockMovementX: true,
                 lockMovementY: true,
-								
             });
 
             fabricObjects.current.push(point);
@@ -124,9 +123,9 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         if (newPoint) {
-					console.log(fabricObjects)
-					//fabricObjects.current.pop();
-					//fabricCanvas.renderAll();
+            console.log(fabricObjects);
+            //fabricObjects.current.pop();
+            //fabricCanvas.renderAll();
 
             fabricObjects.current.push(newPoint);
             pointsLayer.addWithUpdate(newPoint);
@@ -153,7 +152,7 @@ export const CanvasInstance = ({
             lockScalingY: true,
             lockMovementX: true,
             lockMovementY: true,
-            lockScalingFlip:true,		
+            lockScalingFlip: true,
         });
 
         fabricCanvas.add(layer1Bg);
