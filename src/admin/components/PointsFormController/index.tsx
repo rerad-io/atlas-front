@@ -39,7 +39,7 @@ export const PointsFormController = ({
     };
     const handleSelectStructure = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedIndex = +event.currentTarget.value;
-        if (selectedIndex) setSelectedStructure(anatomicalStructureList[selectedIndex]);
+        if (selectedIndex >= 0) setSelectedStructure(anatomicalStructureList[selectedIndex]);
     };
 
     const handleRemove = async () => {
@@ -78,7 +78,7 @@ export const PointsFormController = ({
                             <option value="">без значения</option>
                             {instances?.map((el) => (
                                 <option key={el.id} value={el.id}>
-                                    {`${el.structure} (${el.x}, ${el.y})`}
+                                    {`${el.structureName} (${el.x}, ${el.y})`}
                                 </option>
                             ))}
                         </select>

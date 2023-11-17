@@ -44,6 +44,7 @@ export const updateAnatomicalStructureSubject = async (id: string, body: { name?
 
 export const deleteAnatomicalStructureSubject = async (id: string) => {
     const result = await axios.delete(`${backendUrl}AnatomicalStructureSubject/${id}`);
+    console.log("🚀 ~ file: anatomicalStructureSubjectRequests.ts:48 ~ deleteAnatomicalStructureSubject ~ result:", result);
     return result.status;
     console.log("Error status", result.status);
     console.log("Error data", result.data);

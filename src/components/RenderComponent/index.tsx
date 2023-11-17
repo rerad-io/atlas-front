@@ -2,25 +2,29 @@ import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import toast, { Toaster } from "react-hot-toast";
 import { CanvasInstance } from "../CanvasInstance";
-import { AnatomicalStructure, InstanceData } from "../../_types";
+import { AnatomicalStructure, InstanceData, Series } from "../../_types";
 import { PointsFormController } from "../../admin/components/PointsFormController";
 import { createInstanceData } from "../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 
 export const RenderComponent = ({
-    seriesId,
-    studyId,
     context,
     instances,
+    externalId,
+    serie,
     activeFrameNumber,
 }: {
     context: string;
+    externalId: string;
+    serie: Series;
     instances: InstanceData[];
+    activeFrameNumber: number;
 }) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
     const [newPoint, setNewPoint] = useState<fabric.Circle>();
+    const [pointCoordinates, setPointCoordinates] = useState();
 
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
@@ -37,43 +41,36 @@ export const RenderComponent = ({
 
         canvas?.on("mouse:down", (event) => {
             const pointer = canvas.getPointer(event.e);
-            //console.log("🚀 ~ file: index.tsx:28 ~ canvas?.on ~ pointer:", pointer);
             const point = new fabric.Circle({
-                top: pointer.y,
                 left: pointer.x,
+                top: pointer.y,
+                originX: "center",
+                originY: "center",
                 radius: 3,
                 fill: "green",
             });
-            //console.log(`Mouse click at (${point.top}, ${point.left})`);
+            setPointCoordinates({
+                x: point.left,
+                y: point.top,
+            });
+            //console.log(`Mouse click at (${point.left}, ${point.top})`);
             setNewPoint(point);
         });
 
         setFabricCanvas(canvas);
-
-        // TODO: возникает ошибка удаления DOM NODE?
-        //return () => {
-        //    if (fabricCanvas) {
-        //        fabricCanvas.dispose();
-        //        setFabricCanvas(null);
-        //    }
-        //};
-
-        // TODO: ограничение eslint, требует зависимости
     }, []);
 
     const handleSubmit = async (structure: AnatomicalStructure) => {
+        //console.log("newPoint: ", newPoint);
         try {
             const newInstance = {
-                // TODO: данные study и series брать прямо из instance
-                //study: instances[0].studyId,
-                //series: instances[0].seriesId,
-                study: studyId,
-                series: seriesId,
-                structure: structure.id,
-                instanceNumber: instances[0]?.instanceNumber,
+                studyId: serie.studyId,
+                seriesId: serie.id,
+                structureId: structure.id,
+                instanceNumber: activeFrameNumber,
                 type: "Point",
-                x: newPoint?.left,
-                y: newPoint?.top,
+                x: pointCoordinates?.x,
+                y: pointCoordinates?.y,
                 path: "path",
             };
             const result = await createInstanceData(newInstance);
@@ -100,7 +97,9 @@ export const RenderComponent = ({
                                 fabricCanvas={fabricCanvas}
                                 newPoint={newPoint}
                                 context={context}
+                                externalId={externalId}
                                 activeFrameNumber={activeFrameNumber}
+                                instances={instances}
                             />
                         ) : (
                             <CanvasInstance fabricCanvas={fabricCanvas} context={context} />

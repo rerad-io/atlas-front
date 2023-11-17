@@ -4,8 +4,6 @@ import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
 import { InstanceData, Series } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
-import { getStudyId } from "../../../requests/StudyRequests";
-import { getInstanceDataList } from "../../../requests/instanceDataRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import { RenderComponent } from "../../../components/RenderComponent";
 import s from "./styles.module.scss";
@@ -27,14 +25,7 @@ const StudySeriesEditPage = () => {
                 try {
                     const targetSerie = await getStudySeriesId(id);
                     setStudySerie(targetSerie);
-                    const temporaryInstance = await getInstanceDataList({});
-                    // TODO: представление instanceData - раскоментировать когда будет
-                    const temporaryStudy = await getStudyId(targetSerie?.studyId);
-                    const tempIstanceData = temporaryInstance.filter(
-                        //(item) => (item.seriesId === targetSerie?.id && item.studyItargetSerie?.studyIdd === ),
-                        (item) => item.series === targetSerie?.name && item.study === temporaryStudy.name,
-                    );
-                    setInstances(tempIstanceData);
+                    setInstances(targetSerie.instanceDataList);
                 } catch (error) {
                     console.error("StudySeriesEditPage - ", error);
                 }
@@ -138,8 +129,8 @@ const StudySeriesEditPage = () => {
                     />
                     <RenderComponent
                         context="admin"
-                        seriesId={id}
-                        studyId={studySerie?.studyId}
+                        externalId={studySerie?.studyExternalId}
+                        serie={studySerie}
                         instances={instances}
                         activeFrameNumber={activeFrameNumber}
                     />

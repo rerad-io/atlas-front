@@ -50,11 +50,13 @@ export type SeriesListModel = {
     instanceCount: number;
     sagitalFrame: string;
     coronalFrame: string;
+    instanceDataList: InstanceData[];
+    studyExternalId: string;
 };
 
 export type StudyFullModel = Study & {
     seriesList: SeriesListModel[];
-    instanceData: InstanceData[];
+    instanceDataList: InstanceData[];
 };
 
 export type Series = {
