@@ -80,7 +80,7 @@ export type InstanceData = {
     seriesId: string;
     // TODO: Должны получить порядковый номер серии
     seriesNumber: number;
-    structure: AnatomicalStructure; // Ссылка на объект Анатомическая структура
+    structureId: AnatomicalStructure; // Ссылка на объект Анатомическая структура
     // TODO: Должны получить цвет Темы к которой относится структура
     structureColor: string;
     instanceNumber: number;

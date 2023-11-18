@@ -17,6 +17,7 @@ type PointsFormControllerProps = {
 
 export const PointsFormController = ({ instances, externalId, serie, activeFrameNumber }: PointsFormControllerProps) => {
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+    const [currentInstancesList, setCurrentInstancesList] = useState<InstanceData[]>([]);
     const [selectedInstanceId, setSelectedInstanceId] = useState<string>();
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
 
@@ -27,8 +28,15 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getAnatomicalStructureList({});
-                setAnatomicalStructureList(result);
+                const structureList = await getAnatomicalStructureList({});
+								const usedStructureIds = instances?.map(instance => instance.structureId);
+								const currentInstances = instances.filter(instance => instance.instanceNumber === activeFrameNumber)
+								const availableStructures = structureList.filter(structure =>
+									!usedStructureIds.includes(structure.id)
+								);
+
+								setCurrentInstancesList(currentInstances);
+                setAnatomicalStructureList(availableStructures);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureList:", error);
             }
@@ -139,7 +147,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                             Существующие точки
                             <select name="points" onChange={handleSelectInstance}>
                                 <option value="">без значения</option>
-                                {instances?.map((el) => (
+                                {currentInstancesList?.map((el) => (
                                     <option key={el.id} value={el.id}>
                                         {`${el.structureName} (${el.x}, ${el.y})`}
                                     </option>
