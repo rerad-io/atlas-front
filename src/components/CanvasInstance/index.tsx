@@ -150,7 +150,7 @@ export const CanvasInstance = ({
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(img, 10);
+            fabricCanvas.moveTo(img, 1);
             fabricCanvas.renderAll();
         });
     }, [fabricCanvas, currentFrame]);

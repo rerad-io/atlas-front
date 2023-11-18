@@ -12,17 +12,17 @@ export const SeriesControlComponent = () => {
     const [currentSerie, setCurrentSerie] = useState<Series>({});
 
     const sagital =
-        Object.values(series)[0].number === currentSeriesNumber
+        Object.values(series)[0]?.number === currentSeriesNumber
             ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`
             : "";
 
     const coronal =
-        Object.values(series)[0].number === currentSeriesNumber
+        Object.values(series)[0]?.number === currentSeriesNumber
             ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`
             : "";
 
     useEffect(() => {
-        setCurrentSerie(Object.values(series).find((item) => item.number === currentSeriesNumber));
+        setCurrentSerie(Object.values(series)?.find((item) => item.number === currentSeriesNumber));
     }, [series, currentSeriesNumber]);
 
     const changeSerie = (number: number) => {
