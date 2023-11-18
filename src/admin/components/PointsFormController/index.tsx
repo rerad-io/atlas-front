@@ -29,14 +29,14 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         const fetchData = async () => {
             try {
                 const structureList = await getAnatomicalStructureList({});
-                const currentInstances = instances.filter((instance) => instance.instanceNumber === activeFrameNumber);
+                const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
                 const usedStructureIds = currentInstances?.map((instance) => instance.structureId);
-                const availableStructures = structureList.filter((structure) => !usedStructureIds.includes(structure.id));
+                const availableStructures = structureList?.filter((structure) => !usedStructureIds?.includes(structure.id));
 
                 setCurrentInstancesList(currentInstances);
                 setAnatomicalStructureList(availableStructures);
             } catch (error) {
-                console.error("Error fetching AnatomicalStructureList:", error);
+                console.error("Error fetching PointsFormController:", error);
             }
         };
 
@@ -102,7 +102,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             }
         } catch (error) {
             notifyError("ошибка фиксации структуры!");
-            console.error("Error fetching RenderComponent:", error);
+            console.error("Error fetching PointsFormController:", error);
         }
     };
 

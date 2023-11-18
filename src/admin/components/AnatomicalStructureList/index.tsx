@@ -24,7 +24,7 @@ const AnatomicalStructureList = ({ anatomicalStructureList, columns }: Props) =>
                     setStructureList(structureList.filter((item) => item.id !== itemId));
                 }
             } catch (error) {
-                console.error("Error fetching AnatomicalStructureSubjectList:", error);
+                console.error("Error fetching AnatomicalStructureList:", error);
             }
         }
     };
