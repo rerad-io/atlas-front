@@ -43,7 +43,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         };
 
         fetchData();
-    }, []);
+    }, [ activeFrameNumber, instances]);
 
     const handleSelectInstance = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedId = event.currentTarget.value;
@@ -61,6 +61,8 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 try {
                     const result = await deleteInstanceData(selectedInstanceId);
                     if (result === 204) {
+											const targetInstance = selectedInstanceId.find(instance => inctance.id ===selectedInstanceId);
+											setCurrentInstancesList(targetInstance);
                         notifySuccess("структура удалена из инстанса!");
                     } else {
                         notifyError("ошибка удаления структуры!");
