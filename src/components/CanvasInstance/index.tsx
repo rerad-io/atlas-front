@@ -55,12 +55,12 @@ export const CanvasInstance = ({
         const fetchInstanceData = () => {
             try {
                 if (context === "app") {
-                        setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-                        setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-                                currentInstanceNumber || 1
-                            }.jpg`,
-                        );
+                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+                    setCurrentFrame(
+                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
+                            currentInstanceNumber || 1
+                        }.jpg`,
+                    );
                 } else {
                     const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
 

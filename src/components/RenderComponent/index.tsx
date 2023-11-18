@@ -27,7 +27,7 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
             width: 500,
             height: 500,
             backgroundColor: "whitesmoke",
-            fireMiddleClick: true,
+            //fireMiddleClick: true,
         };
 
         const canvas = new fabric.Canvas(canvasEl.current, options);
@@ -41,6 +41,7 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
         };
 
         canvas.on("mouse:down", (e) => onMouseDown(e));
+
         return () => {
             canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
         };

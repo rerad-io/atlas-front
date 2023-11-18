@@ -29,13 +29,11 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         const fetchData = async () => {
             try {
                 const structureList = await getAnatomicalStructureList({});
-								const usedStructureIds = instances?.map(instance => instance.structureId);
-								const currentInstances = instances.filter(instance => instance.instanceNumber === activeFrameNumber)
-								const availableStructures = structureList.filter(structure =>
-									!usedStructureIds.includes(structure.id)
-								);
+                const currentInstances = instances.filter((instance) => instance.instanceNumber === activeFrameNumber);
+                const usedStructureIds = currentInstances?.map((instance) => instance.structureId);
+                const availableStructures = structureList.filter((structure) => !usedStructureIds.includes(structure.id));
 
-								setCurrentInstancesList(currentInstances);
+                setCurrentInstancesList(currentInstances);
                 setAnatomicalStructureList(availableStructures);
             } catch (error) {
                 console.error("Error fetching AnatomicalStructureList:", error);
@@ -43,7 +41,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         };
 
         fetchData();
-    }, [ activeFrameNumber, instances]);
+    }, [activeFrameNumber, instances]);
 
     const handleSelectInstance = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedId = event.currentTarget.value;
@@ -61,8 +59,8 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 try {
                     const result = await deleteInstanceData(selectedInstanceId);
                     if (result === 204) {
-											const targetInstance = selectedInstanceId.find(instance => inctance.id ===selectedInstanceId);
-											setCurrentInstancesList(targetInstance);
+                        const targetInstance = selectedInstanceId.find((instance) => instance.id === selectedInstanceId);
+                        setCurrentInstancesList(targetInstance);
                         notifySuccess("структура удалена из инстанса!");
                     } else {
                         notifyError("ошибка удаления структуры!");
@@ -126,6 +124,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
 
             sender.add(newPointRef.current);
         }
+
         sender.moveTo(newPointRef.current, 1000);
 
         sender.renderAll();

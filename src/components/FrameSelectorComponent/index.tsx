@@ -26,12 +26,10 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
     useEffect(() => {
         if (context === "app") {
             //if (currentInstanceData.length) {
-                const serieOject: SeriesListModel | undefined = Object.values(series)?.find(
-                    (serie) => serie.number === currentSeriesNumber,
-                );
-                if (serieOject) setCurrentSerie(serieOject);
-                if (study) setCurrentExternalId(study.externalId);
-                setActiveFrame(currentInstanceNumber);
+            const serieOject: SeriesListModel | undefined = Object.values(series)?.find((serie) => serie.number === currentSeriesNumber);
+            if (serieOject) setCurrentSerie(serieOject);
+            if (study) setCurrentExternalId(study.externalId);
+            setActiveFrame(currentInstanceNumber);
             //} else {
             //    setCurrentExternalId("");
             //}
