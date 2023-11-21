@@ -57,6 +57,7 @@ jobs:
         run: |
           helm upgrade ${{ env.APP }} --install ./.helm --namespace ${{ env.NAMESPACE }} \
           -f ./.helm/values.dev.yaml \
+          --set imagePullSecrets\[0\].name=ecr-registry \
           --set image.tag=${{ github.sha }} \
           --debug \
           --wait

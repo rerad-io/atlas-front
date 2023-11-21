@@ -59,7 +59,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
       - name: Upgrade helm release
         run: |
-          helm upgrade ${{ env.APP }} --install ../.helm --namespace ${{ env.NAMESPACE }} \
+          helm upgrade ${{ env.APP }} --install ./.helm --namespace ${{ env.NAMESPACE }} \
           -f ./.helm/values.dev.yaml \
           --set image.tag=${{ github.sha }} \
           --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
