@@ -27,7 +27,6 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
             width: 500,
             height: 500,
             backgroundColor: "whitesmoke",
-            //fireMiddleClick: true,
         };
 
         const canvas = new fabric.Canvas(canvasEl.current, options);
@@ -56,7 +55,6 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
                         (context !== "app" ? (
                             <CanvasInstance
                                 fabricCanvas={fabricCanvas}
-                                //newPoint={newPoint}
                                 context={context}
                                 externalId={externalId}
                                 activeFrameNumber={activeFrameNumber}

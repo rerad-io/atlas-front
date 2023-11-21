@@ -20,14 +20,12 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
 
 export const CanvasInstance = ({
     fabricCanvas,
-    //newPoint,
     context,
     instances,
     externalId,
     activeFrameNumber,
 }: {
     fabricCanvas: fabric.Canvas;
-    //newPoint?: fabric.Circle;
     context: string;
     externalId: string;
     activeFrameNumber: number;
@@ -119,17 +117,16 @@ export const CanvasInstance = ({
         });
     }, [currentData, fabricCanvas]);
 
-    //useEffect(() => {
-    //    if (newPoint) {
-    //        //fabricObjects.current.pop();
-    //        fabricObjects.current.push(newPoint);
-    //        pointsLayer.addWithUpdate(newPoint);
-    //        fabricCanvas.renderAll();
-    //    }
-    //}, [pointsLayer, newPoint, fabricCanvas]);
-
     useEffect(() => {
-        const layer1Bg = new fabric.Group([], {});
+        const layer1Bg = new fabric.Group([], {
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockMovementX: true,
+            lockMovementY: true,
+        });
 
         const layer2Frame = new fabric.Group([], {
             hasControls: false,
@@ -141,6 +138,11 @@ export const CanvasInstance = ({
             lockMovementY: true,
             lockScalingFlip: true,
         });
+
+        // TODO: попытка зафиксировать слои
+        fabricCanvas.moveTo(layer1Bg, 0);
+        fabricCanvas.moveTo(layer2Frame, 1);
+        fabricCanvas.moveTo(pointsLayer.current, 1000);
 
         fabricCanvas.add(layer1Bg);
         fabricCanvas.add(layer2Frame);
