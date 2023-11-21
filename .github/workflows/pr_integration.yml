@@ -37,22 +37,6 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: ['build']
-    uses: rerad-io/rerad-devops/.github/workflows/deploy-on-kuber.yaml@main
-    with:
-      APP: atlas-front-pr-${{ github.event.number }}
-      NAMESPACE: rerad-dev
-    secrets:
-      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      args: | 
-        -f ./.helm/values.dev.yaml \
-        --set image.tag=${{ github.sha }} \
-        
-        --wait
-
-
-  deploy:
-    name: Deploy
     needs: [ 'build' ]
     runs-on: dev-runner
     environment: development
@@ -75,7 +59,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
       - name: Upgrade helm release
         run: |
-          helm upgrade ${{ env.APP }} --install ./helm --namespace ${{ env.NAMESPACE }} \
+          helm upgrade ${{ env.APP }} --install ../.helm --namespace ${{ env.NAMESPACE }} \
           -f ./.helm/values.dev.yaml \
           --set image.tag=${{ github.sha }} \
           --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
@@ -83,7 +67,6 @@ jobs:
           --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
           --debug \
           --wait
-
 
   comment:
     name: Comment
