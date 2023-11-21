@@ -37,20 +37,36 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: ['build']
-    uses: rerad-io/rerad-devops/.github/workflows/deploy-on-kuber.yaml@main
-    with:
-      APP: atlas-front-pr-${{ github.event.number }}
+    needs: [ 'build' ]
+    runs-on: dev-runner
+    environment: development
+    env:
+      APP: atlas-front
       NAMESPACE: rerad-dev
-    secrets:
-      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      args: | 
-        -f ./.helm/values.dev.yaml \
-        --set image.tag=${{ github.sha }} \
-        --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
-        --set ingress.tls\[0\].secretName=atlas-front-pr-${{ github.event.number }}-d-medcol-io \
-        --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
-        --wait
+      HELM_VERSION: 3.13.2
+      HELM_EXPERIMENTAL_OCI: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: install helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Set kubeconfig
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+      - name: Upgrade helm release
+        run: |
+          helm upgrade ${{ env.APP }} --install ./.helm --namespace ${{ env.NAMESPACE }} \
+          -f ./.helm/values.dev.yaml \
+          --set image.tag=${{ github.sha }} \
+          --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
+          --set ingress.tls\[0\].secretName=atlas-front-pr-${{ github.event.number }}-d-medcol-io \
+          --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
+          --debug \
+          --wait
 
   comment:
     name: Comment
@@ -64,11 +80,22 @@ jobs:
     name: Uninstall
     if: github.event.action == 'closed'
     runs-on: dev-runner
+    environment: development
+    env:
+      HELM_VERSION: 3.13.2
+      HELM_EXPERIMENTAL_OCI: 1
     steps:
-    - name: Uninstall with helm
-      uses: wahyd4/kubectl-helm-action@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      with:
-        args: |
-          helm uninstall atlas-front-pr-${{ github.event.number }} -n rerad-dev
+      - name: install helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Set kubeconfig
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+      - name: Upgrade helm release
+        env:
+          HELM_EXPERIMENTAL_OCI: 1
+        run: |
+          helm uninstall atlas-front-pr-${{ github.event.number }} -n ${{ env.NAMESPACE }}

@@ -33,14 +33,31 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: ['build']
-    uses: rerad-io/rerad-devops/.github/workflows/deploy-on-kuber.yaml@main
-    with:
+    needs: [ 'build' ]
+    runs-on: dev-runner
+    environment: development
+    env:
       APP: atlas-front
       NAMESPACE: rerad-dev
-    secrets:
-      KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-      args: | 
-        -f ./.helm/values.dev.yaml \
-        --set image.tag=${{ github.sha }} \
-        --wait
+      HELM_VERSION: 3.13.2
+      HELM_EXPERIMENTAL_OCI: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: install helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+      - name: Set kubeconfig
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+      - name: Upgrade helm release
+        run: |
+          helm upgrade ${{ env.APP }} --install ./.helm --namespace ${{ env.NAMESPACE }} \
+          -f ./.helm/values.dev.yaml \
+          --set imagePullSecrets\[0\].name=ecr-registry \
+          --set image.tag=${{ github.sha }} \
+          --debug \
+          --wait
