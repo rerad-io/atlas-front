@@ -17,6 +17,7 @@ type PointsFormControllerProps = {
 
 export const PointsFormController = ({ instances, externalId, serie, activeFrameNumber }: PointsFormControllerProps) => {
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+    const [currentInstancesList, setCurrentInstancesList] = useState<InstanceData[]>([]);
     const [selectedInstanceId, setSelectedInstanceId] = useState<string>();
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
 
@@ -27,15 +28,20 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getAnatomicalStructureList({});
-                setAnatomicalStructureList(result);
+                const structureList = await getAnatomicalStructureList({});
+                const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
+                const usedStructureIds = currentInstances?.map((instance) => instance.structureId);
+                const availableStructures = structureList?.filter((structure) => !usedStructureIds?.includes(structure.id));
+
+                setCurrentInstancesList(currentInstances);
+                setAnatomicalStructureList(availableStructures);
             } catch (error) {
-                console.error("Error fetching AnatomicalStructureList:", error);
+                console.error("Error fetching PointsFormController:", error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [activeFrameNumber, instances]);
 
     const handleSelectInstance = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedId = event.currentTarget.value;
@@ -53,6 +59,8 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 try {
                     const result = await deleteInstanceData(selectedInstanceId);
                     if (result === 204) {
+                        const currentInstances = currentInstancesList.filter((instance) => instance.id !== selectedInstanceId);
+                        if (currentInstances.length) setCurrentInstancesList(currentInstances);
                         notifySuccess("структура удалена из инстанса!");
                     } else {
                         notifyError("ошибка удаления структуры!");
@@ -94,7 +102,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             }
         } catch (error) {
             notifyError("ошибка фиксации структуры!");
-            console.error("Error fetching RenderComponent:", error);
+            console.error("Error fetching PointsFormController:", error);
         }
     };
 
@@ -116,6 +124,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
 
             sender.add(newPointRef.current);
         }
+
         sender.moveTo(newPointRef.current, 1000);
 
         sender.renderAll();
@@ -139,7 +148,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                             Существующие точки
                             <select name="points" onChange={handleSelectInstance}>
                                 <option value="">без значения</option>
-                                {instances?.map((el) => (
+                                {currentInstancesList?.map((el) => (
                                     <option key={el.id} value={el.id}>
                                         {`${el.structureName} (${el.x}, ${el.y})`}
                                     </option>

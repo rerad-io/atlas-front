@@ -55,17 +55,12 @@ export const CanvasInstance = ({
         const fetchInstanceData = () => {
             try {
                 if (context === "app") {
-                    if (currentInstanceData.length) {
-                        setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-                        setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-                                currentInstanceNumber || 1
-                            }.jpg`,
-                        );
-                    } else {
-                        setCurrentFrame("https://sofia.medicalistes.fr/spip/IMG/jpg/xray-skulls-cross-bones.jpg");
-                        setCurrentInstanseData([]);
-                    }
+                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+                    setCurrentFrame(
+                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
+                            currentInstanceNumber || 1
+                        }.jpg`,
+                    );
                 } else {
                     const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
 
@@ -155,7 +150,7 @@ export const CanvasInstance = ({
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
             //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(img, 10);
+            fabricCanvas.moveTo(img, 1);
             fabricCanvas.renderAll();
         });
     }, [fabricCanvas, currentFrame]);

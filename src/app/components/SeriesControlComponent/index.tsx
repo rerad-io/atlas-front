@@ -7,19 +7,22 @@ import s from "./styles.module.scss";
 
 export const SeriesControlComponent = () => {
     const dispatch = useDispatch();
-    const { study, series, currentSeriesNumber, currentInstanceData } = useSelector(instanceSelector);
+    const { study, series, currentSeriesNumber } = useSelector(instanceSelector);
+
     const [currentSerie, setCurrentSerie] = useState<Series>({});
 
-    const sagital = currentInstanceData?.length
-        ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`
-        : "";
+    const sagital =
+        Object.values(series)[0]?.number === currentSeriesNumber
+            ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.sagitalFrame}`
+            : "";
 
-    const coronal = currentInstanceData?.length
-        ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`
-        : "";
+    const coronal =
+        Object.values(series)[0]?.number === currentSeriesNumber
+            ? `${backendUrl_2}api/file/content/atlas/${study.externalId}/${currentSerie?.coronalFrame}`
+            : "";
 
     useEffect(() => {
-        setCurrentSerie(Object.values(series).find((item) => item.number === currentSeriesNumber));
+        setCurrentSerie(Object.values(series)?.find((item) => item.number === currentSeriesNumber));
     }, [series, currentSeriesNumber]);
 
     const changeSerie = (number: number) => {

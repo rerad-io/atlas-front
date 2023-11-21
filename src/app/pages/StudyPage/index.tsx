@@ -13,10 +13,10 @@ const StudyPage = () => {
     const { id } = useParams<string>();
     const dispatch = useDispatch();
 
-    const { study } = useSelector(instanceSelector);
+    const { study, currentSeriesNumber } = useSelector(instanceSelector);
 
     useEffect(() => {
-        if (id && id !== study.id) {
+        if (id || id !== study.id) {
             const fetchStudyData = async (studyId: string) => {
                 try {
                     const targetStudy = await getStudyId(studyId);
@@ -47,7 +47,7 @@ const StudyPage = () => {
     return (
         <div className={s.page}>
             <div className="container">{study.name ? <h1> {`${study.name}`}</h1> : <h2>Loading...</h2>}</div>
-            {Object.keys(study).length ? (
+            {currentSeriesNumber ? (
                 <div style={{ marginTop: "30px" }}>
                     <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app" />
                     <RenderComponent context="app" />
