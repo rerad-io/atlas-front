@@ -59,8 +59,8 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 try {
                     const result = await deleteInstanceData(selectedInstanceId);
                     if (result === 204) {
-                        const targetInstance = selectedInstanceId.find((instance) => instance.id === selectedInstanceId);
-                        setCurrentInstancesList(targetInstance);
+                        const currentInstances = currentInstancesList.filter((instance) => instance.id !== selectedInstanceId);
+                        if (currentInstances.length) setCurrentInstancesList(currentInstances);
                         notifySuccess("структура удалена из инстанса!");
                     } else {
                         notifyError("ошибка удаления структуры!");
