@@ -15,24 +15,17 @@ type Props = {
 
 const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activeFrameNumber }: Props) => {
     const { study, series, currentSeriesNumber, currentInstanceNumber, currentInstanceData } = useSelector(instanceSelector);
-    //console.log("🚀 ~ file: index.tsx:18 ~ FrameSelectorComponent ~ currentInstanceData:", currentInstanceData)
     const [instancesFrame, setInstancesFrame] = useState<string[]>([]);
-    //console.log("🚀 ~ file: index.tsx:19 ~ FrameSelectorComponent ~ instancesFrame:", instancesFrame)
     const [activeFrame, setActiveFrame] = useState<number>(1);
-    //console.log("🚀 ~ file: index.tsx:20 ~ FrameSelectorComponent ~ activeFrame:", activeFrame)
     const [currentSerie, setCurrentSerie] = useState<SeriesListModel>({} as SeriesListModel);
     const [currentExternalId, setCurrentExternalId] = useState<string>("");
 
     useEffect(() => {
         if (context === "app") {
-            //if (currentInstanceData.length) {
             const serieOject: SeriesListModel | undefined = Object.values(series)?.find((serie) => serie.number === currentSeriesNumber);
             if (serieOject) setCurrentSerie(serieOject);
             if (study) setCurrentExternalId(study.externalId);
             setActiveFrame(currentInstanceNumber);
-            //} else {
-            //    setCurrentExternalId("");
-            //}
         } else {
             setCurrentExternalId(studySerie?.studyExternalId);
             setCurrentSerie(studySerie);
@@ -46,11 +39,6 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
             framesList.push(`${backendUrl_2}api/file/content/atlas/${currentExternalId}/dicom/1/${currentSerie.number}/${i}.jpg`);
         }
         setInstancesFrame(framesList);
-
-        return () => {
-            setInstancesFrame([]);
-            setActiveFrame(1);
-        };
     }, [currentSerie, currentExternalId]);
 
     return (
