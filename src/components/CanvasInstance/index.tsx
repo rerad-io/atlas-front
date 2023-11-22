@@ -36,6 +36,7 @@ export const CanvasInstance = ({
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const pointsLayer = useRef<fabric.Group>(
         new fabric.Group([], {
+            // TODO: проверка слоя
             hasControls: false,
             hasBorders: false,
             lockRotation: true,
