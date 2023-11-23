@@ -1,11 +1,12 @@
-
 ingress:
   enabled: true
+  annotations:
+    cert-manager.io/issuer: "letsencrypt"
   hosts:
     - host: dev.d.medcol.io
       paths:
-        - /atlas
+       - "/atlas"
   tls:
     - secretName: dev-d-medcol-io
       hosts:
-        - dev.d.medcol.io
+       - dev.d.medcol.io

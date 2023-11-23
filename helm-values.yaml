@@ -1,0 +1,5 @@
+image:
+  repository: 789776454163.dkr.ecr.us-east-1.amazonaws.com/atlas-front
+
+service:
+  port: 5400

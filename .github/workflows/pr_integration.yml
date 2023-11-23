@@ -1,5 +1,9 @@
 name: PR Preview workflow
 
+env:
+  HELM_VERSION: 3.13.2
+  NAMESPACE: medcol-dev
+
 on:
   pull_request:
     types: [ 'opened', 'synchronize', 'closed', 'labeled', 'unlabeled' ]
@@ -29,22 +33,17 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       DOT_ENV: |
-        VITE_BACKEND_API=${{ secrets.VITE_BACKEND_API }}
-        VITE_GA4_MEASUREMENT_ID=${{ secrets.VITE_GA4_MEASUREMENT_ID }}
-        VITE_GOOGLE_APP_ID=${{ secrets.VITE_GOOGLE_APP_ID }}
-        VITE_ENVIRONMENT=development
+        VITE_BACKEND_API=https://api.d.medcol.io
+        VITE_ENVIRONMENT=atlas-front-pr-${{ github.event.number }}
         VITE_RELEASE=0.0.1
 
-  deploy:
-    name: Deploy
-    needs: [ 'build' ]
+  deploy-atlas-front:
+    name: Deploy Medcol Front
+    needs: ["build"]
     runs-on: dev-runner
     environment: development
     env:
-      APP: atlas-front
-      NAMESPACE: rerad-dev
-      HELM_VERSION: 3.13.2
-      HELM_EXPERIMENTAL_OCI: 1
+      APP: atlas-front-pr-${{ github.event.number }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -58,11 +57,16 @@ jobs:
           method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
       - name: Upgrade helm release
+        env:
+          HELM_EXPERIMENTAL_OCI: 1
         run: |
-          helm upgrade ${{ env.APP }} --install ./.helm --namespace ${{ env.NAMESPACE }} \
-          -f ./.helm/values.dev.yaml \
+          echo  ${{ secrets.GH_PACKAGE_REPO_PASSWORD }} | helm registry login ghcr.io/${{ github.repository_owner }}/rerad-devops --username ${{ github.repository_owner }} --password-stdin
+          helm upgrade ${{ env.APP }} --install oci://ghcr.io/${{ github.repository_owner }}/rerad-devops/universal-front --version 1.1.0 --namespace ${{ env.NAMESPACE }} \
+          -f helm-values.yaml \
+          -f helm-values.dev.yaml \
           --set image.tag=${{ github.sha }} \
           --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
+          --set ingress.hosts\[0\].paths\[0\]=/atlas \
           --set ingress.tls\[0\].secretName=atlas-front-pr-${{ github.event.number }}-d-medcol-io \
           --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
           --debug \
@@ -70,7 +74,7 @@ jobs:
 
   comment:
     name: Comment
-    needs: ['deploy']
+    needs: ['deploy-atlas-front']
     uses: rerad-io/rerad-devops/.github/workflows/deploy-comment.yaml@main
     with:
       APP_HOST: atlas-front-pr-${{ github.event.number }}.d.medcol.io/atlas
@@ -81,9 +85,6 @@ jobs:
     if: github.event.action == 'closed'
     runs-on: dev-runner
     environment: development
-    env:
-      HELM_VERSION: 3.13.2
-      HELM_EXPERIMENTAL_OCI: 1
     steps:
       - name: install helm
         uses: Azure/setup-helm@v3
