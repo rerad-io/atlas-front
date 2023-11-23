@@ -77,7 +77,7 @@ jobs:
     needs: ['deploy-atlas-front']
     uses: rerad-io/rerad-devops/.github/workflows/deploy-comment.yaml@main
     with:
-      APP_HOST: atlas-front-pr-${{ github.event.number }}.d.medcol.io/app
+      APP_HOST: atlas-front-pr-${{ github.event.number }}.d.medcol.io/atlas
       install: ${{ github.event.action == 'opened' || github.event.action == 'synchronize' }}
   
   uninstall:
