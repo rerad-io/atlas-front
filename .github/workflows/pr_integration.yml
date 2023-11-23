@@ -66,7 +66,7 @@ jobs:
           -f helm-values.dev.yaml \
           --set image.tag=${{ github.sha }} \
           --set ingress.hosts\[0\].host=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
-          --set ingress.hosts\[0\].paths\[0\]=/app \
+          --set ingress.hosts\[0\].paths\[0\]=/atlas \
           --set ingress.tls\[0\].secretName=atlas-front-pr-${{ github.event.number }}-d-medcol-io \
           --set ingress.tls\[0\].hosts\[0\]=atlas-front-pr-${{ github.event.number }}.d.medcol.io \
           --debug \
