@@ -1,6 +1,12 @@
-.form_wrapper {
+.controller_wrapper {
     margin-top: 20px;
-    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+.form_wrapper {
+    min-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 20px;

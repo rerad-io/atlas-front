@@ -46,23 +46,23 @@ export const RenderComponent = ({ context, externalId, currentInstancesList, onC
     }, [onClick]);
 
     return (
-        <section className={s.frame_info}>
-            <div className="container">
-                <div className={s.current_frame}>
-                    <canvas ref={canvasEl} />
-                    {fabricCanvas &&
-                        (context !== "app" ? (
-                            <CanvasInstance
-                                fabricCanvas={fabricCanvas}
-                                context={context}
-                                externalId={externalId}
-                                currentInstancesList={currentInstancesList}
-                            />
-                        ) : (
-                            <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
-                        ))}
-                </div>
+        <div className={s.frame_info}>
+            {/*<div className="container">*/}
+            <div className={s.current_frame}>
+                <canvas ref={canvasEl} />
+                {fabricCanvas &&
+                    (context !== "app" ? (
+                        <CanvasInstance
+                            fabricCanvas={fabricCanvas}
+                            context={context}
+                            externalId={externalId}
+                            currentInstancesList={currentInstancesList}
+                        />
+                    ) : (
+                        <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
+                    ))}
             </div>
-        </section>
+            {/*</div>*/}
+        </div>
     );
 };
