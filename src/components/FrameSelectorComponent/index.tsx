@@ -21,6 +21,10 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
     const [currentExternalId, setCurrentExternalId] = useState<string>("");
 
     useEffect(() => {
+        if (activeFrameNumber) setActiveFrame(activeFrameNumber);
+    }, [activeFrameNumber]);
+
+    useEffect(() => {
         if (context === "app") {
             const serieOject: SeriesListModel | undefined = Object.values(series)?.find((serie) => serie.number === currentSeriesNumber);
             if (serieOject) setCurrentSerie(serieOject);
@@ -29,9 +33,8 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
         } else {
             setCurrentExternalId(studySerie?.studyExternalId);
             setCurrentSerie(studySerie);
-            setActiveFrame(activeFrameNumber);
         }
-    }, [study, series, studySerie, currentSeriesNumber, context, currentInstanceData.length, currentInstanceNumber, activeFrameNumber]);
+    }, [study, series, studySerie, currentSeriesNumber, context, currentInstanceData.length, currentInstanceNumber]);
 
     useEffect(() => {
         const framesList: string[] = [];

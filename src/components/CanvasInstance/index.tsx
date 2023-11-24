@@ -37,13 +37,13 @@ export const CanvasInstance = ({
     const pointsLayer = useRef<fabric.Group>(
         new fabric.Group([], {
             // TODO: проверка слоя
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
+            //hasControls: false,
+            //hasBorders: false,
+            //lockRotation: true,
+            //lockScalingX: true,
+            //lockScalingY: true,
+            //lockMovementX: true,
+            //lockMovementY: true,
         }),
     );
 
@@ -51,6 +51,7 @@ export const CanvasInstance = ({
     const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
 
     useEffect(() => {
+        //console.log("reload useEffect fetchInstanceData");
         const fetchInstanceData = () => {
             try {
                 if (context === "app") {
@@ -63,13 +64,11 @@ export const CanvasInstance = ({
                 } else {
                     const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
 
-                    setCurrentInstanseData(targetIstanceData);
                     if (targetIstanceData?.length) {
+                        setCurrentInstanseData(targetIstanceData);
                         setCurrentFrame(
                             `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${targetIstanceData[0].seriesNumber}/${activeFrameNumber}.jpg`,
                         );
-                    } else {
-                        setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${1}/${activeFrameNumber}.jpg`);
                     }
                 }
             } catch (error) {
