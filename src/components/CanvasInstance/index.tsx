@@ -21,17 +21,15 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
 export const CanvasInstance = ({
     fabricCanvas,
     context,
-    instances,
     externalId,
-    activeFrameNumber,
+    currentInstancesList,
 }: {
     fabricCanvas: fabric.Canvas;
     context: string;
     externalId: string;
-    activeFrameNumber: number;
-    instances: InstanceData[];
+    currentInstancesList: InstanceData[];
 }) => {
-    const { study, series, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
+    const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
     const pointsLayer = useRef<fabric.Group>(
@@ -48,45 +46,40 @@ export const CanvasInstance = ({
     );
 
     const [currentFrame, setCurrentFrame] = useState<string>("");
-    const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
+    const [currentData, setCurrentData] = useState<InstanceData[]>([]);
 
     useEffect(() => {
-        //console.log("reload useEffect fetchInstanceData");
-        const fetchInstanceData = () => {
-            try {
-                if (context === "app") {
-                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+        setCurrentData(currentInstancesList);
+    }, [currentInstancesList]);
+
+    useEffect(() => {
+        if (context === "app") {
+            console.log("reload useEffect fetchInstanceData with context ", context);
+            const fetchInstanceData = () => {
+                try {
+                    setCurrentData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
                     setCurrentFrame(
                         `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
                             currentInstanceNumber || 1
                         }.jpg`,
                     );
-                } else {
-                    const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
-
-                    if (targetIstanceData?.length) {
-                        setCurrentInstanseData(targetIstanceData);
-                        setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${targetIstanceData[0].seriesNumber}/${activeFrameNumber}.jpg`,
-                        );
-                    }
+                } catch (error) {
+                    console.error("CanvasInstance - ", error);
                 }
-            } catch (error) {
-                console.error("CanvasInstance - ", error);
+            };
+            fetchInstanceData();
+        }
+    }, [context, currentInstanceData, currentInstanceNumber, study.externalId, currentSeriesNumber]);
+
+    useEffect(() => {
+        if (context === "admin") {
+            if (currentInstancesList?.length) {
+                setCurrentFrame(
+                    `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${currentInstancesList[0].seriesNumber}/${currentInstancesList[0].instanceNumber}.jpg`,
+                );
             }
-        };
-        fetchInstanceData();
-    }, [
-        instances,
-        currentSeriesNumber,
-        activeFrameNumber,
-        context,
-        currentInstanceData,
-        currentInstanceNumber,
-        series,
-        externalId,
-        study.externalId,
-    ]);
+        }
+    }, [context, currentInstancesList, externalId]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
@@ -113,9 +106,9 @@ export const CanvasInstance = ({
             fabricObjects.current.push(point);
             pointsLayer.current.addWithUpdate(point);
             //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(point, 1000);
+            //fabricCanvas.moveTo(point, 1000);
         });
-    }, [currentData, fabricCanvas]);
+    }, [currentData]);
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {

@@ -135,8 +135,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             <RenderComponent
                 context="admin"
                 externalId={externalId}
-                instances={instances}
-                activeFrameNumber={activeFrameNumber}
+                currentInstancesList={currentInstancesList}
                 onClick={(point, sender) => onCanvasClick(point, sender)}
             />
             <section>

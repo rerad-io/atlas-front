@@ -12,12 +12,11 @@ export type Point = {
 type RenderComponentProps = {
     context: string;
     externalId: string;
-    instances: InstanceData[];
-    activeFrameNumber: number;
+    currentInstancesList: InstanceData[];
     onClick?: (point: Point, sender: fabric.Canvas) => void;
 };
 
-export const RenderComponent = ({ context, instances, externalId, activeFrameNumber, onClick }: RenderComponentProps) => {
+export const RenderComponent = ({ context, externalId, currentInstancesList, onClick }: RenderComponentProps) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -57,8 +56,7 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
                                 fabricCanvas={fabricCanvas}
                                 context={context}
                                 externalId={externalId}
-                                activeFrameNumber={activeFrameNumber}
-                                instances={instances}
+                                currentInstancesList={currentInstancesList}
                             />
                         ) : (
                             <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
