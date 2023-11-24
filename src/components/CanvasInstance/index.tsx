@@ -112,6 +112,7 @@ export const CanvasInstance = ({
             });
 
             point.set("selectable", false);
+            pointsLayer.current.set("selectable", false);
             fabricObjects.current.push(point);
             pointsLayer.current.addWithUpdate(point);
             //  1-слой для картинок, 1000- слой для точек
