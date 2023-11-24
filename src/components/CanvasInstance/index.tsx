@@ -35,13 +35,17 @@ export const CanvasInstance = ({
     const pointsLayer = useRef<fabric.Group>(
         new fabric.Group([], {
             // TODO: проверка слоя
-            //hasControls: false,
-            //hasBorders: false,
-            //lockRotation: true,
-            //lockScalingX: true,
-            //lockScalingY: true,
-            //lockMovementX: true,
-            //lockMovementY: true,
+            hasControls: false,
+            hasBorders: false,
+            lockRotation: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingFlip: true,
+            lockSkewingX: true,
+            lockSkewingY: true,
+            lockUniScaling: true,
         }),
     );
 
@@ -101,6 +105,10 @@ export const CanvasInstance = ({
                 lockScalingY: true,
                 lockMovementX: true,
                 lockMovementY: true,
+                lockScalingFlip: true,
+                lockSkewingX: true,
+                lockSkewingY: true,
+                lockUniScaling: true,
             });
 
             fabricObjects.current.push(point);
@@ -119,6 +127,10 @@ export const CanvasInstance = ({
             lockScalingY: true,
             lockMovementX: true,
             lockMovementY: true,
+            lockScalingFlip: true,
+            lockSkewingX: true,
+            lockSkewingY: true,
+            lockUniScaling: true,
         });
 
         const layer2Frame = new fabric.Group([], {
@@ -130,6 +142,9 @@ export const CanvasInstance = ({
             lockMovementX: true,
             lockMovementY: true,
             lockScalingFlip: true,
+            lockSkewingX: true,
+            lockSkewingY: true,
+            lockUniScaling: true,
         });
 
         // TODO: попытка зафиксировать слои
@@ -137,17 +152,17 @@ export const CanvasInstance = ({
         fabricCanvas.moveTo(layer2Frame, 1);
         fabricCanvas.moveTo(pointsLayer.current, 1000);
 
+        createImage(currentFrame, 500, 500, 0, 0).then((img) => {
+            layer2Frame.addWithUpdate(img);
+            //  1-слой для картинок, 1000- слой для точек
+            //fabricCanvas.moveTo(img, 1);
+            fabricCanvas.renderAll();
+        });
+
         fabricCanvas.add(layer1Bg);
         fabricCanvas.add(layer2Frame);
         fabricCanvas.add(pointsLayer.current);
         fabricCanvas.renderAll();
-
-        createImage(currentFrame, 500, 500, 0, 0).then((img) => {
-            layer2Frame.addWithUpdate(img);
-            //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(img, 1);
-            fabricCanvas.renderAll();
-        });
     }, [fabricCanvas, currentFrame]);
 
     return <></>;
