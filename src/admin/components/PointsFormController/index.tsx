@@ -121,7 +121,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 radius: 3,
                 fill: "green",
             });
-
+            newPointRef.current.set("selectable", false);
             sender.add(newPointRef.current);
         }
 

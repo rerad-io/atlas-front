@@ -98,19 +98,20 @@ export const CanvasInstance = ({
                 left: item?.x,
                 radius: 3,
                 fill: "red",
-                hasControls: false,
-                hasBorders: false,
-                lockRotation: true,
-                lockScalingX: true,
-                lockScalingY: true,
-                lockMovementX: true,
-                lockMovementY: true,
-                lockScalingFlip: true,
-                lockSkewingX: true,
-                lockSkewingY: true,
-                lockUniScaling: true,
+                //hasControls: false,
+                //hasBorders: false,
+                //lockRotation: true,
+                //lockScalingX: true,
+                //lockScalingY: true,
+                //lockMovementX: true,
+                //lockMovementY: true,
+                //lockScalingFlip: true,
+                //lockSkewingX: true,
+                //lockSkewingY: true,
+                //lockUniScaling: true,
             });
 
+            point.set("selectable", false);
             fabricObjects.current.push(point);
             pointsLayer.current.addWithUpdate(point);
             //  1-слой для картинок, 1000- слой для точек
@@ -120,37 +121,40 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingFlip: true,
-            lockSkewingX: true,
-            lockSkewingY: true,
-            lockUniScaling: true,
+            //hasControls: false,
+            //hasBorders: false,
+            //lockRotation: true,
+            //lockScalingX: true,
+            //lockScalingY: true,
+            //lockMovementX: true,
+            //lockMovementY: true,
+            //lockScalingFlip: true,
+            //lockSkewingX: true,
+            //lockSkewingY: true,
+            //lockUniScaling: true,
         });
 
         const layer2Frame = new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingFlip: true,
-            lockSkewingX: true,
-            lockSkewingY: true,
-            lockUniScaling: true,
+            //hasControls: false,
+            //hasBorders: false,
+            //lockRotation: true,
+            //lockScalingX: true,
+            //lockScalingY: true,
+            //lockMovementX: true,
+            //lockMovementY: true,
+            //lockScalingFlip: true,
+            //lockSkewingX: true,
+            //lockSkewingY: true,
+            //lockUniScaling: true,
         });
 
         // TODO: попытка зафиксировать слои
-        fabricCanvas.moveTo(layer1Bg, 0);
-        fabricCanvas.moveTo(layer2Frame, 1);
-        fabricCanvas.moveTo(pointsLayer.current, 1000);
+        //fabricCanvas.moveTo(layer1Bg, 0);
+        //fabricCanvas.moveTo(layer2Frame, 1);
+        //fabricCanvas.moveTo(pointsLayer.current, 1000);
+        layer1Bg.set("selectable", false);
+        layer2Frame.set("selectable", false);
+        //pointsLayer.set("selectable", false);
 
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);
