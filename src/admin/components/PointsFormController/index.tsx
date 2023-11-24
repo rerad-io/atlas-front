@@ -4,7 +4,7 @@ import { AnatomicalStructure, InstanceData, Series } from "../../../_types";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import Button from "../../../components/UI/Button";
 import toast, { Toaster } from "react-hot-toast";
-import { createInstanceData, deleteInstanceData } from "../../../requests/instanceDataRequests";
+import { createInstanceData, deleteInstanceData, updateInstanceData } from "../../../requests/instanceDataRequests";
 import s from "./styles.module.scss";
 import { Point, RenderComponent } from "../../../components/RenderComponent";
 
@@ -73,6 +73,23 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         }
     };
 
+    const handleApprove = async () => {
+        if (selectedInstanceId) {
+            try {
+                const targetInstance = currentInstancesList.find((instance) => instance.id === selectedInstanceId);
+                const result = await updateInstanceData(selectedInstanceId, { ...targetInstance, status: 1 });
+                if (result === 204) {
+                    notifySuccess("структура подтверждена!");
+                } else {
+                    notifyError("ошибка подтверждения!");
+                }
+            } catch (error) {
+                notifyError("ошибка подтверждения!");
+                console.error("Error fetching PointsFormController:", error);
+            }
+        }
+    };
+
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (selectedStructure) handleSubmit(selectedStructure);
@@ -80,7 +97,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
 
     const handleSubmit = async (structure: AnatomicalStructure) => {
         if (!newPointRef.current) {
-            notifyError("Поставьте сперва точку.");
+            notifyError("Определите расположение структуры!");
             return;
         }
         try {
@@ -141,37 +158,52 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             <section>
                 <div className="container">
                     <Toaster />
-                    <form className={s.form} onSubmit={submit}>
-                        <h3>Форма редактирования / добавления точек </h3>
-                        <label>
-                            Существующие точки
-                            <select name="points" onChange={handleSelectInstance}>
-                                <option value="">без значения</option>
-                                {currentInstancesList?.map((el) => (
-                                    <option key={el.id} value={el.id}>
-                                        {`${el.structureName} (${el.x}, ${el.y})`}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <label>
-                            Анатомические структуры
-                            <select name="structure" onChange={handleSelectStructure} required>
-                                <option value="">без значения</option>
-                                {anatomicalStructureList?.map((el, index) => (
-                                    <option key={el.id} value={index}>
-                                        {el.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <div className={s.buttons}>
-                            <Button type="button" onClick={handleRemove}>
-                                Удалить
-                            </Button>
-                            <Button type="submit">Сохранить</Button>
-                        </div>
-                    </form>
+                    <div className={s.form_wrapper}>
+                        <form className={s.form} onSubmit={submit}>
+                            <h3>Добавление инстанса </h3>
+                            <div className={s.form_content}>
+                                <label>
+                                    Анатомические структуры
+                                    <select name="structure" onChange={handleSelectStructure} required>
+                                        <option value="">без значения</option>
+                                        {anatomicalStructureList?.map((el, index) => (
+                                            <option key={el.id} value={index}>
+                                                {el.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <div className={s.btn_wrapper}>
+                                    <Button type="submit">Сохранить</Button>
+                                </div>
+                            </div>
+                        </form>
+                        <form className={s.form} onSubmit={submit}>
+                            <h3>Редактирование инстанса </h3>
+                            <div className={s.form_content}>
+                                <label>
+                                    Размещенные инстансы
+                                    <select name="points" onChange={handleSelectInstance}>
+                                        <option value="">без значения</option>
+                                        {currentInstancesList?.map((el) => (
+                                            <option key={el.id} value={el.id}>
+                                                {`${el.structureName} (${el.x}, ${el.y}) `}
+                                                <span>{`(${!el.status && "не подтверждено"})`}</span>
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <div className={s.btn_wrapper}>
+                                    <Button type="button" onClick={handleApprove}>
+                                        Подтвердить
+                                    </Button>
+                                    <Button type="button" onClick={handleRemove}>
+                                        Удалить
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </section>
         </>

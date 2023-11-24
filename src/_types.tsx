@@ -81,9 +81,9 @@ export type InstanceData = {
     // TODO: Должны получить порядковый номер серии
     seriesNumber: number;
     structureId: AnatomicalStructure; // Ссылка на объект Анатомическая структура
-    // TODO: Должны получить цвет Темы к которой относится структура
-    structureColor: string;
+    structureName: string;
     instanceNumber: number;
+    status: number;
     type: string; // Перечисление (Enum) для типа данных
     x: number;
     y: number;
