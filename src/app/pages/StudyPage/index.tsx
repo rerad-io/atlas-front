@@ -50,7 +50,11 @@ const StudyPage = () => {
             {currentSeriesNumber ? (
                 <div style={{ marginTop: "30px" }}>
                     <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app" />
-                    <RenderComponent context="app" />
+                    <div className="container">
+                        <div className={s.render_wrapper}>
+                            <RenderComponent context="app" />
+                        </div>
+                    </div>
                     <SeriesControlComponent />
                 </div>
             ) : (

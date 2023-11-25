@@ -31,7 +31,7 @@ export const SeriesControlComponent = () => {
     };
 
     return (
-        <section>
+        <section className={s.series_controller}>
             <div className="container">
                 <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
