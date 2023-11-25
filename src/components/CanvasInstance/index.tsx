@@ -48,20 +48,21 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         if (context === "app") {
-            console.log("reload useEffect fetchInstanceData with context ", context);
-            const fetchInstanceData = () => {
-                try {
-                    setCurrentData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-                    setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-                            currentInstanceNumber || 1
-                        }.jpg`,
-                    );
-                } catch (error) {
-                    console.error("CanvasInstance - ", error);
-                }
-            };
-            fetchInstanceData();
+            if (currentInstanceData.length) {
+                const fetchInstanceData = () => {
+                    try {
+                        setCurrentData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+                        setCurrentFrame(
+                            `${backendUrl_2}api/file/content/atlas/${study?.externalId}/dicom/1/${currentSeriesNumber}/${
+                                currentInstanceNumber || 1
+                            }.jpg`,
+                        );
+                    } catch (error) {
+                        console.error("CanvasInstance - ", error);
+                    }
+                };
+                fetchInstanceData();
+            }
         }
     }, [context, currentInstanceData, currentInstanceNumber, study.externalId, currentSeriesNumber]);
 
@@ -95,6 +96,10 @@ export const CanvasInstance = ({
                 left: item?.x,
                 radius: 3,
                 fill: "red",
+            });
+
+            point.on("mouseover", function () {
+                console.log("selected a circle");
             });
 
             const text = new fabric.Text(item.structureName, {
