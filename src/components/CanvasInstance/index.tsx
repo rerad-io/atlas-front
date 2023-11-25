@@ -74,7 +74,9 @@ export const CanvasInstance = ({
                     }.jpg`,
                 );
             } else {
-                setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${seriesNumber}/${activeFrameNumber}.jpg`);
+                if (externalId) {
+                    setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${seriesNumber}/${activeFrameNumber}.jpg`);
+                }
             }
         }
     }, [context, currentInstancesList, externalId, activeFrameNumber, seriesNumber]);
