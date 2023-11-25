@@ -23,25 +23,26 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
 
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
-    const newPointRef = useRef<fabric.Circle>();
+    const newPointRef = useRef<fabric.Circle | null>(null);
+
+    useEffect(() => {
+        const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
+        setCurrentInstancesList(currentInstances);
+    }, [activeFrameNumber, instances]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const structureList = await getAnatomicalStructureList({});
-                const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
-                const usedStructureIds = currentInstances?.map((instance) => instance.structureId);
+                const usedStructureIds = currentInstancesList?.map((instance) => instance.structureId);
                 const availableStructures = structureList?.filter((structure) => !usedStructureIds?.includes(structure.id));
-
-                setCurrentInstancesList(currentInstances);
                 setAnatomicalStructureList(availableStructures);
             } catch (error) {
                 console.error("Error fetching PointsFormController:", error);
             }
         };
-
         fetchData();
-    }, [activeFrameNumber, instances]);
+    }, [activeFrameNumber, instances, currentInstancesList]);
 
     const handleSelectInstance = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedId = event.currentTarget.value;
@@ -77,7 +78,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         if (selectedInstanceId) {
             try {
                 const targetInstance = currentInstancesList.find((instance) => instance.id === selectedInstanceId);
-                const result = await updateInstanceData(selectedInstanceId, { ...targetInstance, status: 1 });
+                const result = await updateInstanceData(selectedInstanceId, { ...targetInstance, status: "VERIFIED" });
                 if (result === 204) {
                     notifySuccess("структура подтверждена!");
                 } else {
@@ -114,6 +115,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             const result = await createInstanceData(newInstance);
             if (result.id) {
                 notifySuccess("новая структура отмечена!");
+                setCurrentInstancesList([...currentInstancesList, result]);
             } else {
                 notifyError("ошибка фиксации структуры!");
             }
@@ -121,6 +123,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
             notifyError("ошибка фиксации структуры!");
             console.error("Error fetching PointsFormController:", error);
         }
+        newPointRef.current = null;
     };
 
     const onCanvasClick = (point: Point, sender: fabric.Canvas) => {
@@ -138,7 +141,6 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                 radius: 3,
                 fill: "green",
             });
-            newPointRef.current.set("selectable", false);
             sender.add(newPointRef.current);
         }
 
@@ -156,6 +158,8 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                         context="admin"
                         externalId={externalId}
                         currentInstancesList={currentInstancesList}
+                        seriesNumber={serie?.number}
+                        activeFrameNumber={activeFrameNumber}
                         onClick={(point, sender) => onCanvasClick(point, sender)}
                     />
                     <div className={s.controller_form}>
@@ -179,7 +183,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                                     </div>
                                 </div>
                             </form>
-                            <form className={s.form} onSubmit={submit}>
+                            <div className={s.form}>
                                 <h3>Редактирование инстанса </h3>
                                 <div className={s.form_content}>
                                     <label>
@@ -188,8 +192,9 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                                             <option value="">без значения</option>
                                             {currentInstancesList?.map((el) => (
                                                 <option key={el.id} value={el.id}>
-                                                    {`${el.structureName} (${el.x}, ${el.y}) `}
-                                                    <span>{`(${!el.status && "не подтверждено"})`}</span>
+                                                    {`${el.structureName} (${el.x}, ${el.y}) (${
+                                                        el.status === "UNVERIFIED" ? "не подтверждено" : ""
+                                                    })`}
                                                 </option>
                                             ))}
                                         </select>
@@ -203,7 +208,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                                         </Button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

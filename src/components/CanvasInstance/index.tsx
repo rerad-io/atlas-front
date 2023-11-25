@@ -23,31 +23,21 @@ export const CanvasInstance = ({
     context,
     externalId,
     currentInstancesList,
+    activeFrameNumber,
+    seriesNumber,
 }: {
     fabricCanvas: fabric.Canvas;
     context: string;
     externalId: string;
     currentInstancesList: InstanceData[];
+    activeFrameNumber: number;
+    seriesNumber: number;
 }) => {
     const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
     const fabricObjects = useRef<fabric.Circle[]>([]);
-    const pointsLayer = useRef<fabric.Group>(
-        new fabric.Group([], {
-            // TODO: проверка слоя
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingFlip: true,
-            lockSkewingX: true,
-            lockSkewingY: true,
-            lockUniScaling: true,
-        }),
-    );
+    const pointsLayer = useRef<fabric.Group>(new fabric.Group([], {}));
+    const textLayer = useRef<fabric.Group>(new fabric.Group([], {}));
 
     const [currentFrame, setCurrentFrame] = useState<string>("");
     const [currentData, setCurrentData] = useState<InstanceData[]>([]);
@@ -79,17 +69,22 @@ export const CanvasInstance = ({
         if (context === "admin") {
             if (currentInstancesList?.length) {
                 setCurrentFrame(
-                    `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${currentInstancesList[0].seriesNumber}/${currentInstancesList[0].instanceNumber}.jpg`,
+                    `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${currentInstancesList[0]?.seriesNumber}/${
+                        currentInstancesList[0]?.instanceNumber || activeFrameNumber
+                    }.jpg`,
                 );
+            } else {
+                setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${seriesNumber}/${activeFrameNumber}.jpg`);
             }
         }
-    }, [context, currentInstancesList, externalId]);
+    }, [context, currentInstancesList, externalId, activeFrameNumber, seriesNumber]);
 
     useEffect(() => {
         console.log("reload useEffect in CanvasInstance");
 
         fabricObjects.current.forEach((fabricItem) => {
             pointsLayer.current.removeWithUpdate(fabricItem);
+            textLayer.current.removeWithUpdate(fabricItem);
         });
 
         currentData?.forEach((item) => {
@@ -98,64 +93,33 @@ export const CanvasInstance = ({
                 left: item?.x,
                 radius: 3,
                 fill: "red",
-                //hasControls: false,
-                //hasBorders: false,
-                //lockRotation: true,
-                //lockScalingX: true,
-                //lockScalingY: true,
-                //lockMovementX: true,
-                //lockMovementY: true,
-                //lockScalingFlip: true,
-                //lockSkewingX: true,
-                //lockSkewingY: true,
-                //lockUniScaling: true,
+            });
+
+            const text = new fabric.Text(item.structureName, {
+                fill: "white",
             });
 
             point.set("selectable", false);
+            //text.set("selectable", false);
             pointsLayer.current.set("selectable", false);
             fabricObjects.current.push(point);
             pointsLayer.current.addWithUpdate(point);
+            textLayer.current.addWithUpdate(text);
             //  1-слой для картинок, 1000- слой для точек
             //fabricCanvas.moveTo(point, 1000);
         });
     }, [currentData]);
 
     useEffect(() => {
-        const layer1Bg = new fabric.Group([], {
-            //hasControls: false,
-            //hasBorders: false,
-            //lockRotation: true,
-            //lockScalingX: true,
-            //lockScalingY: true,
-            //lockMovementX: true,
-            //lockMovementY: true,
-            //lockScalingFlip: true,
-            //lockSkewingX: true,
-            //lockSkewingY: true,
-            //lockUniScaling: true,
-        });
-
-        const layer2Frame = new fabric.Group([], {
-            //hasControls: false,
-            //hasBorders: false,
-            //lockRotation: true,
-            //lockScalingX: true,
-            //lockScalingY: true,
-            //lockMovementX: true,
-            //lockMovementY: true,
-            //lockScalingFlip: true,
-            //lockSkewingX: true,
-            //lockSkewingY: true,
-            //lockUniScaling: true,
-        });
+        const layer1Bg = new fabric.Group([], {});
+        const layer2Frame = new fabric.Group([], {});
 
         // TODO: попытка зафиксировать слои
-        //fabricCanvas.moveTo(layer1Bg, 0);
-        //fabricCanvas.moveTo(layer2Frame, 1);
-        //fabricCanvas.moveTo(pointsLayer.current, 1000);
+        fabricCanvas.moveTo(layer1Bg, 0);
+        fabricCanvas.moveTo(layer2Frame, 1);
+        fabricCanvas.moveTo(pointsLayer.current, 1000);
         layer1Bg.set("selectable", false);
         layer2Frame.set("selectable", false);
-        //pointsLayer.set("selectable", false);
 
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);

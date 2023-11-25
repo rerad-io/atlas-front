@@ -83,7 +83,7 @@ export type InstanceData = {
     structureId: AnatomicalStructure; // Ссылка на объект Анатомическая структура
     structureName: string;
     instanceNumber: number;
-    status: number;
+    status: string;
     type: string; // Перечисление (Enum) для типа данных
     x: number;
     y: number;

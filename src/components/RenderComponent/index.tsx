@@ -13,10 +13,19 @@ type RenderComponentProps = {
     context: string;
     externalId: string;
     currentInstancesList: InstanceData[];
+    activeFrameNumber: number;
+    seriesNumber: number;
     onClick?: (point: Point, sender: fabric.Canvas) => void;
 };
 
-export const RenderComponent = ({ context, externalId, currentInstancesList, onClick }: RenderComponentProps) => {
+export const RenderComponent = ({
+    context,
+    externalId,
+    currentInstancesList,
+    activeFrameNumber,
+    seriesNumber,
+    onClick,
+}: RenderComponentProps) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -27,7 +36,6 @@ export const RenderComponent = ({ context, externalId, currentInstancesList, onC
             height: 500,
             backgroundColor: "whitesmoke",
         };
-
         const canvas = new fabric.Canvas(canvasEl.current, options);
         setFabricCanvas(canvas);
 
@@ -47,7 +55,6 @@ export const RenderComponent = ({ context, externalId, currentInstancesList, onC
 
     return (
         <div className={s.frame_info}>
-            {/*<div className="container">*/}
             <div className={s.current_frame}>
                 <canvas ref={canvasEl} />
                 {fabricCanvas &&
@@ -57,12 +64,13 @@ export const RenderComponent = ({ context, externalId, currentInstancesList, onC
                             context={context}
                             externalId={externalId}
                             currentInstancesList={currentInstancesList}
+                            seriesNumber={seriesNumber}
+                            activeFrameNumber={activeFrameNumber}
                         />
                     ) : (
                         <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
                     ))}
             </div>
-            {/*</div>*/}
         </div>
     );
 };
