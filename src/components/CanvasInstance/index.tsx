@@ -99,9 +99,9 @@ export const CanvasInstance = ({
 
             point.set("selectable", false);
 
-            point.on("mouseover", function () {
-                console.log("selected a circle");
-            });
+            //point.on("mouseover", function () {
+            //    console.log("selected a circle");
+            //});
 
             const line = new fabric.Line(
                 [item?.x <= 250 ? item?.x - 3 : item?.x + 3, item?.y, item?.x <= 250 ? item?.x - 65 : item?.x + 60, item?.y + 6],
