@@ -147,6 +147,7 @@ export const CanvasInstance = ({
             layer2Frame.addWithUpdate(img);
             //  1-слой для картинок, 1000- слой для точек
             //fabricCanvas.moveTo(img, 1);
+            fabricCanvas.setCursor("default");
             fabricCanvas.renderAll();
         });
 

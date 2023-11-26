@@ -35,7 +35,8 @@ export const RenderComponent = ({
             width: 500,
             height: 500,
             backgroundColor: "whitesmoke",
-            hoverCursor: "pointer",
+            //hoverCursor: "pointer",
+            cursor: "default",
         };
         const canvas = new fabric.Canvas(canvasEl.current, options);
         setFabricCanvas(canvas);
