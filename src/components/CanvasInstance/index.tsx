@@ -35,10 +35,8 @@ export const CanvasInstance = ({
 }) => {
     const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
-    const fabricObjects = useRef<fabric.Circle[]>([]);
+    const fabricObjects = useRef<fabric.Group[]>([]);
     const pointsLayer = useRef<fabric.Group>(new fabric.Group([], {}));
-    const textLayer = useRef<fabric.Group>(new fabric.Group([], {}));
-
     const [currentFrame, setCurrentFrame] = useState<string>("");
     const [currentData, setCurrentData] = useState<InstanceData[]>([]);
 
@@ -87,31 +85,48 @@ export const CanvasInstance = ({
 
         fabricObjects.current.forEach((fabricItem) => {
             pointsLayer.current.removeWithUpdate(fabricItem);
-            textLayer.current.removeWithUpdate(fabricItem);
         });
 
         currentData?.forEach((item) => {
             const point = new fabric.Circle({
-                top: item?.y,
                 left: item?.x,
+                top: item?.y,
+                originX: "center",
+                originY: "center",
                 radius: 3,
-                fill: "red",
+                fill: item.structureColor || "red",
             });
+
+            point.set("selectable", false);
 
             point.on("mouseover", function () {
                 console.log("selected a circle");
             });
 
+            const line = new fabric.Line(
+                [item?.x <= 250 ? item?.x - 3 : item?.x + 3, item?.y, item?.x <= 250 ? item?.x - 65 : item?.x + 60, item?.y + 6],
+                {
+                    originX: "center",
+                    originY: "center",
+                    stroke: item.structureColor || "white",
+                },
+            );
+
             const text = new fabric.Text(item.structureName, {
-                fill: "white",
+                originX: "center",
+                originY: "center",
+                left: item?.x <= 250 ? item?.x - 130 : item?.x + 130,
+                top: item?.y,
+                fill: item.structureColor || "white",
+                fontSize: 14,
+                underline: true,
             });
 
-            point.set("selectable", false);
-            //text.set("selectable", false);
+            const instanceGroup = new fabric.Group([point, line, text], {});
+
             pointsLayer.current.set("selectable", false);
-            fabricObjects.current.push(point);
-            pointsLayer.current.addWithUpdate(point);
-            textLayer.current.addWithUpdate(text);
+            fabricObjects.current.push(instanceGroup);
+            pointsLayer.current.addWithUpdate(instanceGroup);
             //  1-слой для картинок, 1000- слой для точек
             //fabricCanvas.moveTo(point, 1000);
         });

@@ -78,8 +78,10 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
         if (selectedInstanceId) {
             try {
                 const targetInstance = currentInstancesList.find((instance) => instance.id === selectedInstanceId);
-                const result = await updateInstanceData(selectedInstanceId, { ...targetInstance, status: "VERIFIED" });
-                if (result === 204) {
+                const result = await updateInstanceData(selectedInstanceId, { ...targetInstance, status: 1 });
+                if (result.id) {
+                    // TODO: при рабочем запросе на апдейт status
+                    //setCurrentInstancesList(currentInstancesList.filter((item) => item.id !== selectedInstanceId).push(result));
                     notifySuccess("структура подтверждена!");
                 } else {
                     notifyError("ошибка подтверждения!");
@@ -192,9 +194,7 @@ export const PointsFormController = ({ instances, externalId, serie, activeFrame
                                             <option value="">без значения</option>
                                             {currentInstancesList?.map((el) => (
                                                 <option key={el.id} value={el.id}>
-                                                    {`${el.structureName} (${el.x}, ${el.y}) (${
-                                                        el.status === "UNVERIFIED" ? "не подтверждено" : ""
-                                                    })`}
+                                                    {`${el.structureName} (${el.x}, ${el.y}) (${el.status === 0 ? "не подтверждено" : ""})`}
                                                 </option>
                                             ))}
                                         </select>
