@@ -3,7 +3,7 @@ const slideWidth: number = 80;
 import { Swiper, SwiperSlide } from "swiper/react";
 
 type Props = {
-    instancesFrame: string;
+    instancesFrame: string[];
     activeFrame: number;
     handleCurrentFrame?: (index: number) => void;
 };

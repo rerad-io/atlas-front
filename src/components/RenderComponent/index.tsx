@@ -1,21 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
-import { InstanceData } from "../../_types";
+import { InstanceData, Point } from "../../_types";
 import s from "./styles.module.scss";
-
-export type Point = {
-    x: number;
-    y: number;
-};
 
 type RenderComponentProps = {
     context: string;
-    externalId: string;
+    externalId?: string;
     currentInstancesList: InstanceData[];
     activeFrameNumber: number;
-    seriesNumber: number;
-    onClick?: (point: Point, sender: fabric.Canvas) => void;
+    seriesNumber?: number;
+    newPoint?: Point;
+    setNewPoint: (point: Point) => void;
 };
 
 export const RenderComponent = ({
@@ -24,7 +20,8 @@ export const RenderComponent = ({
     currentInstancesList,
     activeFrameNumber,
     seriesNumber,
-    onClick,
+    newPoint,
+    setNewPoint,
 }: RenderComponentProps) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
@@ -35,43 +32,57 @@ export const RenderComponent = ({
             width: 500,
             height: 500,
             backgroundColor: "whitesmoke",
-            hoverCursor: "default",
             cursor: "default",
         };
         const canvas = new fabric.Canvas(canvasEl.current, options);
-        setFabricCanvas(canvas);
 
         const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
-            if (onClick) {
-                const pointer = canvas.getPointer(event.e);
-                onClick(pointer, canvas);
-            }
+            const pointer = canvas.getPointer(event.e);
+            // TODO: оставить для проверки loading компоненты
+            //console.log("RenderComponent => onMouseDown");
+
+            const newPoint = {
+                left: pointer.x,
+                top: pointer.y,
+                originX: "center",
+                originY: "center",
+                radius: 3,
+                fill: "green",
+                cursor: "default",
+            };
+
+            setNewPoint(newPoint);
+
+            canvas.renderAll();
         };
 
-        canvas.on("mouse:down", (e) => onMouseDown(e));
+        setFabricCanvas(canvas);
 
-        return () => {
-            canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
-        };
-    }, [onClick]);
+        if (context === "admin") {
+            canvas.on("mouse:down", (e) => onMouseDown(e));
+
+            return () => {
+                setNewPoint({} as Point);
+                canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+            };
+        }
+    }, [context, setNewPoint]);
 
     return (
         <div className={s.frame_info}>
             <div className={s.current_frame}>
                 <canvas ref={canvasEl} />
-                {fabricCanvas &&
-                    (context !== "app" ? (
-                        <CanvasInstance
-                            fabricCanvas={fabricCanvas}
-                            context={context}
-                            externalId={externalId}
-                            currentInstancesList={currentInstancesList}
-                            seriesNumber={seriesNumber}
-                            activeFrameNumber={activeFrameNumber}
-                        />
-                    ) : (
-                        <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
-                    ))}
+                {fabricCanvas && (
+                    <CanvasInstance
+                        newPoint={newPoint}
+                        fabricCanvas={fabricCanvas}
+                        context={context}
+                        externalId={externalId}
+                        currentInstancesList={currentInstancesList}
+                        seriesNumber={seriesNumber}
+                        activeFrameNumber={activeFrameNumber}
+                    />
+                )}
             </div>
         </div>
     );

@@ -7,10 +7,10 @@ import { Slider } from "../Slider";
 import s from "./styles.module.scss";
 
 type Props = {
-    studySerie: SeriesListModel;
+    studySerie?: SeriesListModel;
     activeFrameNumber: number;
     handleCurrentFrame: (index: number) => void;
-    context: string;
+    context?: string;
 };
 
 const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activeFrameNumber }: Props) => {
@@ -18,7 +18,7 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
     const [instancesFrame, setInstancesFrame] = useState<string[]>([]);
     const [activeFrame, setActiveFrame] = useState<number>(1);
     const [currentSerie, setCurrentSerie] = useState<SeriesListModel>({} as SeriesListModel);
-    const [currentExternalId, setCurrentExternalId] = useState<string>("");
+    const [currentExternalId, setCurrentExternalId] = useState<string | undefined>("" as string);
 
     useEffect(() => {
         if (activeFrameNumber) setActiveFrame(activeFrameNumber);
@@ -32,7 +32,7 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
             setActiveFrame(currentInstanceNumber);
         } else {
             setCurrentExternalId(studySerie?.studyExternalId);
-            setCurrentSerie(studySerie);
+            setCurrentSerie(studySerie!);
         }
     }, [study, series, studySerie, currentSeriesNumber, context, currentInstanceData.length, currentInstanceNumber]);
 
