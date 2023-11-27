@@ -148,8 +148,8 @@ export const CanvasInstance = ({
         //fabricCanvas.moveTo(pointsLayer.current, 1000);
 
         // TODO: проверка на фиксацию
-        //layer1Bg.set("selectable", false);
-        //layer2Frame.set("selectable", false);
+        layer1Bg.set("selectable", false);
+        layer2Frame.set("selectable", false);
 
         createImage(currentFrame, 500, 500, 0, 0).then((img) => {
             layer2Frame.addWithUpdate(img);

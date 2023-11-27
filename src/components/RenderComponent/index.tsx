@@ -48,6 +48,7 @@ export const RenderComponent = ({
                 originY: "center",
                 radius: 3,
                 fill: "green",
+                hoverCursor: "default",
                 cursor: "default",
             };
 
