@@ -13,7 +13,7 @@ const StudySeriesList = ({ seriesList, studyId }) => {
         const fetchDataAndSetStudySeriesList = async () => {
             try {
                 setStudySeriesList(seriesList);
-                if (seriesList) {
+                if (seriesList?.length) {
                     const columnsTitles = Object.keys(seriesList[0]);
                     columnsTitles.push("Actions");
                     setColumns(columnsTitles);

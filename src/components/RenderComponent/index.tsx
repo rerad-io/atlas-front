@@ -1,23 +1,28 @@
 import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
-import { InstanceData } from "../../_types";
+import { InstanceData, Point } from "../../_types";
 import s from "./styles.module.scss";
-
-export type Point = {
-    x: number;
-    y: number;
-};
 
 type RenderComponentProps = {
     context: string;
-    externalId: string;
-    instances: InstanceData[];
+    externalId?: string;
+    currentInstancesList: InstanceData[];
     activeFrameNumber: number;
-    onClick?: (point: Point, sender: fabric.Canvas) => void;
+    seriesNumber?: number;
+    newPoint?: Point;
+    setNewPoint: (point: Point) => void;
 };
 
-export const RenderComponent = ({ context, instances, externalId, activeFrameNumber, onClick }: RenderComponentProps) => {
+export const RenderComponent = ({
+    context,
+    externalId,
+    currentInstancesList,
+    activeFrameNumber,
+    seriesNumber,
+    newPoint,
+    setNewPoint,
+}: RenderComponentProps) => {
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -27,44 +32,59 @@ export const RenderComponent = ({ context, instances, externalId, activeFrameNum
             width: 500,
             height: 500,
             backgroundColor: "whitesmoke",
+            cursor: "default",
         };
-
         const canvas = new fabric.Canvas(canvasEl.current, options);
-        setFabricCanvas(canvas);
 
         const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
-            if (onClick) {
-                const pointer = canvas.getPointer(event.e);
-                onClick(pointer, canvas);
-            }
+            const pointer = canvas.getPointer(event.e);
+            // TODO: оставить для проверки loading компоненты
+            //console.log("RenderComponent => onMouseDown");
+
+            const newPoint = {
+                left: pointer.x,
+                top: pointer.y,
+                originX: "center",
+                originY: "center",
+                radius: 3,
+                fill: "green",
+                hoverCursor: "default",
+                cursor: "default",
+            };
+
+            setNewPoint(newPoint);
+
+            canvas.renderAll();
         };
 
-        canvas.on("mouse:down", (e) => onMouseDown(e));
+        setFabricCanvas(canvas);
 
-        return () => {
-            canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
-        };
-    }, [onClick]);
+        if (context === "admin") {
+            canvas.on("mouse:down", (e) => onMouseDown(e));
+
+            return () => {
+                setNewPoint({} as Point);
+                canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+            };
+        }
+    }, [context, setNewPoint]);
 
     return (
-        <section className={s.frame_info}>
-            <div className="container">
-                <div className={s.current_frame}>
-                    <canvas ref={canvasEl} />
-                    {fabricCanvas &&
-                        (context !== "app" ? (
-                            <CanvasInstance
-                                fabricCanvas={fabricCanvas}
-                                context={context}
-                                externalId={externalId}
-                                activeFrameNumber={activeFrameNumber}
-                                instances={instances}
-                            />
-                        ) : (
-                            <CanvasInstance fabricCanvas={fabricCanvas} context={context} />
-                        ))}
-                </div>
+        <div className={s.frame_info}>
+            <div className={s.current_frame}>
+                <canvas ref={canvasEl} />
+                {fabricCanvas && (
+                    <CanvasInstance
+                        newPoint={newPoint}
+                        fabricCanvas={fabricCanvas}
+                        context={context}
+                        externalId={externalId}
+                        currentInstancesList={currentInstancesList}
+                        seriesNumber={seriesNumber}
+                        activeFrameNumber={activeFrameNumber}
+                    />
+                )}
             </div>
-        </section>
+        </div>
     );
 };

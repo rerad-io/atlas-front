@@ -1,19 +1,28 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Button from "../../../components/UI/Button";
-import { InstanceData, Series } from "../../../_types";
+import { AnatomicalStructure, InstanceData, Point, SeriesListModel } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
-import s from "./styles.module.scss";
+import toast, { Toaster } from "react-hot-toast";
 import { PointsFormController } from "../../components/PointsFormController";
+import { createInstanceData, deleteInstanceData } from "../../../requests/instanceDataRequests";
+import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
+import { RenderComponent } from "../../../components/RenderComponent";
+import s from "./styles.module.scss";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
-    const [studySerie, setStudySerie] = useState<Series>();
+    const [studySerie, setStudySerie] = useState<SeriesListModel>();
     const [instances, setInstances] = useState<InstanceData[]>();
     const [activeFrameNumber, setActiveFrameNumber] = useState<number>(1);
+    const [newPoint, setNewPoint] = useState<Point>();
+    const [currentInstancesList, setCurrentInstancesList] = useState<InstanceData[]>([]);
+    const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
+
+    const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
+    const notifyError = (message: string) => toast.error(message, { duration: 2000 });
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -33,6 +42,25 @@ const StudySeriesEditPage = () => {
             fetchDataAndsetStudyseriesId();
         }
     }, [id]);
+
+    useEffect(() => {
+        const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
+        if (currentInstances) setCurrentInstancesList(currentInstances);
+    }, [activeFrameNumber, instances]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const structureList = await getAnatomicalStructureList({});
+                const usedStructureIds = currentInstancesList?.map((instance) => instance.structureId);
+                const availableStructures = structureList?.filter(({ id }) => !usedStructureIds?.includes(id));
+                setAnatomicalStructureList(availableStructures);
+            } catch (error) {
+                console.error("Error fetching PointsFormController:", error);
+            }
+        };
+        fetchData();
+    }, [activeFrameNumber, instances, currentInstancesList]);
 
     const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -69,16 +97,68 @@ const StudySeriesEditPage = () => {
             fetchDataAndCreateStudySeries();
         }
 
-        e.target.reset();
+        (e.currentTarget as HTMLFormElement).reset();
     };
 
     const handleCurrentFrame = (index: number) => {
         setActiveFrameNumber(index);
     };
 
+    const handleSubmit = async (structure: AnatomicalStructure) => {
+        if (!newPoint?.left) {
+            notifyError("Определите расположение структуры!");
+            return;
+        }
+        try {
+            const newInstance = {
+                studyId: studySerie?.studyId,
+                seriesId: studySerie?.id,
+                structureId: structure.id,
+                instanceNumber: activeFrameNumber,
+                type: "POINT",
+                x: newPoint?.left,
+                y: newPoint?.top,
+                path: "path",
+            };
+            const result = await createInstanceData(newInstance);
+            if (result.id) {
+                notifySuccess("новая структура отмечена!");
+                setCurrentInstancesList([...currentInstancesList, result]);
+                setNewPoint({} as Point);
+            } else {
+                notifyError("ошибка фиксации структуры!");
+            }
+        } catch (error) {
+            notifyError("ошибка фиксации структуры!");
+            console.error("Error fetching PointsFormController:", error);
+        }
+    };
+
+    const handleRemove = async (selectedInstanceId: string) => {
+        if (selectedInstanceId) {
+            const isAlert = confirm("уверены что хотите удалить структуру из исследования?");
+            if (isAlert) {
+                try {
+                    const result = await deleteInstanceData(selectedInstanceId);
+                    if (result === 204) {
+                        const currentInstances = currentInstancesList.filter((instance) => instance.id !== selectedInstanceId);
+                        if (currentInstances.length) setCurrentInstancesList(currentInstances);
+                        notifySuccess("структура удалена из инстанса!");
+                    } else {
+                        notifyError("ошибка удаления структуры!");
+                    }
+                } catch (error) {
+                    notifyError("ошибка удаления структуры!");
+                    console.error("Error fetching PointsFormController:", error);
+                }
+            }
+        }
+    };
+
     return (
         <div className={s.page}>
             <div className="container">
+                <Toaster />
                 <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
                 <form onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="Study">
@@ -127,12 +207,26 @@ const StudySeriesEditPage = () => {
                         handleCurrentFrame={handleCurrentFrame}
                         activeFrameNumber={activeFrameNumber}
                     />
-                    <PointsFormController
-                        externalId={studySerie?.studyExternalId}
-                        serie={studySerie!}
-                        instances={instances!}
-                        activeFrameNumber={activeFrameNumber}
-                    />
+                    <div className="container">
+                        <div className={s.controller_wrapper}>
+                            <RenderComponent
+                                context="admin"
+                                externalId={studySerie?.studyExternalId}
+                                setNewPoint={setNewPoint}
+                                newPoint={newPoint}
+                                currentInstancesList={currentInstancesList}
+                                seriesNumber={studySerie?.number}
+                                activeFrameNumber={activeFrameNumber}
+                            />
+                            <PointsFormController
+                                handleSubmit={handleSubmit}
+                                anatomicalStructureList={anatomicalStructureList}
+                                handleRemove={handleRemove}
+                                setCurrentInstancesList={setCurrentInstancesList}
+                                currentInstancesList={currentInstancesList}
+                            />
+                        </div>
+                    </div>
                 </>
             ) : null}
         </div>

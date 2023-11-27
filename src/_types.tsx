@@ -73,19 +73,26 @@ export type Series = {
 export type InstanceData = {
     id: string;
     study: string;
-    // TODO: Должны получить идентификатор исследования
     studyId: string;
-    // TODO: Должны получить идентификатор серии
     series: string;
     seriesId: string;
-    // TODO: Должны получить порядковый номер серии
     seriesNumber: number;
-    structureId: AnatomicalStructure; // Ссылка на объект Анатомическая структура
-    // TODO: Должны получить цвет Темы к которой относится структура
-    structureColor: string;
+    structureId: AnatomicalStructure;
+    structureName: string;
+    subjectColor: string;
     instanceNumber: number;
-    type: string; // Перечисление (Enum) для типа данных
+    status: string;
+    type: string;
     x: number;
     y: number;
     path: string;
+};
+
+export type Point = {
+    left: number;
+    top: number;
+    originX: string;
+    originY: string;
+    radius: number;
+    fill: string;
 };

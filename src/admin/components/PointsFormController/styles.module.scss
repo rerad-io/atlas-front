@@ -1,6 +1,11 @@
+.form_wrapper {
+    min-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .form {
-    max-width: 60%;
-    margin-top: 20px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -19,8 +24,14 @@
     padding: 5px 10px;
 }
 
-.buttons {
-    align-self: end;
+.form_content {
     display: flex;
+    flex-direction: column;
     gap: 10px;
+}
+
+.btn_wrapper {
+    align-self: flex-end;
+    display: flex;
+    gap: 20px;
 }

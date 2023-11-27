@@ -2,7 +2,7 @@ import { fabric } from "fabric";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
-import { InstanceData } from "../../_types";
+import { InstanceData, Point } from "../../_types";
 import { backendUrl_2 } from "../../requests/backendUrl";
 
 const createImage = (url: string, width: number, height: number, x: number, y: number) =>
@@ -21,141 +21,147 @@ const createImage = (url: string, width: number, height: number, x: number, y: n
 export const CanvasInstance = ({
     fabricCanvas,
     context,
-    instances,
     externalId,
+    currentInstancesList,
     activeFrameNumber,
+    seriesNumber,
+    newPoint,
 }: {
     fabricCanvas: fabric.Canvas;
     context: string;
-    externalId: string;
+    externalId?: string;
+    newPoint?: Point;
+    currentInstancesList: InstanceData[];
     activeFrameNumber: number;
-    instances: InstanceData[];
+    seriesNumber?: number;
 }) => {
-    const { study, series, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
+    const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
-    const fabricObjects = useRef<fabric.Circle[]>([]);
-    const pointsLayer = useRef<fabric.Group>(
-        new fabric.Group([], {
-            // TODO: проверка слоя
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-        }),
-    );
-
+    const pointsLayer = useRef<fabric.Group>(new fabric.Group([], {}));
     const [currentFrame, setCurrentFrame] = useState<string>("");
-    const [currentData, setCurrentInstanseData] = useState<InstanceData[]>([]);
+    const [currentData, setCurrentData] = useState<InstanceData[]>([]);
 
     useEffect(() => {
-        const fetchInstanceData = () => {
-            try {
-                if (context === "app") {
-                    setCurrentInstanseData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
-                    setCurrentFrame(
-                        `${backendUrl_2}api/file/content/atlas/${study.externalId}/dicom/1/${currentSeriesNumber}/${
-                            currentInstanceNumber || 1
-                        }.jpg`,
-                    );
-                } else {
-                    const targetIstanceData = instances?.filter((item) => item.instanceNumber === activeFrameNumber);
-
-                    setCurrentInstanseData(targetIstanceData);
-                    if (targetIstanceData?.length) {
+        if (context === "app") {
+            const fetchInstanceData = () => {
+                try {
+                    setCurrentData(currentInstanceData?.filter((item) => item.instanceNumber === currentInstanceNumber || 1));
+                    if (study?.externalId) {
                         setCurrentFrame(
-                            `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${targetIstanceData[0].seriesNumber}/${activeFrameNumber}.jpg`,
+                            `${backendUrl_2}api/file/content/atlas/${study?.externalId}/dicom/1/${currentSeriesNumber}/${
+                                currentInstanceNumber || 1
+                            }.jpg`,
                         );
-                    } else {
-                        setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${1}/${activeFrameNumber}.jpg`);
                     }
+                } catch (error) {
+                    console.error("CanvasInstance - ", error);
                 }
-            } catch (error) {
-                console.error("CanvasInstance - ", error);
+            };
+            fetchInstanceData();
+        }
+    }, [context, currentInstanceData, currentInstanceNumber, study.externalId, currentSeriesNumber]);
+
+    useEffect(() => {
+        if (context === "admin") {
+            setCurrentData(currentInstancesList);
+        }
+    }, [context, currentInstancesList]);
+
+    useEffect(() => {
+        if (context === "admin") {
+            if (currentInstancesList?.length) {
+                setCurrentFrame(
+                    `${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${currentInstancesList[0]?.seriesNumber}/${
+                        currentInstancesList[0]?.instanceNumber || activeFrameNumber
+                    }.jpg`,
+                );
+            } else {
+                if (externalId) {
+                    setCurrentFrame(`${backendUrl_2}api/file/content/atlas/${externalId}/dicom/1/${seriesNumber}/${activeFrameNumber}.jpg`);
+                }
             }
-        };
-        fetchInstanceData();
-    }, [
-        instances,
-        currentSeriesNumber,
-        activeFrameNumber,
-        context,
-        currentInstanceData,
-        currentInstanceNumber,
-        series,
-        externalId,
-        study.externalId,
-    ]);
+        }
+    }, [context, currentInstancesList, externalId, activeFrameNumber, seriesNumber]);
 
     useEffect(() => {
-        console.log("reload useEffect in CanvasInstance");
+        // TODO: оставить для проверки loading компоненты
+        //console.log("reload useEffect in CanvasInstance");
 
-        fabricObjects.current.forEach((fabricItem) => {
-            pointsLayer.current.removeWithUpdate(fabricItem);
+        pointsLayer.current.getObjects().forEach((fabricItem) => {
+            pointsLayer.current.remove(fabricItem);
         });
 
-        currentData?.forEach((item) => {
-            const point = new fabric.Circle({
-                top: item?.y,
-                left: item?.x,
-                radius: 3,
-                fill: "red",
-                hasControls: false,
-                hasBorders: false,
-                lockRotation: true,
-                lockScalingX: true,
-                lockScalingY: true,
-                lockMovementX: true,
-                lockMovementY: true,
+        if (currentData.length) {
+            currentData.forEach((item) => {
+                const point = new fabric.Circle({
+                    left: item?.x,
+                    top: item?.y,
+                    originX: "center",
+                    originY: "center",
+                    radius: 3,
+                    fill: item.subjectColor ? `#${item.subjectColor}` : "red",
+                });
+
+                // TODO: почему не работает ?
+                //point.on("mouse:over", function () {
+                //    console.log("selected a circle");
+                //});
+
+                const startX = item?.x <= 250 ? item?.x - 5 : item?.x + 5;
+                const finishX = item?.x <= 250 ? item?.x - 50 : item?.x + 50;
+
+                const line = new fabric.Line([startX, item?.y, finishX, item?.y], {
+                    originX: "center",
+                    originY: "center",
+                    stroke: item.subjectColor ? `#${item.subjectColor}` : "white",
+                });
+
+                const text = new fabric.Text(item.structureName, {
+                    originX: "center",
+                    originY: "center",
+                    left: item?.x <= 250 ? startX - 130 : startX + 130,
+                    top: item?.y,
+                    fill: item.subjectColor ? `#${item.subjectColor}` : "white",
+                    fontSize: 18,
+                    hoverCursor: "hover",
+                });
+                const instanceGroup = new fabric.Group([point, line, text], {});
+
+                pointsLayer.current.set("selectable", false);
+                pointsLayer.current.addWithUpdate(instanceGroup);
             });
+        }
 
-            fabricObjects.current.push(point);
-            pointsLayer.current.addWithUpdate(point);
-            //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(point, 1000);
-        });
-    }, [currentData, fabricCanvas]);
+        const targetPoint = new fabric.Circle(newPoint);
+        pointsLayer.current.addWithUpdate(targetPoint);
+
+        fabricCanvas.renderAll();
+    }, [currentData, fabricCanvas, newPoint]);
 
     useEffect(() => {
-        const layer1Bg = new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-        });
-
-        const layer2Frame = new fabric.Group([], {
-            hasControls: false,
-            hasBorders: false,
-            lockRotation: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingFlip: true,
-        });
+        const layer1Bg = new fabric.Group([], {});
+        const layer2Frame = new fabric.Group([], {});
 
         // TODO: попытка зафиксировать слои
-        fabricCanvas.moveTo(layer1Bg, 0);
-        fabricCanvas.moveTo(layer2Frame, 1);
-        fabricCanvas.moveTo(pointsLayer.current, 1000);
+        //fabricCanvas.moveTo(layer1Bg, 0);
+        //fabricCanvas.moveTo(layer2Frame, 1);
+        //fabricCanvas.moveTo(pointsLayer.current, 1000);
+
+        // TODO: проверка на фиксацию
+        layer1Bg.set("selectable", false);
+        layer2Frame.set("selectable", false);
+
+        createImage(currentFrame, 500, 500, 0, 0).then((img) => {
+            layer2Frame.addWithUpdate(img);
+            //  1-слой для картинок, 1000- слой для точек
+            //fabricCanvas.moveTo(img, 1);
+            fabricCanvas.renderAll();
+        });
 
         fabricCanvas.add(layer1Bg);
         fabricCanvas.add(layer2Frame);
         fabricCanvas.add(pointsLayer.current);
         fabricCanvas.renderAll();
-
-        createImage(currentFrame, 500, 500, 0, 0).then((img) => {
-            layer2Frame.addWithUpdate(img);
-            //  1-слой для картинок, 1000- слой для точек
-            fabricCanvas.moveTo(img, 1);
-            fabricCanvas.renderAll();
-        });
     }, [fabricCanvas, currentFrame]);
 
     return <></>;
