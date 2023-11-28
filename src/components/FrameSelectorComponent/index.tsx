@@ -23,8 +23,10 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, setNe
 
     useEffect(() => {
         if (activeFrameNumber) setActiveFrame(activeFrameNumber);
-        setNewPoint({} as Point);
-    }, [activeFrameNumber, setNewPoint]);
+        if (context === "admin") {
+            setNewPoint({} as Point);
+        }
+    }, [context, activeFrameNumber, setNewPoint]);
 
     useEffect(() => {
         if (context === "app") {
@@ -36,6 +38,10 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, setNe
             setCurrentExternalId(studySerie?.studyExternalId);
             setCurrentSerie(studySerie!);
         }
+
+        return () => {
+            setCurrentSerie({} as SeriesListModel);
+        };
     }, [study, series, studySerie, currentSeriesNumber, context, currentInstanceData.length, currentInstanceNumber]);
 
     useEffect(() => {
