@@ -41,7 +41,7 @@ const StudySeriesEditPage = () => {
             };
             fetchDataAndsetStudyseriesId();
         }
-    }, [id]);
+    }, [id, currentInstancesList]);
 
     useEffect(() => {
         const currentInstances = instances?.filter((instance) => instance.instanceNumber === activeFrameNumber);
