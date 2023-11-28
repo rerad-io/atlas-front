@@ -86,7 +86,7 @@ const StudyEditPage = () => {
             <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                 {
                     <label>
-                        External Id:
+                        External Id*:
                         <input
                             required
                             type="text"
@@ -99,7 +99,7 @@ const StudyEditPage = () => {
                     </label>
                 }
                 <label>
-                    Study Name:
+                    Study Name*:
                     <input required type="text" name="name" defaultValue={study?.name} onChange={handleChange} />
                 </label>
                 <label>
