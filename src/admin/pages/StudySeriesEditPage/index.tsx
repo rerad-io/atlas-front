@@ -162,7 +162,7 @@ const StudySeriesEditPage = () => {
                 <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
                 <form onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="Study">
-                        Study ID:
+                        Study ID*:
                         <input
                             type="text"
                             name="studyId"
@@ -173,16 +173,16 @@ const StudySeriesEditPage = () => {
                         />
                     </label>
                     <label htmlFor="StudySeriesName">
-                        Series Name:
-                        <input type="text" id="StudySeriesName" name="name" defaultValue={studySerie?.name} />
+                        Series Name*:
+                        <input type="text" id="StudySeriesName" name="name" defaultValue={studySerie?.name} required />
                     </label>
                     <label htmlFor="studyNumber">
-                        Series Number:
-                        <input type="number" id="studyNumber" name="number" defaultValue={studySerie?.number} />
+                        Series Number*:
+                        <input type="number" id="studyNumber" name="number" defaultValue={studySerie?.number} required />
                     </label>
                     <label htmlFor="PreviewFrame">
                         Preview Frame:
-                        <input type="text" name="previewFrame" id="PreviewFrame" defaultValue={studySerie?.previewFrame}></input>
+                        <input type="text" name="previewFrame" id="PreviewFrame" defaultValue={studySerie?.previewFrame} required></input>
                     </label>
                     <label htmlFor="SagitalFrame">
                         Sagital Frame:
