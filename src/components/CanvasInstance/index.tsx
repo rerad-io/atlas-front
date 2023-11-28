@@ -147,7 +147,7 @@ export const CanvasInstance = ({
         //fabricCanvas.moveTo(layer2Frame, 1);
         //fabricCanvas.moveTo(pointsLayer.current, 1000);
 
-        // TODO: проверка на фиксацию
+        // TODO: фиксация background и img
         layer1Bg.set("selectable", false);
         layer2Frame.set("selectable", false);
 

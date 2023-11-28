@@ -6,7 +6,7 @@ import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../..
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import toast, { Toaster } from "react-hot-toast";
 import { PointsFormController } from "../../components/PointsFormController";
-import { createInstanceData, deleteInstanceData } from "../../../requests/instanceDataRequests";
+import { createInstanceData, deleteInstanceData, updateInstanceData } from "../../../requests/instanceDataRequests";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { RenderComponent } from "../../../components/RenderComponent";
 import s from "./styles.module.scss";
@@ -14,6 +14,7 @@ import s from "./styles.module.scss";
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
+    const [serieId, setSerieId] = useState<string>(id as string);
     const [studySerie, setStudySerie] = useState<SeriesListModel>();
     const [instances, setInstances] = useState<InstanceData[]>();
     const [activeFrameNumber, setActiveFrameNumber] = useState<number>(1);
@@ -32,6 +33,7 @@ const StudySeriesEditPage = () => {
         if (id) {
             const fetchDataAndsetStudyseriesId = async () => {
                 try {
+                    setSerieId(id);
                     const targetSerie = await getStudySeriesId(id);
                     setStudySerie(targetSerie);
                     setInstances(targetSerie.instanceDataList);
@@ -123,7 +125,9 @@ const StudySeriesEditPage = () => {
             const result = await createInstanceData(newInstance);
             if (result.id) {
                 notifySuccess("новая структура отмечена!");
-                setCurrentInstancesList([...currentInstancesList, result]);
+                const targetSerie = await getStudySeriesId(serieId);
+                setStudySerie(targetSerie);
+                setInstances(targetSerie.instanceDataList);
                 setNewPoint({} as Point);
             } else {
                 notifyError("ошибка фиксации структуры!");
@@ -141,8 +145,9 @@ const StudySeriesEditPage = () => {
                 try {
                     const result = await deleteInstanceData(selectedInstanceId);
                     if (result === 204) {
-                        const currentInstances = currentInstancesList.filter((instance) => instance.id !== selectedInstanceId);
-                        if (currentInstances.length) setCurrentInstancesList(currentInstances);
+                        const targetSerie = await getStudySeriesId(serieId);
+                        setStudySerie(targetSerie);
+                        setInstances(targetSerie.instanceDataList);
                         notifySuccess("структура удалена из инстанса!");
                     } else {
                         notifyError("ошибка удаления структуры!");
@@ -151,6 +156,33 @@ const StudySeriesEditPage = () => {
                     notifyError("ошибка удаления структуры!");
                     console.error("Error fetching PointsFormController:", error);
                 }
+            }
+        }
+    };
+
+    const handleApprove = async (selectedInstanceId: string) => {
+        if (selectedInstanceId) {
+            try {
+                const targetInstance = currentInstancesList.find((instance) => instance.id === selectedInstanceId);
+                if (targetInstance?.status !== "VERIFIED") {
+                    const verifiedInstance = await updateInstanceData(selectedInstanceId, {
+                        ...targetInstance,
+                        status: "VERIFIED",
+                    });
+                    if (verifiedInstance.id) {
+                        const targetSerie = await getStudySeriesId(serieId);
+                        setStudySerie(targetSerie);
+                        setInstances(targetSerie.instanceDataList);
+                        notifySuccess("структура подтверждена!");
+                    } else {
+                        notifyError("ошибка подтверждения!");
+                    }
+                } else {
+                    notifyError("структура уже была подтверждена");
+                }
+            } catch (error) {
+                notifyError("ошибка подтверждения!");
+                console.error("Error fetching PointsFormController:", error);
             }
         }
     };
@@ -220,10 +252,10 @@ const StudySeriesEditPage = () => {
                                 activeFrameNumber={activeFrameNumber}
                             />
                             <PointsFormController
+                                handleApprove={handleApprove}
                                 handleSubmit={handleSubmit}
                                 anatomicalStructureList={anatomicalStructureList}
                                 handleRemove={handleRemove}
-                                setCurrentInstancesList={setCurrentInstancesList}
                                 currentInstancesList={currentInstancesList}
                             />
                         </div>
