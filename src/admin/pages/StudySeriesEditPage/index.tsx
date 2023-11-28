@@ -203,6 +203,7 @@ const StudySeriesEditPage = () => {
             {id ? (
                 <>
                     <FrameSelectorComponent
+                        setNewPoint={setNewPoint}
                         studySerie={studySerie}
                         handleCurrentFrame={handleCurrentFrame}
                         activeFrameNumber={activeFrameNumber}

@@ -2,18 +2,19 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { instanceSelector } from "../../store/instance";
 import { backendUrl_2 } from "../../requests/backendUrl";
-import { SeriesListModel } from "../../_types";
+import { Point, SeriesListModel } from "../../_types";
 import { Slider } from "../Slider";
 import s from "./styles.module.scss";
 
 type Props = {
+    setNewPoint: (point: Point) => void;
     studySerie?: SeriesListModel;
     activeFrameNumber: number;
     handleCurrentFrame: (index: number) => void;
     context?: string;
 };
 
-const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activeFrameNumber }: Props) => {
+const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, setNewPoint, activeFrameNumber }: Props) => {
     const { study, series, currentSeriesNumber, currentInstanceNumber, currentInstanceData } = useSelector(instanceSelector);
     const [instancesFrame, setInstancesFrame] = useState<string[]>([]);
     const [activeFrame, setActiveFrame] = useState<number>(1);
@@ -22,7 +23,8 @@ const FrameSelectorComponent = ({ context, studySerie, handleCurrentFrame, activ
 
     useEffect(() => {
         if (activeFrameNumber) setActiveFrame(activeFrameNumber);
-    }, [activeFrameNumber]);
+        setNewPoint({} as Point);
+    }, [activeFrameNumber, setNewPoint]);
 
     useEffect(() => {
         if (context === "app") {
