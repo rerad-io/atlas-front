@@ -13,7 +13,7 @@ export const Slider = ({ instancesFrame, activeFrame, handleCurrentFrame }: Prop
         <Swiper
             className={s.slider_wrapper}
             style={{
-                width: "500px",
+                //width: "500px",
                 height: `${slideWidth}px`,
             }}
             spaceBetween={1}

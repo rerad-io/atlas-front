@@ -26,6 +26,7 @@ export const CanvasInstance = ({
     activeFrameNumber,
     seriesNumber,
     newPoint,
+    frameSize,
 }: {
     fabricCanvas: fabric.Canvas;
     context: string;
@@ -34,6 +35,7 @@ export const CanvasInstance = ({
     currentInstancesList: InstanceData[];
     activeFrameNumber: number;
     seriesNumber?: number;
+    frameSize: { width: number; heght: number };
 }) => {
     const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
 
@@ -86,6 +88,8 @@ export const CanvasInstance = ({
     useEffect(() => {
         // TODO: оставить для проверки loading компоненты
         //console.log("reload useEffect in CanvasInstance");
+        const originX = 0;
+        const originY = 0;
 
         pointsLayer.current.getObjects().forEach((fabricItem) => {
             pointsLayer.current.remove(fabricItem);
@@ -96,20 +100,24 @@ export const CanvasInstance = ({
                 const point = new fabric.Circle({
                     left: item?.x,
                     top: item?.y,
-                    originX: "center",
-                    originY: "center",
+
                     radius: 3,
                     fill: item.subjectColor ? `#${item.subjectColor}` : "red",
                 });
 
                 // TODO: почему не работает ?
-                //point.on("mouse:over", function () {
-                //    console.log("selected a circle");
-                //});
+                point.on("mouse:over", function () {
+                    console.log("selected a circle");
+                });
 
                 const startX = item?.x <= 250 ? item?.x - 5 : item?.x + 5;
                 const finishX = item?.x <= 250 ? item?.x - 50 : item?.x + 50;
 
+                // TODO:
+                // 1. нужно вызвать ф-цию которая вернет позицию по вертикали для линии.
+                // 1.1. где targetY равняется =  высота канваса / на кол-во точек по это стороне * на номер точки в этой стороне
+                // 1.2. по горизонтали точки должы быть выравняны
+                // 2. при создании линии создается три точки [startX, item?.y, targetX, targetY,  finishX, targetY]
                 const line = new fabric.Line([startX, item?.y, finishX, item?.y], {
                     originX: "center",
                     originY: "center",
@@ -117,15 +125,22 @@ export const CanvasInstance = ({
                 });
 
                 const text = new fabric.Text(item.structureName, {
-                    originX: "center",
-                    originY: "center",
-                    left: item?.x <= 250 ? startX - 130 : startX + 130,
+                    originX: item?.x <= 250 ? "right" : "left",
+                    //originY: "center",
+                    //left: item?.x <= 250 ? startX - 130 : startX + 130,
+                    left: item?.x <= 250 ? 220 : startX + 20,
+                    //left: 50,
                     top: item?.y,
                     fill: item.subjectColor ? `#${item.subjectColor}` : "white",
                     fontSize: 18,
                     hoverCursor: "hover",
+                    textAlign: item?.x <= 250 ? "right" : "left",
                 });
                 const instanceGroup = new fabric.Group([point, line, text], {});
+
+                //instanceGroup.on("mouse:over", function () {
+                //    console.log("selected a circle");
+                //});
 
                 pointsLayer.current.set("selectable", false);
                 pointsLayer.current.addWithUpdate(instanceGroup);
@@ -137,6 +152,12 @@ export const CanvasInstance = ({
 
         fabricCanvas.renderAll();
     }, [currentData, fabricCanvas, newPoint]);
+
+    //useEffect(()=>{
+
+    //},[
+    //	// TODO: нужно отловить добавление точки
+    //])
 
     useEffect(() => {
         const layer1Bg = new fabric.Group([], {});
@@ -151,8 +172,15 @@ export const CanvasInstance = ({
         layer1Bg.set("selectable", false);
         layer2Frame.set("selectable", false);
 
-        createImage(currentFrame, 500, 500, 0, 0).then((img) => {
+        createImage(
+            currentFrame,
+            frameSize.width * 0.626,
+            frameSize.width * 0.626,
+            frameSize.width * 0.1875,
+            frameSize.width * 0.1875,
+        ).then((img) => {
             layer2Frame.addWithUpdate(img);
+
             //  1-слой для картинок, 1000- слой для точек
             //fabricCanvas.moveTo(img, 1);
             fabricCanvas.renderAll();

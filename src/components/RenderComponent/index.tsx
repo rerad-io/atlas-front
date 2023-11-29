@@ -23,18 +23,44 @@ export const RenderComponent = ({
     newPoint,
     setNewPoint,
 }: RenderComponentProps) => {
+    const parentCanvas = useRef<HTMLDivElement>(null);
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
+    const [frameSize, setFameSize] = useState<{ width: number; height: number }>({
+        width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+        height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+    });
+
+    useEffect(() => {
+        const handleResize = () => {
+            setFameSize({
+                width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+                height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+            });
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         const options = {
-            width: 500,
-            height: 500,
-            backgroundColor: "whitesmoke",
+            //width: frameSize.width,
+            //height: frameSize.heght,
+            //originX: "center",
+            //originY: "center",
+            //backgroundColor: "whitesmoke",
+            backgroundColor: "black",
             cursor: "default",
         };
         const canvas = new fabric.Canvas(canvasEl.current, options);
+
+        canvas.setWidth(parentCanvas?.current?.clientWidth);
+        canvas.setHeight(parentCanvas?.current?.clientHeight);
 
         const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
             const pointer = canvas.getPointer(event.e);
@@ -67,24 +93,23 @@ export const RenderComponent = ({
                 canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
             };
         }
-    }, [context, setNewPoint]);
+    }, [context, frameSize, setNewPoint]);
 
     return (
-        <div className={s.frame_info}>
-            <div className={s.current_frame}>
-                <canvas ref={canvasEl} />
-                {fabricCanvas && (
-                    <CanvasInstance
-                        newPoint={newPoint}
-                        fabricCanvas={fabricCanvas}
-                        context={context}
-                        externalId={externalId}
-                        currentInstancesList={currentInstancesList}
-                        seriesNumber={seriesNumber}
-                        activeFrameNumber={activeFrameNumber}
-                    />
-                )}
-            </div>
+        <div ref={parentCanvas} style={{ width: frameSize?.width, height: frameSize?.height }} className={s.canvas_wrapper}>
+            <canvas ref={canvasEl} />
+            {fabricCanvas && (
+                <CanvasInstance
+                    frameSize={frameSize}
+                    newPoint={newPoint}
+                    fabricCanvas={fabricCanvas}
+                    context={context}
+                    externalId={externalId}
+                    currentInstancesList={currentInstancesList}
+                    seriesNumber={seriesNumber}
+                    activeFrameNumber={activeFrameNumber}
+                />
+            )}
         </div>
     );
 };
