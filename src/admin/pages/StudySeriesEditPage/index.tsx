@@ -118,8 +118,8 @@ const StudySeriesEditPage = () => {
                 structureId: structure.id,
                 instanceNumber: activeFrameNumber,
                 type: "POINT",
-                x: newPoint?.left,
-                y: newPoint?.top,
+                x: newPoint?.x,
+                y: newPoint?.y,
                 path: "path",
             };
             const result = await createInstanceData(newInstance);

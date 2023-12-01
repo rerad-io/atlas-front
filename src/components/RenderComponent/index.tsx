@@ -23,7 +23,6 @@ export const RenderComponent = ({
     newPoint,
     setNewPoint,
 }: RenderComponentProps) => {
-    const parentCanvas = useRef<HTMLDivElement>(null);
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
@@ -48,55 +47,71 @@ export const RenderComponent = ({
     }, []);
 
     useEffect(() => {
-        const options = {
-            //width: frameSize.width,
-            //height: frameSize.heght,
-            //originX: "center",
-            //originY: "center",
-            //backgroundColor: "whitesmoke",
-            backgroundColor: "black",
-            cursor: "default",
-        };
-        const canvas = new fabric.Canvas(canvasEl.current, options);
+        if (frameSize) {
+            const options = {
+                width: frameSize?.width,
+                height: frameSize?.width,
 
-        canvas.setWidth(parentCanvas?.current?.clientWidth);
-        canvas.setHeight(parentCanvas?.current?.clientHeight);
-
-        const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
-            const pointer = canvas.getPointer(event.e);
-            // TODO: оставить для проверки loading компоненты
-            //console.log("RenderComponent => onMouseDown");
-
-            const newPoint = {
-                left: pointer.x,
-                top: pointer.y,
                 originX: "center",
                 originY: "center",
-                radius: 3,
-                fill: "green",
-                hoverCursor: "default",
+                backgroundColor: "#303030",
                 cursor: "default",
             };
 
-            setNewPoint(newPoint);
+            if (fabricCanvas) {
+                // TODO: Удаляем предыдущий канвас перед созданием нового?
+                fabricCanvas.dispose();
+            }
 
-            canvas.renderAll();
-        };
+            const canvas = new fabric.Canvas(canvasEl.current, options);
 
-        setFabricCanvas(canvas);
+            const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
+                const pointer = canvas.getPointer(event.e);
+                const clickX = (pointer.x * 100) / frameSize.width;
+                const clickY = (pointer.y * 100) / frameSize.height;
 
-        if (context === "admin") {
-            canvas.on("mouse:down", (e) => onMouseDown(e));
+                if (
+                    pointer.x > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
+                    pointer.x < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626 &&
+                    pointer.y > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
+                    pointer.y < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626
+                ) {
+                    const newPoint = {
+                        x: clickX,
+                        y: clickY,
+                        left: pointer.x,
+                        top: pointer.y,
+                        originX: "center",
+                        originY: "center",
+                        radius: 3,
+                        fill: "green",
+                        hoverCursor: "default",
+                        cursor: "default",
+                    };
 
-            return () => {
-                setNewPoint({} as Point);
-                canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+                    setNewPoint(newPoint);
+
+                    canvas.renderAll();
+                }
             };
+
+            setFabricCanvas(canvas);
+
+            if (context === "admin") {
+                canvas.on("mouse:down", (e) => onMouseDown(e));
+
+                return () => {
+                    // TODO: обновление canvas остается под вопросом
+                    //canvas.dispose();
+                    setNewPoint({} as Point);
+                    canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+                };
+            }
         }
     }, [context, frameSize, setNewPoint]);
 
     return (
-        <div ref={parentCanvas} style={{ width: frameSize?.width, height: frameSize?.height }} className={s.canvas_wrapper}>
+        <div style={{ width: frameSize?.width, height: frameSize?.height }} className={s.canvas_wrapper}>
             <canvas ref={canvasEl} />
             {fabricCanvas && (
                 <CanvasInstance

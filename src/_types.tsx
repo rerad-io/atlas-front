@@ -91,6 +91,8 @@ export type InstanceData = {
 export type Point = {
     left: number;
     top: number;
+    x: number;
+    y: number;
     originX: string;
     originY: string;
     radius: number;
