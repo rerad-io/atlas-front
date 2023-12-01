@@ -108,6 +108,7 @@ export const RenderComponent = ({
                 };
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [context, frameSize, setNewPoint]);
 
     return (
