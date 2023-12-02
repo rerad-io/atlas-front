@@ -7,7 +7,7 @@ const AnatomicalStructureSubjectListPage = () => {
         <div className={s.page}>
             <div className="container">
                 <h1>Темы Анатомической структуры</h1>
-                <Button to="/admin/AnatomicalStructureSubject/create">Add new Anatomical Theme</Button>
+                <Button to="/admin/AnatomicalStructureSubject/create">Добавить новую тему</Button>
             </div>
             <AnatomicalStructureSubjectList />
         </div>

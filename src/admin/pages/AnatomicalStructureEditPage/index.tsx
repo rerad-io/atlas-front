@@ -113,7 +113,7 @@ const AnatomicalStructureEditPage = () => {
                     <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                         {!id ? (
                             <label>
-                                Subject Name:
+                                Тема:
                                 <select name="anatomicalStructureSubjectId" required>
                                     <option disabled value={""}>
                                         выбрать
@@ -125,17 +125,17 @@ const AnatomicalStructureEditPage = () => {
                             </label>
                         ) : (
                             <p>
-                                Subject Name: <b>{subject?.name}</b>
+                                Тема: <b>{subject?.name}</b>
                             </p>
                         )}
 
                         <label>
-                            Structure Name*:
+                            Анатомическая структура * :
                             <input type="text" name="name" placeholder={structure?.name} required />
                         </label>
                         {typeof id === "undefined" ? (
                             <label>
-                                Create Another:
+                                Создать еще :
                                 <input
                                     type="checkbox"
                                     name="createAnother"
@@ -146,7 +146,7 @@ const AnatomicalStructureEditPage = () => {
                                 />
                             </label>
                         ) : null}
-                        <Button>Save</Button>
+                        <Button>Сохранить</Button>
                     </form>
                 </div>
             </div>

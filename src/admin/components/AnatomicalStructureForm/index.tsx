@@ -46,46 +46,44 @@ const AnatomicalStructureForm = ({ columns, setAnatomicalStructureList }: Props)
     };
 
     return (
-        <>
-            <form className={s.form} onSubmit={submit}>
-                <h2>Фильтры</h2>
-                <label>
-                    Название
-                    <input type="input" name="name" placeholder="Search..." />
-                </label>
-                <label>
-                    Тема
-                    <select name="anatomicalStructureSubjectId" defaultValue={"all"}>
-                        <option value={"all"}>все</option>
-                        {anatomicalStructureSubjectList.map((el) => (
-                            <option key={el.id} value={el.id}>
-                                {el.name}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label>
-                    Сортировка
-                    <select name="orderBy" defaultValue={"name"}>
-                        <option value={"name"}>по имени структуры</option>
-                        {columns.slice(1, -1).map((el, index) => (
-                            <option key={index} value={el.id}>
-                                {el}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <label>
-                    Направление сортировки
-                    <select name="orderByDirection" defaultValue={"asc"}>
-                        <option value={"asc"}>от А до Я</option>
-                        <option value={"desc"}>от Я до А</option>
-                    </select>
-                </label>
+        <form className={s.form} onSubmit={submit}>
+            <h2>Фильтры</h2>
+            <label>
+                Название
+                <input type="input" name="name" placeholder="Search..." />
+            </label>
+            <label>
+                Тема
+                <select name="anatomicalStructureSubjectId" defaultValue={"all"}>
+                    <option value={"all"}>все</option>
+                    {anatomicalStructureSubjectList.map((el) => (
+                        <option key={el.id} value={el.id}>
+                            {el.name}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label>
+                Сортировка
+                <select name="orderBy" defaultValue={"name"}>
+                    <option value={"name"}>по имени структуры</option>
+                    {columns.slice(1, -1).map((el, index) => (
+                        <option key={index} value={el.id}>
+                            {el}
+                        </option>
+                    ))}
+                </select>
+            </label>
+            <label>
+                Направление сортировки
+                <select name="orderByDirection" defaultValue={"asc"}>
+                    <option value={"asc"}>от А до Я</option>
+                    <option value={"desc"}>от Я до А</option>
+                </select>
+            </label>
 
-                <Button type="submit">Применить</Button>
-            </form>
-        </>
+            <Button type="submit">Применить</Button>
+        </form>
     );
 };
 

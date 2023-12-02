@@ -1,23 +1,32 @@
+import { AnatomicalStructureSubject, AnatomicalStructureModel } from "../../../_types";
 import Button from "../Button";
 import s from "./styles.module.scss";
 
-function TableComponent({ columns = [], data = [], actions = "", removeItemById = null }) {
+type Props = {
+    columns: string[];
+    data: AnatomicalStructureSubject[] | AnatomicalStructureModel[];
+    actions: string;
+    removeItemById: (id: string) => void;
+};
+
+function TableComponent({ columns, data, actions = "", removeItemById }: Props) {
     const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
+
     const tableData = () => {
         return data.map((item, index) => (
             <tr
                 key={index}
                 style={
-                    item.anatomicalStructureSubject
-                        ? { backgroundColor: `#${item.anatomicalStructureSubject.color}` }
-                        : { backgroundColor: `#${item.color}` }
+                    item?.color
+                        ? { backgroundColor: `#${item?.color}` }
+                        : { backgroundColor: `#${item?.anatomicalStructureSubject?.color}` }
                 }
             >
-                {item.anatomicalStructureSubject ? (
+                {item?.anatomicalStructureSubject ? (
                     <>
                         <td>{item.id}</td>
                         <td>{item.name}</td>
-                        <td>{item.anatomicalStructureSubject ? item.anatomicalStructureSubject.name : ""}</td>
+                        <td>{item?.anatomicalStructureSubject ? item?.anatomicalStructureSubject?.name : ""}</td>
                     </>
                 ) : (
                     Object.values(item).map((value, objectIndex) => <td key={objectIndex}>{value}</td>)
@@ -25,8 +34,8 @@ function TableComponent({ columns = [], data = [], actions = "", removeItemById 
                 {actions ? (
                     <td className={s.actions}>
                         <div className={s.action_wrapper}>
-                            <Button to={`/admin/${actions}/${item.id}`}>Edit</Button>
-                            <Button onClick={() => removeItemById(item.id, actions)}>Delete</Button>
+                            <Button to={`/admin/${actions}/${item.id}`}>Изменить</Button>
+                            <Button onClick={() => removeItemById(item.id)}>Удалить</Button>
                         </div>
                     </td>
                 ) : null}
