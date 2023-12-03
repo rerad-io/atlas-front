@@ -5,19 +5,29 @@ import { deleteStudySeries } from "../../../requests/StudySeriesRequests";
 import { Series } from "../../../_types";
 import s from "./styles.module.scss";
 
-const StudySeriesList = ({ seriesList, studyId }) => {
+const columns = [
+    "Идентификационный номер",
+    "Номер серии",
+    "Название серии",
+    "Предварительный кадр",
+    "Количество экземпляров",
+    "Сагитальное изображение",
+    "Корональное изображение",
+    "Действия",
+];
+
+type Props = {
+    seriesList: Series[];
+    studyId: string;
+};
+
+const StudySeriesList = ({ seriesList, studyId }: Props) => {
     const [studySeriesList, setStudySeriesList] = useState<Series[]>([]);
-    const [columns, setColumns] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchDataAndSetStudySeriesList = async () => {
             try {
                 setStudySeriesList(seriesList);
-                if (seriesList?.length) {
-                    const columnsTitles = Object.keys(seriesList[0]);
-                    columnsTitles.push("Actions");
-                    setColumns(columnsTitles);
-                }
             } catch (error) {
                 console.error("StudySeriesList - ", error);
             }

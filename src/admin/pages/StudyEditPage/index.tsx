@@ -86,7 +86,7 @@ const StudyEditPage = () => {
             <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                 {
                     <label>
-                        External Id*:
+                        Внешний идентификатор * :
                         <input
                             required
                             type="text"
@@ -99,20 +99,20 @@ const StudyEditPage = () => {
                     </label>
                 }
                 <label>
-                    Study Name*:
+                    Название исследования * :
                     <input required type="text" name="name" defaultValue={study?.name} onChange={handleChange} />
                 </label>
                 <label>
-                    Study Description:
+                    Описание исследования:
                     <textarea name="description" rows={4} cols={50} defaultValue={study?.description} onChange={handleChange} />
                 </label>
                 <label>
-                    Preview Frame:
+                    Предварительный кадр:
                     <input type="text" name="previewFrame" defaultValue={study?.previewFrame} onChange={handleChange} />
                 </label>
                 {typeof id === "undefined" ? (
                     <label>
-                        Create Another:
+                        Создать еще:
                         <input
                             type="checkbox"
                             name="createAnother"
@@ -123,7 +123,7 @@ const StudyEditPage = () => {
                         />
                     </label>
                 ) : null}
-                <Button>Save</Button>
+                <Button>Сохранить</Button>
             </form>
 
             {id ? <StudySeriesList seriesList={study?.seriesList} studyId={id} /> : null}

@@ -10,11 +10,11 @@ const AdminIndex = () => {
             <section className={s.menu_section}>
                 <div className="container">
                     <div className={s.page_wrapper}>
-                        <h1>Administration page</h1>
+                        <h1>Страница управления</h1>
                         <div className={s.subtitle}>
-                            <span>You are logged in as:</span>
-                            <span>Admin: {name}</span>
-                            <span>Role: {role}</span>
+                            <span>Вы зашли как:</span>
+                            <span>Имя: {name}</span>
+                            <span>Доступ: {role}</span>
                         </div>
                         <nav>
                             <ul className={s.nav_list}>

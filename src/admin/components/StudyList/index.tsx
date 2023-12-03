@@ -6,6 +6,7 @@ import { Study } from "../../../_types";
 type Props = {
     studyList: Study[];
     columns: string[];
+    actions: string;
 };
 const StudyList = ({ studyList, columns }: Props) => {
     const [list, setList] = useState(studyList);

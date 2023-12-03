@@ -1,10 +1,10 @@
-import { AnatomicalStructureSubject, AnatomicalStructureModel } from "../../../_types";
+import { AnatomicalStructureSubject, AnatomicalStructureModel, Series } from "../../../_types";
 import Button from "../Button";
 import s from "./styles.module.scss";
 
 type Props = {
     columns: string[];
-    data: AnatomicalStructureSubject[] | AnatomicalStructureModel[];
+    data: AnatomicalStructureSubject[] | AnatomicalStructureModel[] | Series[];
     actions: string;
     removeItemById: (id: string) => void;
 };
@@ -13,7 +13,7 @@ function TableComponent({ columns, data, actions = "", removeItemById }: Props) 
     const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
 
     const tableData = () => {
-        return data.map((item, index) => (
+        return data?.map((item, index) => (
             <tr
                 key={index}
                 style={

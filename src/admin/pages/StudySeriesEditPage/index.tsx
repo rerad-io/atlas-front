@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Button from "../../../components/UI/Button";
-import { AnatomicalStructure, InstanceData, Point, SeriesListModel } from "../../../_types";
+import { AnatomicalStructure, InstanceData, Point, SeriesListModel, Study } from "../../../_types";
 import { createStudySeries, getStudySeriesId, updateStudySeries } from "../../../requests/StudySeriesRequests";
 import FrameSelectorComponent from "../../../components/FrameSelectorComponent";
 import toast, { Toaster } from "react-hot-toast";
@@ -9,12 +9,14 @@ import { PointsFormController } from "../../components/PointsFormController";
 import { createInstanceData, deleteInstanceData, updateInstanceData } from "../../../requests/instanceDataRequests";
 import { getAnatomicalStructureList } from "../../../requests/anatomicalStructureRequests";
 import { RenderComponent } from "../../../components/RenderComponent";
+import { getStudyId } from "../../../requests/StudyRequests";
 import s from "./styles.module.scss";
 
 const StudySeriesEditPage = () => {
     const { id } = useParams<{ id: string }>();
 
     const [serieId, setSerieId] = useState<string>(id as string);
+    const [study, setStudy] = useState<Study>();
     const [studySerie, setStudySerie] = useState<SeriesListModel>();
     const [instances, setInstances] = useState<InstanceData[]>();
     const [activeFrameNumber, setActiveFrameNumber] = useState<number>(1);
@@ -28,6 +30,23 @@ const StudySeriesEditPage = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const studyId = searchParams.get("studyId");
+
+    useEffect(() => {
+        const fetchStudyId = async () => {
+            try {
+                if (studyId) {
+                    const targetStudy = await getStudyId(studyId);
+                    setStudy(targetStudy);
+                } else if (studySerie) {
+                    const targetStudy = await getStudyId(studySerie?.studyId);
+                    setStudy(targetStudy);
+                }
+            } catch (error) {
+                console.error("StudySeriesEditPage - ", error);
+            }
+        };
+        fetchStudyId();
+    }, [studyId, studySerie]);
 
     useEffect(() => {
         if (id) {
@@ -194,42 +213,50 @@ const StudySeriesEditPage = () => {
                 <h1 className="title">{id ? "Редактировать" : "Добавить"} Серию Исследования</h1>
                 <form onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="Study">
-                        Study ID*:
+                        Исследование:
                         <input
                             type="text"
                             name="studyId"
                             id="Study"
-                            defaultValue={studyId ? studyId : studySerie?.studyId}
+                            defaultValue={study?.name}
                             disabled
-                            style={{ width: "400px" }}
+                            style={{
+                                width: "400px",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                fontWeight: "600",
+                                color: "black",
+                                fontSize: "18px",
+                                paddingLeft: "10px",
+                            }}
                         />
                     </label>
                     <label htmlFor="StudySeriesName">
-                        Series Name*:
+                        Название серии * :
                         <input type="text" id="StudySeriesName" name="name" defaultValue={studySerie?.name} required />
                     </label>
                     <label htmlFor="studyNumber">
-                        Series Number*:
+                        Номер серии * :
                         <input type="number" id="studyNumber" name="number" defaultValue={studySerie?.number} required />
                     </label>
                     <label htmlFor="PreviewFrame">
-                        Preview Frame:
+                        Предварительное изображение:
                         <input type="text" name="previewFrame" id="PreviewFrame" defaultValue={studySerie?.previewFrame} required></input>
                     </label>
                     <label htmlFor="SagitalFrame">
-                        Sagital Frame:
+                        Сагитальное изображение:
                         <input type="text" name="sagitalFrame" id="SagitalFrame" defaultValue={studySerie?.sagitalFrame}></input>
                     </label>
                     <label htmlFor="CoronalFrame">
-                        Coronal Frame:
+                        Корональное изображение:
                         <input type="text" name="coronalFrame" id="CoronalFrame" defaultValue={studySerie?.coronalFrame}></input>
                     </label>
                     <label htmlFor="instanceCount">
-                        Instance Count:
+                        Количество экземпляров:
                         <input type="number" name="instanceCount" id="instanceCount" defaultValue={studySerie?.instanceCount}></input>
                     </label>
 
-                    <Button>Save</Button>
+                    <Button>Сохранить</Button>
                 </form>
             </div>
             {id ? (
