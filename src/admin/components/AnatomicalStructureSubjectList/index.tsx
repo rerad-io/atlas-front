@@ -8,9 +8,10 @@ import {
 } from "../../../requests/anatomicalStructureSubjectRequests";
 import { AnatomicalStructureSubject } from "../../../_types";
 
+const columns = ["Идентификационный номер", "Название Темы", "Цвет темы", "Действия"];
+
 const AnatomicalStructureSubjectList = () => {
     const [subjectsList, setSubjectsList] = useState<AnatomicalStructureSubject[]>([]);
-    const [columns, setColumns] = useState<string[]>([]);
 
     const notifySuccess = (message: string) => toast.success(message, { duration: 2000 });
     const notifyError = (message: string) => toast.error(message, { duration: 2000 });
@@ -27,14 +28,6 @@ const AnatomicalStructureSubjectList = () => {
 
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if (subjectsList.length) {
-            const columnsTitles = Object.keys(subjectsList[0]);
-            columnsTitles.push("Actions");
-            setColumns(columnsTitles);
-        }
-    }, [subjectsList]);
 
     const removeItemById = async (itemId: string) => {
         const targetSubject = await getAnatomicalStructureSubjectById(itemId);

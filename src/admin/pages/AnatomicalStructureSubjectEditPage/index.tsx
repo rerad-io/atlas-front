@@ -11,6 +11,8 @@ import {
 import { AnatomicalStructure, AnatomicalStructureSubjectModel } from "../../../_types";
 import s from "./styles.module.scss";
 
+const columns = ["Идентификационный номер", "Название структуры", "Описание структуры", "Действия"];
+
 const AnatomicalStructureSubjectEditPage = () => {
     const { id } = useParams<string>();
     const navigate = useNavigate();
@@ -18,7 +20,6 @@ const AnatomicalStructureSubjectEditPage = () => {
 
     const [subject, setSubject] = useState<AnatomicalStructureSubjectModel>();
     const [anatomicalStructureList, setAnatomicalStructureList] = useState<AnatomicalStructure[]>([]);
-    const [columns, setColumns] = useState<string[]>([]);
     const [subjectColor, setSubjectColor] = useState<string>(subject ? `#${subject.color}` : "000000");
 
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -41,14 +42,6 @@ const AnatomicalStructureSubjectEditPage = () => {
             fetchData(id);
         }
     }, [id]);
-
-    useEffect(() => {
-        if (anatomicalStructureList.length) {
-            const columnsTitles = Object.keys(anatomicalStructureList[0]);
-            columnsTitles.push("Actions");
-            setColumns(columnsTitles);
-        }
-    }, [anatomicalStructureList]);
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -115,11 +108,11 @@ const AnatomicalStructureSubjectEditPage = () => {
                 <h1 className="title">{id ? "Редактировать" : "Создать"} тему</h1>
                 <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
-                        Theme Name*:
+                        Название темы * :
                         <input type="text" name="name" id="themeName" placeholder={subject?.name} required />
                     </label>
                     <label htmlFor="themeColor">
-                        Theme Color*:
+                        Цвет темы * :
                         {subject ? (
                             <input type="color" name="color" id="themeColor" value={subjectColor} onChange={handleColorChange} required />
                         ) : (
@@ -128,7 +121,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                     </label>
                     {typeof id === "undefined" ? (
                         <label htmlFor="createAnother">
-                            Create Another:
+                            Создать еще :
                             <input
                                 type="checkbox"
                                 name="createAnother"
@@ -140,7 +133,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                             />
                         </label>
                     ) : null}
-                    <Button>Save</Button>
+                    <Button>Сохранить</Button>
                 </form>
             </div>
             {id ? <AnatomicalStructureList {...{ anatomicalStructureList, columns }} /> : null}

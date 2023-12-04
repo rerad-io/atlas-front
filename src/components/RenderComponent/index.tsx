@@ -26,65 +26,106 @@ export const RenderComponent = ({
     const canvasEl = useRef<HTMLCanvasElement>(null);
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
+    const [frameSize, setFameSize] = useState<{ width: number; height: number }>({
+        width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+        height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+    });
 
     useEffect(() => {
-        const options = {
-            width: 500,
-            height: 500,
-            backgroundColor: "whitesmoke",
-            cursor: "default",
+        const handleResize = () => {
+            setFameSize({
+                width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+                height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+            });
         };
-        const canvas = new fabric.Canvas(canvasEl.current, options);
 
-        const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
-            const pointer = canvas.getPointer(event.e);
-            // TODO: оставить для проверки loading компоненты
-            //console.log("RenderComponent => onMouseDown");
+        window.addEventListener("resize", handleResize);
 
-            const newPoint = {
-                left: pointer.x,
-                top: pointer.y,
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (frameSize) {
+            const options = {
+                width: frameSize?.width,
+                height: frameSize?.width,
+
                 originX: "center",
                 originY: "center",
-                radius: 3,
-                fill: "green",
-                hoverCursor: "default",
+                backgroundColor: "#303030",
                 cursor: "default",
             };
 
-            setNewPoint(newPoint);
+            if (fabricCanvas) {
+                // TODO: Удаляем предыдущий канвас перед созданием нового?
+                fabricCanvas.dispose();
+            }
 
-            canvas.renderAll();
-        };
+            const canvas = new fabric.Canvas(canvasEl.current, options);
 
-        setFabricCanvas(canvas);
+            const onMouseDown = (event: fabric.IEvent<MouseEvent>) => {
+                const pointer = canvas.getPointer(event.e);
+                const clickX = (pointer.x * 100) / frameSize.width;
+                const clickY = (pointer.y * 100) / frameSize.height;
 
-        if (context === "admin") {
-            canvas.on("mouse:down", (e) => onMouseDown(e));
+                if (
+                    pointer.x > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
+                    pointer.x < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626 &&
+                    pointer.y > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
+                    pointer.y < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626
+                ) {
+                    const newPoint = {
+                        x: clickX,
+                        y: clickY,
+                        left: pointer.x,
+                        top: pointer.y,
+                        originX: "center",
+                        originY: "center",
+                        radius: 3,
+                        fill: "green",
+                        hoverCursor: "default",
+                        cursor: "default",
+                    };
 
-            return () => {
-                setNewPoint({} as Point);
-                canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+                    setNewPoint(newPoint);
+
+                    canvas.renderAll();
+                }
             };
+
+            setFabricCanvas(canvas);
+
+            if (context === "admin") {
+                canvas.on("mouse:down", (e) => onMouseDown(e));
+
+                return () => {
+                    // TODO: обновление canvas остается под вопросом
+                    //canvas.dispose();
+                    setNewPoint({} as Point);
+                    canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
+                };
+            }
         }
-    }, [context, setNewPoint]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [context, frameSize, setNewPoint]);
 
     return (
-        <div className={s.frame_info}>
-            <div className={s.current_frame}>
-                <canvas ref={canvasEl} />
-                {fabricCanvas && (
-                    <CanvasInstance
-                        newPoint={newPoint}
-                        fabricCanvas={fabricCanvas}
-                        context={context}
-                        externalId={externalId}
-                        currentInstancesList={currentInstancesList}
-                        seriesNumber={seriesNumber}
-                        activeFrameNumber={activeFrameNumber}
-                    />
-                )}
-            </div>
+        <div style={{ width: frameSize?.width, height: frameSize?.height }} className={s.canvas_wrapper}>
+            <canvas ref={canvasEl} />
+            {fabricCanvas && (
+                <CanvasInstance
+                    frameSize={frameSize}
+                    newPoint={newPoint}
+                    fabricCanvas={fabricCanvas}
+                    context={context}
+                    externalId={externalId}
+                    currentInstancesList={currentInstancesList}
+                    seriesNumber={seriesNumber}
+                    activeFrameNumber={activeFrameNumber}
+                />
+            )}
         </div>
     );
 };
