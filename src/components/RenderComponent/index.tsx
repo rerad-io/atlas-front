@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { fabric } from "fabric";
 import { CanvasInstance } from "../CanvasInstance";
 import { InstanceData, Point } from "../../_types";
-import s from "./styles.module.scss";
 
 type RenderComponentProps = {
     context: string;
@@ -27,15 +26,15 @@ export const RenderComponent = ({
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
     const [frameSize, setFameSize] = useState<{ width: number; height: number }>({
-        width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
-        height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+        width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
+        height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
     });
 
     useEffect(() => {
         const handleResize = () => {
             setFameSize({
-                width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
-                height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.4,
+                width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
+                height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
             });
         };
 
@@ -57,11 +56,6 @@ export const RenderComponent = ({
                 backgroundColor: "#303030",
                 cursor: "default",
             };
-
-            if (fabricCanvas) {
-                // TODO: Удаляем предыдущий канвас перед созданием нового?
-                fabricCanvas.dispose();
-            }
 
             const canvas = new fabric.Canvas(canvasEl.current, options);
 
@@ -99,24 +93,25 @@ export const RenderComponent = ({
 
             if (context === "admin") {
                 canvas.on("mouse:down", (e) => onMouseDown(e));
+            }
 
-                return () => {
-                    // TODO: обновление canvas остается под вопросом
-                    //canvas.dispose();
+            return () => {
+                // TODO: обновление canvas остается под вопросом
+                canvas.dispose();
+                if (context === "admin") {
                     setNewPoint({} as Point);
                     canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
-                };
-            }
+                }
+            };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [context, frameSize, setNewPoint]);
 
     return (
-        <div style={{ width: frameSize?.width, height: frameSize?.height }} className={s.canvas_wrapper}>
+        <>
             <canvas ref={canvasEl} />
             {fabricCanvas && (
                 <CanvasInstance
-                    frameSize={frameSize}
                     newPoint={newPoint}
                     fabricCanvas={fabricCanvas}
                     context={context}
@@ -126,6 +121,6 @@ export const RenderComponent = ({
                     activeFrameNumber={activeFrameNumber}
                 />
             )}
-        </div>
+        </>
     );
 };
