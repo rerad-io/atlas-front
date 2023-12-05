@@ -6,11 +6,11 @@ import { InstanceData, Point } from "../../_types";
 type RenderComponentProps = {
     context: string;
     externalId?: string;
-    currentInstancesList: InstanceData[];
-    activeFrameNumber: number;
+    currentInstancesList?: InstanceData[];
+    activeFrameNumber?: number;
     seriesNumber?: number;
     newPoint?: Point;
-    setNewPoint: (point: Point) => void;
+    setNewPoint?: (point: Point) => void;
 };
 
 export const RenderComponent = ({
@@ -26,15 +26,15 @@ export const RenderComponent = ({
 
     const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas>();
     const [frameSize, setFameSize] = useState<{ width: number; height: number }>({
-        width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
-        height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
+        width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.5,
+        height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.5,
     });
 
     useEffect(() => {
         const handleResize = () => {
             setFameSize({
-                width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
-                height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.4,
+                width: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.5,
+                height: window.innerWidth <= 992 ? window.innerWidth * 0.8 : window.innerWidth * 0.5,
             });
         };
 
@@ -48,8 +48,8 @@ export const RenderComponent = ({
     useEffect(() => {
         if (frameSize) {
             const options = {
-                width: frameSize?.width,
-                height: frameSize?.width,
+                width: frameSize.width,
+                height: frameSize.width,
 
                 originX: "center",
                 originY: "center",
@@ -65,10 +65,10 @@ export const RenderComponent = ({
                 const clickY = (pointer.y * 100) / frameSize.height;
 
                 if (
-                    pointer.x > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
-                    pointer.x < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626 &&
-                    pointer.y > (frameSize?.width - frameSize?.width * 0.626) / 2 &&
-                    pointer.y < (frameSize?.width - frameSize?.width * 0.626) / 2 + frameSize?.width * 0.626
+                    pointer.x > (frameSize.width - frameSize.width * 0.626) / 2 &&
+                    pointer.x < (frameSize.width - frameSize.width * 0.626) / 2 + frameSize.width * 0.626 &&
+                    pointer.y > (frameSize.width - frameSize.width * 0.626) / 2 &&
+                    pointer.y < (frameSize.width - frameSize.width * 0.626) / 2 + frameSize.width * 0.626
                 ) {
                     const newPoint = {
                         x: clickX,
@@ -96,8 +96,6 @@ export const RenderComponent = ({
             }
 
             return () => {
-                // TODO: обновление canvas остается под вопросом
-                canvas.dispose();
                 if (context === "admin") {
                     setNewPoint({} as Point);
                     canvas.off("mouse:down", onMouseDown as (e: fabric.IEvent<Event>) => void);
@@ -105,10 +103,10 @@ export const RenderComponent = ({
             };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [context, frameSize, setNewPoint]);
+    }, [context, frameSize]);
 
     return (
-        <>
+        <div style={{ width: frameSize.width, height: frameSize.width, marginTop: "20px" }}>
             <canvas ref={canvasEl} />
             {fabricCanvas && (
                 <CanvasInstance
@@ -121,6 +119,6 @@ export const RenderComponent = ({
                     activeFrameNumber={activeFrameNumber}
                 />
             )}
-        </>
+        </div>
     );
 };

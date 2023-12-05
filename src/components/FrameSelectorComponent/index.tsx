@@ -9,7 +9,7 @@ import s from "./styles.module.scss";
 type Props = {
     setNewPoint: (point: Point) => void;
     studySerie?: SeriesListModel;
-    activeFrameNumber: number;
+    activeFrameNumber?: number;
     handleCurrentFrame: (index: number) => void;
     context?: string;
 };

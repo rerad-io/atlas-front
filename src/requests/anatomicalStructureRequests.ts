@@ -24,9 +24,11 @@ export const getAnatomicalStructureList = async (parameters: Record<string, unkn
 };
 
 // TODO: для аутентификации
-//export const getAnatomicalStructureList = async (parameters: Record<string, unknown>) => {
-//    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure${prepareQuery(parameters)}`, null, {
-//			Headers:
+//export const getAnatomicalStructureAuthList = async (parameters: Record<string, unknown>) => {
+//    const result = await axios.get<AnatomicalStructure[]>(`${backendUrl}AnatomicalStructure${prepareQuery(parameters)}`, {
+//			headers:{
+//				"Authorization":"Bearer YOUR_ACCESS_TOKEN",
+//			}
 //		});
 //    if (result.status >= 200 && result.status <= 300) {
 //        return result.data;

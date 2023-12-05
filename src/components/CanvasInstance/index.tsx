@@ -35,8 +35,8 @@ export const CanvasInstance = ({
     context: string;
     externalId?: string;
     newPoint?: Point;
-    currentInstancesList: InstanceData[];
-    activeFrameNumber: number;
+    currentInstancesList?: InstanceData[];
+    activeFrameNumber?: number;
     seriesNumber?: number;
 }) => {
     const { study, currentInstanceData, currentInstanceNumber, currentSeriesNumber } = useSelector(instanceSelector);
@@ -66,7 +66,7 @@ export const CanvasInstance = ({
 
     useEffect(() => {
         if (context === "admin") {
-            setCurrentData(currentInstancesList);
+            setCurrentData(currentInstancesList!);
         }
     }, [context, currentInstancesList]);
 
@@ -90,98 +90,100 @@ export const CanvasInstance = ({
         // TODO: оставить для проверки loading компоненты
         //console.log("reload useEffect in CanvasInstance");
 
-        if (fabricCanvas) {
-            pointsLayer.current.getObjects().forEach((fabricItem) => {
-                pointsLayer.current.remove(fabricItem);
-            });
-
-            if (currentData.length) {
-                const leftDots: InstanceData[] = currentData.reduce((acum: InstanceData[], item: InstanceData) => {
-                    if ((fabricCanvas.width * item?.x) / 100 <= fabricCanvas.width * 0.5) {
-                        acum = [...acum, item];
-                    }
-                    acum.sort((a, b) => a.y - b.y);
-                    return acum;
-                }, []);
-
-                const rightDots: InstanceData[] = currentData.reduce((acum: InstanceData[], item: InstanceData) => {
-                    if ((fabricCanvas.width * item?.x) / 100 > fabricCanvas.width * 0.5) {
-                        acum = [...acum, item];
-                    }
-                    acum.sort((a, b) => a.y - b.y);
-                    return acum;
-                }, []);
-
-                const getVericalLine = (oneSideDataLength: number, oneSideDataItem: number) => {
-                    const targetY = (fabricCanvas.height / oneSideDataLength) * oneSideDataItem;
-                    return targetY + 50;
-                };
-
-                const drawData = (oneSideData: InstanceData[]) => {
-                    oneSideData.forEach((item, index) => {
-                        const itemX = (fabricCanvas.width * item?.x) / 100;
-                        const itemY = (fabricCanvas.height * item?.y) / 100;
-
-                        const point = new fabric.Circle({
-                            left: itemX,
-                            top: itemY,
-                            originX: "center",
-                            originY: "center",
-                            radius: 2,
-                            fill: item.subjectColor ? `#${item.subjectColor}` : "red",
-                        });
-
-                        const imgLeft = (fabricCanvas?.width - fabricCanvas?.width * 0.626) / 2;
-                        const imgRight = (fabricCanvas?.width - fabricCanvas?.width * 0.626) / 2 + fabricCanvas?.width * 0.626;
-
-                        const targetX = itemX <= fabricCanvas.width * 0.5 ? imgLeft + 50 : imgRight - 50;
-                        const targetY = getVericalLine(oneSideData.length, index);
-                        const finishX = itemX <= fabricCanvas.width * 0.5 ? targetX - CANVASOBJECT_WIDTH : targetX + CANVASOBJECT_WIDTH;
-
-                        const line_1 = new fabric.Line([itemX, itemY, targetX, targetY], {
-                            originX: "center",
-                            originY: "center",
-                            width: CANVASOBJECT_WIDTH,
-                            stroke: item.subjectColor ? `#${item.subjectColor}` : "white",
-                        });
-
-                        const line_2 = new fabric.Line([targetX, targetY, finishX, targetY], {
-                            originX: "center",
-                            originY: "center",
-                            stroke: item.subjectColor ? `#${item.subjectColor}` : "white",
-                        });
-                        const lineGroup = new fabric.Group([line_1, line_2], {});
-
-                        const text = new fabric.Textbox(item.structureName, {
-                            originX: itemX <= fabricCanvas.width * 0.5 ? "right" : "left",
-                            originY: "bottom",
-                            left: itemX <= fabricCanvas.width * 0.5 ? targetX - 5 : targetX + 5,
-                            top: targetY,
-                            lineHeight: 0.8,
-                            hoverCursor: "red",
-                            fontSize: 18,
-                            selectable: true,
-                            width: CANVASOBJECT_WIDTH,
-                            textAlign: itemX <= fabricCanvas.width * 0.5 ? "right" : "left",
-                            fill: item.subjectColor ? `#${item.subjectColor}` : "white",
-                        });
-
-                        const instanceGroup = new fabric.Group([point, text, lineGroup], {});
-
-                        pointsLayer.current.set("selectable", false);
-                        pointsLayer.current.addWithUpdate(instanceGroup);
-                    });
-                };
-
-                drawData(leftDots);
-                drawData(rightDots);
-            }
-
-            const targetPoint = new fabric.Circle(newPoint);
-            pointsLayer.current.addWithUpdate(targetPoint);
-
-            fabricCanvas.renderAll();
+        if (!fabricCanvas) {
+            return;
         }
+        pointsLayer.current.getObjects().forEach((fabricItem) => {
+            pointsLayer.current.remove(fabricItem);
+        });
+
+        if (currentData.length) {
+            const leftDots: InstanceData[] = currentData.reduce((acum: InstanceData[], item: InstanceData) => {
+                if ((fabricCanvas.width! * item?.x) / 100 <= fabricCanvas.width! * 0.5) {
+                    acum = [...acum, item];
+                }
+                acum.sort((a, b) => a.y - b.y);
+                return acum;
+            }, []);
+
+            const rightDots: InstanceData[] = currentData.reduce((acum: InstanceData[], item: InstanceData) => {
+                if ((fabricCanvas.width! * item?.x) / 100 > fabricCanvas.width! * 0.5) {
+                    acum = [...acum, item];
+                }
+                acum.sort((a, b) => a.y - b.y);
+                return acum;
+            }, []);
+
+            const getVericalLine = (oneSideDataLength: number, oneSideDataItem: number) => {
+                const targetY = (fabricCanvas.height! / oneSideDataLength) * oneSideDataItem;
+                return targetY + 50;
+            };
+
+            const drawData = (oneSideData: InstanceData[]) => {
+                oneSideData.forEach((item, index) => {
+                    const itemX = (fabricCanvas.width! * item?.x) / 100;
+                    const itemY = (fabricCanvas.height! * item?.y) / 100;
+
+                    const point = new fabric.Circle({
+                        left: itemX,
+                        top: itemY,
+                        originX: "center",
+                        originY: "center",
+                        radius: 2,
+                        fill: item.subjectColor ? `#${item.subjectColor}` : "red",
+                    });
+
+                    const imgLeft = (fabricCanvas.width! - fabricCanvas.width! * 0.626) / 2;
+                    const imgRight = (fabricCanvas.width! - fabricCanvas.width! * 0.626) / 2 + fabricCanvas.width! * 0.626;
+
+                    const targetX = itemX <= fabricCanvas.width! * 0.5 ? imgLeft + 50 : imgRight - 50;
+                    const targetY = getVericalLine(oneSideData.length, index);
+                    const finishX = itemX <= fabricCanvas.width! * 0.5 ? targetX - CANVASOBJECT_WIDTH : targetX + CANVASOBJECT_WIDTH;
+
+                    const line_1 = new fabric.Line([itemX, itemY, targetX, targetY], {
+                        originX: "center",
+                        originY: "center",
+                        width: CANVASOBJECT_WIDTH,
+                        stroke: item.subjectColor ? `#${item.subjectColor}` : "white",
+                    });
+
+                    const line_2 = new fabric.Line([targetX, targetY, finishX, targetY], {
+                        originX: "center",
+                        originY: "center",
+                        stroke: item.subjectColor ? `#${item.subjectColor}` : "white",
+                    });
+                    const lineGroup = new fabric.Group([line_1, line_2], {});
+
+                    const text = new fabric.Textbox(item.structureName, {
+                        originX: itemX <= fabricCanvas.width! * 0.5 ? "right" : "left",
+                        originY: "bottom",
+                        left: itemX <= fabricCanvas.width! * 0.5 ? targetX - 5 : targetX + 5,
+                        top: targetY,
+                        lineHeight: 0.8,
+                        hoverCursor: "red",
+                        fontSize: 18,
+                        selectable: true,
+                        width: CANVASOBJECT_WIDTH,
+                        textAlign: itemX <= fabricCanvas.width! * 0.5 ? "right" : "left",
+                        fill: item.subjectColor ? `#${item.subjectColor}` : "white",
+                    });
+
+                    const instanceGroup = new fabric.Group([point, text, lineGroup], {});
+
+                    pointsLayer.current.set("selectable", false);
+                    pointsLayer.current.addWithUpdate(instanceGroup);
+                });
+            };
+
+            drawData(leftDots);
+            drawData(rightDots);
+        }
+
+        const targetPoint = new fabric.Circle(newPoint);
+        pointsLayer.current.addWithUpdate(targetPoint);
+
+        fabricCanvas.renderAll();
+        //}
     }, [currentData, fabricCanvas, newPoint]);
 
     useEffect(() => {
@@ -190,10 +192,10 @@ export const CanvasInstance = ({
         layer2Frame.set("selectable", false);
 
         if (fabricCanvas) {
-            const imgWidth = fabricCanvas?.width * 0.626;
-            const imgHeight = fabricCanvas?.height * 0.626;
-            const imgX = fabricCanvas?.width * 0.5;
-            const imgY = fabricCanvas?.width * 0.5;
+            const imgWidth = fabricCanvas.width! * 0.626;
+            const imgHeight = fabricCanvas.height! * 0.626;
+            const imgX = fabricCanvas.width! * 0.5;
+            const imgY = fabricCanvas.width! * 0.5;
 
             createImage(currentFrame, imgWidth, imgHeight, imgX, imgY)
                 .then((img) => {

@@ -36,7 +36,7 @@ const StudyPage = () => {
                 }
             };
 
-            fetchStudyData(id);
+            fetchStudyData(id!);
         }
     }, [id, study.id, dispatch]);
 
@@ -51,9 +51,7 @@ const StudyPage = () => {
                 <div style={{ marginTop: "30px" }}>
                     <FrameSelectorComponent handleCurrentFrame={handleCurrentFrame} context="app" />
                     <div className="container">
-                        <div className={s.render_wrapper}>
-                            <RenderComponent context="app" />
-                        </div>
+                        <RenderComponent context="app" />
                     </div>
                     <SeriesControlComponent />
                 </div>
