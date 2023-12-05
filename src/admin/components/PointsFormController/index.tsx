@@ -64,7 +64,7 @@ export const PointsFormController = ({
                         <select name="points" onChange={handleSelectInstance}>
                             <option value="">без значения</option>
                             {currentInstancesList?.map((el) => (
-                                <option key={el.id} value={el.id}>
+                                <option key={el.id} value={el.id} style={{ color: el.status === "VERIFIED" ? "black" : "red" }}>
                                     {`${el.structureName} (${el.x}, ${el.y}) ${el.status === "UNVERIFIED" ? "(не подтверждено)" : ""}`}
                                 </option>
                             ))}
