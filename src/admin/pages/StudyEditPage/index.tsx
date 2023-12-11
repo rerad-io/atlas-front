@@ -91,10 +91,10 @@ const StudyEditPage = () => {
                             required
                             type="text"
                             name="externalId"
-                            value={values[oninput?.name]}
-                            placeholder={study ? study.externalId : ""}
-                            style={{ width: "300px" }}
+                            defaultValue={study ? study.externalId : ""}
+                            style={{ width: "300px", border: study ? "none" : "1px solid black", backgroundColor: "white" }}
                             onChange={handleChange}
+                            disabled={study ? true : false}
                         />
                     </label>
                 }

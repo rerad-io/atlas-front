@@ -10,7 +10,7 @@ type Props = {
 };
 
 function TableComponent({ columns, data, actions = "", removeItemById }: Props) {
-    const tableHeader = () => columns.map((column, index) => <th key={index}>{column}</th>);
+    const tableHeader = () => (data?.length ? columns.map((column, index) => <th key={index}>{column}</th>) : "");
 
     const tableData = () => {
         return data?.map((item, index) => (
