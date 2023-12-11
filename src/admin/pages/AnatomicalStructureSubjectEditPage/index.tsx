@@ -109,7 +109,7 @@ const AnatomicalStructureSubjectEditPage = () => {
                 <form ref={formRef} onSubmit={onSubmitHandler} className={s.form}>
                     <label htmlFor="themeName">
                         Название темы * :
-                        <input type="text" name="name" id="themeName" placeholder={subject?.name} required />
+                        <input type="text" name="name" id="themeName" defaultValue={subject?.name} placeholder={subject?.name} required />
                     </label>
                     <label htmlFor="themeColor">
                         Цвет темы * :
