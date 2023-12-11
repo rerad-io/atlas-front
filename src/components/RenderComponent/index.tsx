@@ -9,8 +9,8 @@ type RenderComponentProps = {
     currentInstancesList?: InstanceData[];
     activeFrameNumber?: number;
     seriesNumber?: number;
-    newPoint?: Point;
-    setNewPoint?: (point: Point) => void;
+    newPoint: Point;
+    setNewPoint: (point: Point) => void;
 };
 
 export const RenderComponent = ({
@@ -71,6 +71,7 @@ export const RenderComponent = ({
                     pointer.y < (frameSize.width - frameSize.width * 0.626) / 2 + frameSize.width * 0.626
                 ) {
                     const newPoint = {
+                        name: "newPoint",
                         x: clickX,
                         y: clickY,
                         left: pointer.x,
