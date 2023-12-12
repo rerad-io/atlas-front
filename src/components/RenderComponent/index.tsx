@@ -50,11 +50,11 @@ export const RenderComponent = ({
             const options = {
                 width: frameSize.width,
                 height: frameSize.width,
-
+                hoverCursor: "default",
                 originX: "center",
                 originY: "center",
                 backgroundColor: "#303030",
-                cursor: "default",
+                cursorH: "default",
             };
 
             const canvas = new fabric.Canvas(canvasEl.current, options);

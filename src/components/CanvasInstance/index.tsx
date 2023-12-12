@@ -158,7 +158,7 @@ export const CanvasInstance = ({
                     left: itemX <= fabricCanvas.width! * 0.5 ? targetX - 5 : targetX + 5,
                     top: targetY,
                     lineHeight: 0.8,
-                    hoverCursor: "red",
+                    hoverCursor: "pointer",
                     fontSize: 18,
                     selectable: true,
                     width: CANVASOBJECT_WIDTH,
