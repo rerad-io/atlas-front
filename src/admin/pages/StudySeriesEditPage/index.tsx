@@ -49,19 +49,20 @@ const StudySeriesEditPage = () => {
     }, [studyId, studySerie]);
 
     useEffect(() => {
-        if (id) {
-            const fetchDataAndsetStudyseriesId = async () => {
-                try {
-                    setSerieId(id);
-                    const targetSerie = await getStudySeriesId(id);
-                    setStudySerie(targetSerie);
-                    setInstances(targetSerie.instanceDataList);
-                } catch (error) {
-                    console.error("StudySeriesEditPage - ", error);
-                }
-            };
-            fetchDataAndsetStudyseriesId();
+        if (!id) {
+            return;
         }
+        const fetchDataAndsetStudyseriesId = async () => {
+            try {
+                setSerieId(id);
+                const targetSerie = await getStudySeriesId(id);
+                setStudySerie(targetSerie);
+                setInstances(targetSerie.instanceDataList);
+            } catch (error) {
+                console.error("StudySeriesEditPage - ", error);
+            }
+        };
+        fetchDataAndsetStudyseriesId();
     }, [id]);
 
     useEffect(() => {
@@ -137,8 +138,8 @@ const StudySeriesEditPage = () => {
                 structureId: structure.id,
                 instanceNumber: activeFrameNumber,
                 type: "POINT",
-                x: newPoint?.x,
-                y: newPoint?.y,
+                x: newPoint.x,
+                y: newPoint.y,
                 path: "path",
             };
             const result = await createInstanceData(newInstance);

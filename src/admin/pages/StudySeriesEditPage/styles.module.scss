@@ -10,8 +10,20 @@
 }
 
 .controller_wrapper {
-    margin-top: 20px;
     display: flex;
-    flex-wrap: wrap;
     gap: 30px;
+}
+
+@media (min-width: 1990px) {
+    .controller_wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 992px) {
+    .controller_wrapper {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

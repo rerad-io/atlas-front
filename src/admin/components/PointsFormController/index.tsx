@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnatomicalStructure, InstanceData } from "../../../_types";
 import Button from "../../../components/UI/Button";
 import s from "./styles.module.scss";
@@ -19,25 +19,6 @@ export const PointsFormController = ({
 }: PointsFormControllerProps) => {
     const [selectedInstanceId, setSelectedInstanceId] = useState<string>("");
     const [selectedStructure, setSelectedStructure] = useState<AnatomicalStructure>();
-    const [frameSize, setFameSize] = useState<{ width: number; height: number }>({
-        width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.3,
-        height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.3,
-    });
-
-    useEffect(() => {
-        const handleResize = () => {
-            setFameSize({
-                width: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.3,
-                height: window.innerWidth <= 992 ? window.innerWidth : window.innerWidth * 0.3,
-            });
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
 
     const handleSelectInstance = (event: React.FormEvent<HTMLSelectElement>) => {
         const selectedId = event.currentTarget.value;
@@ -55,7 +36,7 @@ export const PointsFormController = ({
     };
 
     return (
-        <section className={s.form_wrapper} style={{ maxWidth: frameSize.width }}>
+        <section className={s.form_wrapper}>
             <form className={s.form} onSubmit={submit}>
                 <h3>Добавление инстанса </h3>
                 <div className={s.form_content}>
@@ -83,7 +64,7 @@ export const PointsFormController = ({
                         <select name="points" onChange={handleSelectInstance}>
                             <option value="">без значения</option>
                             {currentInstancesList?.map((el) => (
-                                <option key={el.id} value={el.id}>
+                                <option key={el.id} value={el.id} style={{ color: el.status === "VERIFIED" ? "black" : "red" }}>
                                     {`${el.structureName} (${el.x}, ${el.y}) ${el.status === "UNVERIFIED" ? "(не подтверждено)" : ""}`}
                                 </option>
                             ))}
